@@ -1,0 +1,28 @@
+{
+    "kernel_id": {
+        "type": ["null", "string"],
+        "pattern": "^([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}$",
+        "description": "ID of subject stored in Glance that should be used as the kernel when booting an AMI-style subject."
+    },
+    "ramdisk_id": {
+        "type": ["null", "string"],
+        "pattern": "^([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}$",
+        "description": "ID of subject stored in Glance that should be used as the ramdisk when booting an AMI-style subject."
+    },
+    "instance_uuid": {
+        "type": "string",
+        "description": "Metadata which can be used to record which instance this subject is associated with. (Informational only, does not create an instance snapshot.)"
+    },
+    "architecture": {
+        "description": "Operating system architecture as specified in http://docs.openstack.org/trunk/openstack-compute/admin/content/adding-subjects.html",
+        "type": "string"
+    },
+    "os_distro": {
+        "description": "Common name of operating system distribution as specified in http://docs.openstack.org/trunk/openstack-compute/admin/content/adding-subjects.html",
+        "type": "string"
+    },
+    "os_version": {
+        "description": "Operating system version as specified by the distributor",
+        "type": "string"
+    }
+}

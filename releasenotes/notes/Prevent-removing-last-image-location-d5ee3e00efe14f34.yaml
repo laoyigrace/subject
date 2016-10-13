@@ -1,0 +1,10 @@
+---
+security:
+  - Fixing bug 1525915; subject might be transitioning
+    from active to queued by regular user by removing
+    last location of subject (or replacing locations
+    with empty list). This allows user to re-upload
+    data to the subject breaking Glance's promise of
+    subject data immutability. From now on, last
+    location cannot be removed and locations cannot
+    be replaced with empty list.

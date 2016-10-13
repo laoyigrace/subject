@@ -1,0 +1,7 @@
+---
+features:
+  - Implemented re-authentication with trusts when updating subject status in
+    registry after subject upload. When long-running subject upload takes some a lot
+    of time (more than token expiration time) glance uses trusts to receive new
+    token and update subject status in registry. It allows users to upload big
+    size subjects without increasing token expiration time.
