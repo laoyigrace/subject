@@ -40,7 +40,7 @@ TENANT1 = '6838eb7b-6ded-434a-882c-b344c77fe8df'
 TENANT2 = '2c014f32-55eb-467d-8fcb-4bd706012f81'
 
 
-class ImageStub(subject.domain.Image):
+class SubjectStub(subject.domain.Subject):
     def get_data(self, offset=0, chunk_size=None):
         return ['01234', '56789']
 
@@ -49,7 +49,7 @@ class ImageStub(subject.domain.Image):
             pass
 
 
-class ImageRepoStub(object):
+class SubjectRepoStub(object):
     def remove(self, *args, **kwargs):
         return 'subject_from_get'
 
@@ -66,7 +66,7 @@ class ImageRepoStub(object):
         return ['subjects_from_list']
 
 
-class ImageMemberRepoStub(object):
+class SubjectMemberRepoStub(object):
     def remove(self, *args, **kwargs):
         return 'subject_member_from_remove'
 
@@ -138,12 +138,12 @@ class TestNotifier(utils.BaseTestCase):
         mock_set_trans_defaults.assert_called_with('subject')
 
 
-class TestImageNotifications(utils.BaseTestCase):
+class TestSubjectNotifications(utils.BaseTestCase):
     """Test Subject Notifications work"""
 
     def setUp(self):
-        super(TestImageNotifications, self).setUp()
-        self.subject = ImageStub(
+        super(TestSubjectNotifications, self).setUp()
+        self.subject = SubjectStub(
             subject_id=UUID1, name='subject-1', status='active', size=1024,
             created_at=DATETIME, updated_at=DATETIME, owner=TENANT1,
             visibility='public', container_format='ami', virtual_size=2048,
@@ -152,11 +152,11 @@ class TestImageNotifications(utils.BaseTestCase):
             locations=['http://127.0.0.1'])
         self.context = subject.context.RequestContext(tenant=TENANT2,
                                                       user=USER1)
-        self.subject_repo_stub = ImageRepoStub()
+        self.subject_repo_stub = SubjectRepoStub()
         self.notifier = unit_test_utils.FakeNotifier()
         self.subject_repo_proxy = subject.notifier.SubjectRepoProxy(
             self.subject_repo_stub, self.context, self.notifier)
-        self.subject_proxy = subject.notifier.ImageProxy(
+        self.subject_proxy = subject.notifier.SubjectProxy(
             self.subject, self.context, self.notifier)
 
     def test_subject_save_notification(self):
@@ -195,12 +195,12 @@ class TestImageNotifications(utils.BaseTestCase):
 
     def test_subject_get(self):
         subject = self.subject_repo_proxy.get(UUID1)
-        self.assertIsInstance(subject, subject.notifier.ImageProxy)
+        self.assertIsInstance(subject, subject.notifier.SubjectProxy)
         self.assertEqual('subject_from_get', subject.repo)
 
     def test_subject_list(self):
         subjects = self.subject_repo_proxy.list()
-        self.assertIsInstance(subjects[0], subject.notifier.ImageProxy)
+        self.assertIsInstance(subjects[0], subject.notifier.SubjectProxy)
         self.assertEqual('subjects_from_list', subjects[0].repo)
 
     def test_subject_get_data_should_call_next_subject_get_data(self):
@@ -410,31 +410,31 @@ class TestImageNotifications(utils.BaseTestCase):
         self.assertIn('Failed', output_log['payload'])
 
 
-class TestImageMemberNotifications(utils.BaseTestCase):
+class TestSubjectMemberNotifications(utils.BaseTestCase):
     """Test Subject Member Notifications work"""
 
     def setUp(self):
-        super(TestImageMemberNotifications, self).setUp()
+        super(TestSubjectMemberNotifications, self).setUp()
         self.context = subject.context.RequestContext(tenant=TENANT2,
                                                       user=USER1)
         self.notifier = unit_test_utils.FakeNotifier()
 
-        self.subject = ImageStub(
+        self.subject = SubjectStub(
             subject_id=UUID1, name='subject-1', status='active', size=1024,
             created_at=DATETIME, updated_at=DATETIME, owner=TENANT1,
             visibility='public', container_format='ami',
             tags=['one', 'two'], disk_format='ami', min_ram=128,
             min_disk=10, checksum='ca425b88f047ce8ec45ee90e813ada91',
             locations=['http://127.0.0.1'])
-        self.subject_member = subject.domain.ImageMembership(
+        self.subject_member = subject.domain.SubjectMembership(
             id=1, subject_id=UUID1, member_id=TENANT1, created_at=DATETIME,
             updated_at=DATETIME, status='accepted')
 
-        self.subject_member_repo_stub = ImageMemberRepoStub()
-        self.subject_member_repo_proxy = subject.notifier.ImageMemberRepoProxy(
+        self.subject_member_repo_stub = SubjectMemberRepoStub()
+        self.subject_member_repo_proxy = subject.notifier.SubjectMemberRepoProxy(
             self.subject_member_repo_stub, self.subject,
             self.context, self.notifier)
-        self.subject_member_proxy = subject.notifier.ImageMemberProxy(
+        self.subject_member_proxy = subject.notifier.SubjectMemberProxy(
             self.subject_member, self.context, self.notifier)
 
     def _assert_subject_member_with_notifier(self, output_log, deleted=False):
@@ -485,13 +485,13 @@ class TestImageMemberNotifications(utils.BaseTestCase):
 
     def test_subject_member_get(self):
         subject_member = self.subject_member_repo_proxy.get(TENANT1)
-        self.assertIsInstance(subject_member, subject.notifier.ImageMemberProxy)
+        self.assertIsInstance(subject_member, subject.notifier.SubjectMemberProxy)
         self.assertEqual('subject_member_from_get', subject_member.repo)
 
     def test_subject_member_list(self):
         subject_members = self.subject_member_repo_proxy.list()
         self.assertIsInstance(subject_members[0],
-                              subject.notifier.ImageMemberProxy)
+                              subject.notifier.SubjectMemberProxy)
         self.assertEqual('subject_members_from_list', subject_members[0].repo)
 
 

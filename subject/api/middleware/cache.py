@@ -53,8 +53,8 @@ PATTERNS = {
 class CacheFilter(wsgi.Middleware):
 
     def __init__(self, app):
-        self.cache = subject_cache.ImageCache()
-        self.serializer = subjects.ImageSerializer()
+        self.cache = subject_cache.SubjectCache()
+        self.serializer = subjects.SubjectSerializer()
         self.policy = policy.Enforcer()
         LOG.info(_LI("Initialized subject cache middleware"))
         super(CacheFilter, self).__init__(app)
@@ -128,7 +128,7 @@ class CacheFilter(wsgi.Middleware):
             # _process_v2_request call.
             request.environ['api.cache.subject'] = subject
 
-            return policy.ImageTarget(subject)
+            return policy.SubjectTarget(subject)
         except exception.NotFound as e:
             raise webob.exc.HTTPNotFound(explanation=e.msg, request=request)
 
@@ -168,7 +168,7 @@ class CacheFilter(wsgi.Middleware):
 
         try:
             return method(request, subject_id, subject_iterator, subject_metadata)
-        except exception.ImageNotFound:
+        except exception.SubjectNotFound:
             msg = _LE("Subject cache contained subject file for subject '%s', "
                       "however the registry did not contain metadata for "
                       "that subject!") % subject_id

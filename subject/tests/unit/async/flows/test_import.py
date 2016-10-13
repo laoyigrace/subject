@@ -350,7 +350,7 @@ class TestImportTask(test_utils.BaseTestCase):
                     self.assertEqual(content, ifile.read())
 
     def test_create_subject(self):
-        subject_create = import_flow._CreateImage(self.task.task_id,
+        subject_create = import_flow._CreateSubject(self.task.task_id,
                                                 self.task_type,
                                                 self.task_repo,
                                                 self.img_repo,
@@ -368,7 +368,7 @@ class TestImportTask(test_utils.BaseTestCase):
                                             self.task.task_id)
 
     def test_save_subject(self):
-        save_subject = import_flow._SaveImage(self.task.task_id,
+        save_subject = import_flow._SaveSubject(self.task.task_id,
                                             self.task_type,
                                             self.img_repo)
 

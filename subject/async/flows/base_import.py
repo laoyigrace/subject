@@ -16,8 +16,8 @@
 import json
 import os
 
-import glance_store as store_api
-from glance_store import backend
+import subject_store as store_api
+from subject_store import backend
 from oslo_concurrency import processutils as putils
 from oslo_config import cfg
 from oslo_log import log as logging
@@ -43,7 +43,7 @@ LOG = logging.getLogger(__name__)
 CONF = cfg.CONF
 
 
-class _CreateImage(task.Task):
+class _CreateSubject(task.Task):
 
     default_provides = 'subject_id'
 
@@ -54,8 +54,8 @@ class _CreateImage(task.Task):
         self.task_repo = task_repo
         self.subject_repo = subject_repo
         self.subject_factory = subject_factory
-        super(_CreateImage, self).__init__(
-            name='%s-CreateImage-%s' % (task_type, task_id))
+        super(_CreateSubject, self).__init__(
+            name='%s-CreateSubject-%s' % (task_type, task_id))
 
     def execute(self):
         task = script_utils.get_task(self.task_repo, self.task_id)
@@ -103,23 +103,23 @@ class _ImportToFS(task.Task):
         self.store = self._build_store()
 
     def _build_store(self):
-        # NOTE(flaper87): Due to the nice glance_store api (#sarcasm), we're
+        # NOTE(flaper87): Due to the nice subject_store api (#sarcasm), we're
         # forced to build our own config object, register the required options
         # (and by required I mean *ALL* of them, even the ones we don't want),
         # and create our own store instance by calling a private function.
         # This is certainly unfortunate but it's the best we can do until the
-        # glance_store refactor is done. A good thing is that glance_store is
+        # subject_store refactor is done. A good thing is that subject_store is
         # under our team's management and it gates on Glance so changes to
         # this API will (should?) break task's tests.
         conf = cfg.ConfigOpts()
         backend.register_opts(conf)
         conf.set_override('filesystem_store_datadir',
                           CONF.task.work_dir,
-                          group='glance_store',
+                          group='subject_store',
                           enforce_type=True)
 
         # NOTE(flaper87): Do not even try to judge me for this... :(
-        # With the glance_store refactor, this code will change, until
+        # With the subject_store refactor, this code will change, until
         # that happens, we don't have a better option and this is the
         # least worst one, IMHO.
         store = backend._load_store(conf, 'file')
@@ -302,8 +302,8 @@ class _ImportToStore(task.Task):
         #
         # subject_path = os.path.join(base_path, subject_id)
         #
-        # if (base_path == CONF.glance_store.filesystem_store_datadir or
-        #      base_path in CONF.glance_store.filesystem_store_datadirs):
+        # if (base_path == CONF.subject_store.filesystem_store_datadir or
+        #      base_path in CONF.subject_store.filesystem_store_datadirs):
         #     os.rename(file_path, subject_path)
         #
         # subject_import.set_subject_data(subject, subject_path, None)
@@ -315,14 +315,14 @@ class _ImportToStore(task.Task):
         self.subject_repo.save(subject)
 
 
-class _SaveImage(task.Task):
+class _SaveSubject(task.Task):
 
     def __init__(self, task_id, task_type, subject_repo):
         self.task_id = task_id
         self.task_type = task_type
         self.subject_repo = subject_repo
-        super(_SaveImage, self).__init__(
-            name='%s-SaveImage-%s' % (task_type, task_id))
+        super(_SaveSubject, self).__init__(
+            name='%s-SaveSubject-%s' % (task_type, task_id))
 
     def execute(self, subject_id):
         """Transition subject status to active
@@ -418,7 +418,7 @@ def get_flow(**kwargs):
     uri = kwargs.get('uri')
 
     flow = lf.Flow(task_type, retry=retry.AlwaysRevert()).add(
-        _CreateImage(task_id, task_type, task_repo, subject_repo, subject_factory))
+        _CreateSubject(task_id, task_type, task_repo, subject_repo, subject_factory))
 
     import_to_store = _ImportToStore(task_id, task_type, subject_repo, uri)
 
@@ -468,7 +468,7 @@ def get_flow(**kwargs):
         flow.add(import_to_store)
 
     flow.add(
-        _SaveImage(task_id, task_type, subject_repo),
+        _SaveSubject(task_id, task_type, subject_repo),
         _CompleteTask(task_id, task_type, task_repo)
     )
     return flow

@@ -116,11 +116,11 @@ class Forbidden(GlanceException):
     message = _("You are not authorized to complete %(action)s action.")
 
 
-class ForbiddenPublicImage(Forbidden):
+class ForbiddenPublicSubject(Forbidden):
     message = _("You are not authorized to complete this action.")
 
 
-class ProtectedImageDelete(Forbidden):
+class ProtectedSubjectDelete(Forbidden):
     message = _("Subject %(subject_id)s is protected and cannot be deleted.")
 
 
@@ -288,27 +288,27 @@ class InvalidObject(GlanceException):
                 "'%(schema)s': %(reason)s")
 
 
-class ImageSizeLimitExceeded(GlanceException):
+class SubjectSizeLimitExceeded(GlanceException):
     message = _("The provided subject is too large.")
 
 
-class ImageMemberLimitExceeded(LimitExceeded):
+class SubjectMemberLimitExceeded(LimitExceeded):
     message = _("The limit has been exceeded on the number of allowed subject "
                 "members for this subject. Attempted: %(attempted)s, "
                 "Maximum: %(maximum)s")
 
 
-class ImagePropertyLimitExceeded(LimitExceeded):
+class SubjectPropertyLimitExceeded(LimitExceeded):
     message = _("The limit has been exceeded on the number of allowed subject "
                 "properties. Attempted: %(attempted)s, Maximum: %(maximum)s")
 
 
-class ImageTagLimitExceeded(LimitExceeded):
+class SubjectTagLimitExceeded(LimitExceeded):
     message = _("The limit has been exceeded on the number of allowed subject "
                 "tags. Attempted: %(attempted)s, Maximum: %(maximum)s")
 
 
-class ImageLocationLimitExceeded(LimitExceeded):
+class SubjectLocationLimitExceeded(LimitExceeded):
     message = _("The limit has been exceeded on the number of allowed subject "
                 "locations. Attempted: %(attempted)s, Maximum: %(maximum)s")
 
@@ -329,7 +329,7 @@ class BadTaskConfiguration(GlanceException):
     message = _("Task was not configured properly")
 
 
-class ImageNotFound(NotFound):
+class SubjectNotFound(NotFound):
     message = _("Subject with the given id %(subject_id)s was not found")
 
 
@@ -363,7 +363,7 @@ class InvalidParameterValue(Invalid):
                 "%(extra_msg)s")
 
 
-class InvalidImageStatusTransition(Invalid):
+class InvalidSubjectStatusTransition(Invalid):
     message = _("Subject status transition from %(cur_status)s to"
                 " %(new_status)s is not allowed")
 

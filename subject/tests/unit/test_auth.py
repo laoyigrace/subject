@@ -605,10 +605,10 @@ class TestEndpoints(utils.BaseTestCase):
                           endpoint_type='internalURL')
 
 
-class TestImageMutability(utils.BaseTestCase):
+class TestSubjectMutability(utils.BaseTestCase):
 
     def setUp(self):
-        super(TestImageMutability, self).setUp()
+        super(TestSubjectMutability, self).setUp()
         self.subject_factory = subject.domain.SubjectFactory()
 
     def _is_mutable(self, tenant, owner, is_admin=False):
@@ -634,9 +634,9 @@ class TestImageMutability(utils.BaseTestCase):
         self.assertTrue(self._is_mutable(TENANT1, TENANT1))
 
 
-class TestImmutableImage(utils.BaseTestCase):
+class TestImmutableSubject(utils.BaseTestCase):
     def setUp(self):
-        super(TestImmutableImage, self).setUp()
+        super(TestImmutableSubject, self).setUp()
         subject_factory = subject.domain.SubjectFactory()
         self.context = subject.context.RequestContext(tenant=TENANT1)
         subject = subject_factory.new_subject(
@@ -648,7 +648,7 @@ class TestImmutableImage(utils.BaseTestCase):
             extra_properties={'foo': 'bar'},
             tags=['ping', 'pong'],
         )
-        self.subject = authorization.ImmutableImageProxy(subject, self.context)
+        self.subject = authorization.ImmutableSubjectProxy(subject, self.context)
 
     def _test_change(self, attr, value):
         self.assertRaises(exception.Forbidden,
@@ -775,18 +775,18 @@ class TestImmutableImage(utils.BaseTestCase):
         self.assertRaises(exception.Forbidden, self.subject.reactivate)
 
     def test_get_data(self):
-        class FakeImage(object):
+        class FakeSubject(object):
             def get_data(self):
                 return 'tiddlywinks'
 
-        subject = subject.api.authorization.ImmutableImageProxy(
-            FakeImage(), self.context)
+        subject = subject.api.authorization.ImmutableSubjectProxy(
+            FakeSubject(), self.context)
         self.assertEqual('tiddlywinks', subject.get_data())
 
 
-class TestImageFactoryProxy(utils.BaseTestCase):
+class TestSubjectFactoryProxy(utils.BaseTestCase):
     def setUp(self):
-        super(TestImageFactoryProxy, self).setUp()
+        super(TestSubjectFactoryProxy, self).setUp()
         factory = subject.domain.SubjectFactory()
         self.context = subject.context.RequestContext(tenant=TENANT1)
         self.subject_factory = authorization.SubjectFactoryProxy(factory,
@@ -820,9 +820,9 @@ class TestImageFactoryProxy(utils.BaseTestCase):
         self.assertEqual(TENANT1, subject.owner)
 
 
-class TestImageRepoProxy(utils.BaseTestCase):
+class TestSubjectRepoProxy(utils.BaseTestCase):
 
-    class ImageRepoStub(object):
+    class SubjectRepoStub(object):
         def __init__(self, fixtures):
             self.fixtures = fixtures
 
@@ -837,7 +837,7 @@ class TestImageRepoProxy(utils.BaseTestCase):
             return self.fixtures
 
     def setUp(self):
-        super(TestImageRepoProxy, self).setUp()
+        super(TestSubjectRepoProxy, self).setUp()
         subject_factory = subject.domain.SubjectFactory()
         self.fixtures = [
             subject_factory.new_subject(owner=TENANT1),
@@ -845,7 +845,7 @@ class TestImageRepoProxy(utils.BaseTestCase):
             subject_factory.new_subject(owner=TENANT2),
         ]
         self.context = subject.context.RequestContext(tenant=TENANT1)
-        subject_repo = self.ImageRepoStub(self.fixtures)
+        subject_repo = self.SubjectRepoStub(self.fixtures)
         self.subject_repo = authorization.SubjectRepoProxy(subject_repo,
                                                          self.context)
 

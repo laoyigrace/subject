@@ -38,10 +38,10 @@ UUID1 = 'c80a1a6c-bd1f-41c5-90ee-81afedb1d58d'
 TENANT1 = '6838eb7b-6ded-434a-882c-b344c77fe8df'
 
 
-class TestImageFactory(test_utils.BaseTestCase):
+class TestSubjectFactory(test_utils.BaseTestCase):
 
     def setUp(self):
-        super(TestImageFactory, self).setUp()
+        super(TestSubjectFactory, self).setUp()
         self.subject_factory = domain.SubjectFactory()
 
     def test_minimal_new_subject(self):
@@ -128,10 +128,10 @@ class TestImageFactory(test_utils.BaseTestCase):
         self.assertEqual(True, new_subject.extra_properties['is_public'])
 
 
-class TestImage(test_utils.BaseTestCase):
+class TestSubject(test_utils.BaseTestCase):
 
     def setUp(self):
-        super(TestImage, self).setUp()
+        super(TestSubject, self).setUp()
         self.subject_factory = domain.SubjectFactory()
         self.subject = self.subject_factory.new_subject(
             container_format='bear', disk_format='rawr')
@@ -162,7 +162,7 @@ class TestImage(test_utils.BaseTestCase):
 
     def test_delete_protected_subject(self):
         self.subject.protected = True
-        self.assertRaises(exception.ProtectedImageDelete, self.subject.delete)
+        self.assertRaises(exception.ProtectedSubjectDelete, self.subject.delete)
 
     def test_status_saving(self):
         self.subject.status = 'saving'
@@ -172,7 +172,7 @@ class TestImage(test_utils.BaseTestCase):
         self.subject.status = 'saving'
         self.subject.status = 'killed'
         self.assertRaises(
-            exception.InvalidImageStatusTransition,
+            exception.InvalidSubjectStatusTransition,
             setattr, self.subject, 'status', 'delet')
 
     def test_status_saving_without_disk_format(self):
@@ -205,11 +205,11 @@ class TestImage(test_utils.BaseTestCase):
         self.assertEqual('pending_delete', self.subject.status)
 
 
-class TestImageMember(test_utils.BaseTestCase):
+class TestSubjectMember(test_utils.BaseTestCase):
 
     def setUp(self):
-        super(TestImageMember, self).setUp()
-        self.subject_member_factory = domain.ImageMemberFactory()
+        super(TestSubjectMember, self).setUp()
+        self.subject_member_factory = domain.SubjectMemberFactory()
         self.subject_factory = domain.SubjectFactory()
         self.subject = self.subject_factory.new_subject()
         self.subject_member = self.subject_member_factory.new_subject_member(
@@ -224,11 +224,11 @@ class TestImageMember(test_utils.BaseTestCase):
                           self.subject_member, 'status', 'ellison')
 
 
-class TestImageMemberFactory(test_utils.BaseTestCase):
+class TestSubjectMemberFactory(test_utils.BaseTestCase):
 
     def setUp(self):
-        super(TestImageMemberFactory, self).setUp()
-        self.subject_member_factory = domain.ImageMemberFactory()
+        super(TestSubjectMemberFactory, self).setUp()
+        self.subject_member_factory = domain.SubjectMemberFactory()
         self.subject_factory = domain.SubjectFactory()
 
     def test_minimal_new_subject_member(self):

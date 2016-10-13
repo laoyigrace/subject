@@ -2,10 +2,10 @@
 upgrade:
   - |
     Some backend store names were inconsistent between glance
-    and glance_store.  This meant that operators of the
+    and subject_store.  This meant that operators of the
     VMware datastore or file system store were required to use
     store names in ``glance-api.conf`` that did not correspond
-    to any valid identifier in glance_store.  As this situation
+    to any valid identifier in subject_store.  As this situation
     encouraged misconfiguration and operator unhappiness, we
     have made the store names consistent in the Newton
     release. What this means for you:
@@ -18,11 +18,11 @@ upgrade:
       option
     * *VMware datastore operators*: The old name, now
       **DEPRECATED**, was ``vmware_datastore``.  The **new**
-      name, used in both glance and glance_store, is
+      name, used in both glance and subject_store, is
       ``vmware``
     * *File system store operators*: the old name, now
       **DEPRECATED**, was ``filesystem``.  The **new** name,
-      used in both glance and glance_store, is ``file``
+      used in both glance and subject_store, is ``file``
     * This change is backward compatible, that is, the old
       names will be recognized by the code during the deprecation
       period. Support for the deprecated names will be removed in

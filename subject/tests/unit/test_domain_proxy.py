@@ -160,7 +160,7 @@ class TestProxyRepoWrapping(test_utils.BaseTestCase):
         self._test_method_with_proxied_argument('remove', None)
 
 
-class FakeImageFactory(object):
+class FakeSubjectFactory(object):
     def __init__(self, result=None):
         self.result = None
         self.kwargs = None
@@ -170,10 +170,10 @@ class FakeImageFactory(object):
         return self.result
 
 
-class TestImageFactory(test_utils.BaseTestCase):
+class TestSubjectFactory(test_utils.BaseTestCase):
     def setUp(self):
-        super(TestImageFactory, self).setUp()
-        self.factory = FakeImageFactory()
+        super(TestSubjectFactory, self).setUp()
+        self.factory = FakeSubjectFactory()
 
     def test_proxy_plain(self):
         proxy_factory = proxy.SubjectFactory(self.factory)
@@ -193,7 +193,7 @@ class TestImageFactory(test_utils.BaseTestCase):
         self.assertEqual({'a': 1, 'b': 'two'}, self.factory.kwargs)
 
 
-class FakeImageMembershipFactory(object):
+class FakeSubjectMembershipFactory(object):
     def __init__(self, result=None):
         self.result = None
         self.subject = None
@@ -205,13 +205,13 @@ class FakeImageMembershipFactory(object):
         return self.result
 
 
-class TestImageMembershipFactory(test_utils.BaseTestCase):
+class TestSubjectMembershipFactory(test_utils.BaseTestCase):
     def setUp(self):
-        super(TestImageMembershipFactory, self).setUp()
-        self.factory = FakeImageMembershipFactory()
+        super(TestSubjectMembershipFactory, self).setUp()
+        self.factory = FakeSubjectMembershipFactory()
 
     def test_proxy_plain(self):
-        proxy_factory = proxy.ImageMembershipFactory(self.factory)
+        proxy_factory = proxy.SubjectMembershipFactory(self.factory)
         self.factory.result = 'tyrion'
         membership = proxy_factory.new_subject_member('jaime', 'cersei')
         self.assertEqual('tyrion', membership)
@@ -219,7 +219,7 @@ class TestImageMembershipFactory(test_utils.BaseTestCase):
         self.assertEqual('cersei', self.factory.member_id)
 
     def test_proxy_wrapped_membership(self):
-        proxy_factory = proxy.ImageMembershipFactory(
+        proxy_factory = proxy.SubjectMembershipFactory(
             self.factory, proxy_class=FakeProxy, proxy_kwargs={'a': 1})
         self.factory.result = 'tyrion'
         membership = proxy_factory.new_subject_member('jaime', 'cersei')
@@ -230,7 +230,7 @@ class TestImageMembershipFactory(test_utils.BaseTestCase):
         self.assertEqual('cersei', self.factory.member_id)
 
     def test_proxy_wrapped_subject(self):
-        proxy_factory = proxy.ImageMembershipFactory(
+        proxy_factory = proxy.SubjectMembershipFactory(
             self.factory, proxy_class=FakeProxy)
         self.factory.result = 'tyrion'
         subject = FakeProxy('jaime')
@@ -243,7 +243,7 @@ class TestImageMembershipFactory(test_utils.BaseTestCase):
         class FakeProxy2(FakeProxy):
             pass
 
-        proxy_factory = proxy.ImageMembershipFactory(
+        proxy_factory = proxy.SubjectMembershipFactory(
             self.factory,
             proxy_class=FakeProxy,
             proxy_kwargs={'b': 2})
@@ -258,7 +258,7 @@ class TestImageMembershipFactory(test_utils.BaseTestCase):
         self.assertEqual('cersei', self.factory.member_id)
 
 
-class FakeImage(object):
+class FakeSubject(object):
     def __init__(self, result=None):
         self.result = result
 

@@ -91,7 +91,7 @@ class _OVF_Process(task.Task):
             # import refactoring work plans to do. Until then, we will check
             # the context as a short-cut.
             if subject.context and subject.context.is_admin:
-                extractor = OVAImageExtractor()
+                extractor = OVASubjectExtractor()
                 data_iter = self._get_ova_iter_objects(file_path)
                 disk, properties = extractor.extract(data_iter)
                 subject.extra_properties.update(properties)
@@ -115,7 +115,7 @@ class _OVF_Process(task.Task):
             os.path.remove(fs_path)
 
 
-class OVAImageExtractor(object):
+class OVASubjectExtractor(object):
     """Extracts and parses the uploaded OVA package
 
     A class that extracts the disk subject and OVF file from an OVA

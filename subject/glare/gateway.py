@@ -11,7 +11,7 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
-import glance_store
+import subject_store
 
 from subject.common import store_utils
 import subject.db
@@ -24,7 +24,7 @@ from subject.glare import updater
 class Gateway(object):
     def __init__(self, db_api=None, store_api=None, plugins=None):
         self.db_api = db_api or subject.db.get_api()
-        self.store_api = store_api or glance_store
+        self.store_api = store_api or subject_store
         self.store_utils = store_utils
         self.plugins = plugins
 

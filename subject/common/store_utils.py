@@ -14,7 +14,7 @@
 
 import sys
 
-import glance_store as store_api
+import subject_store as store_api
 from oslo_config import cfg
 from oslo_log import log as logging
 from oslo_utils import encodeutils
@@ -129,7 +129,7 @@ def validate_external_location(uri):
     if not uri:
         return False
 
-    # TODO(zhiyan): This function could be moved to glance_store.
+    # TODO(zhiyan): This function could be moved to subject_store.
     # TODO(gm): Use a whitelist of allowed schemes
     scheme = urlparse.urlparse(uri).scheme
     return (scheme in store_api.get_known_schemes() and

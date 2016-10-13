@@ -124,15 +124,15 @@ def _db_task_fixture(task_id, type, status, **kwargs):
     return obj
 
 
-class TestImageRepo(test_utils.BaseTestCase):
+class TestSubjectRepo(test_utils.BaseTestCase):
 
     def setUp(self):
-        super(TestImageRepo, self).setUp()
+        super(TestSubjectRepo, self).setUp()
         self.db = unit_test_utils.FakeDB(initialize=False)
         self.context = subject.context.RequestContext(
             user=USER1, tenant=TENANT1)
         self.subject_repo = subject.db.SubjectRepo(self.context, self.db)
-        self.subject_factory = subject.domain.ImageFactory()
+        self.subject_factory = subject.domain.SubjectFactory()
         self._create_subjects()
         self._create_subject_members()
 
@@ -191,7 +191,7 @@ class TestImageRepo(test_utils.BaseTestCase):
 
     def test_get_not_found(self):
         fake_uuid = str(uuid.uuid4())
-        exc = self.assertRaises(exception.ImageNotFound, self.subject_repo.get,
+        exc = self.assertRaises(exception.SubjectNotFound, self.subject_repo.get,
                                 fake_uuid)
         self.assertIn(fake_uuid, encodeutils.exception_to_unicode(exc))
 
@@ -371,7 +371,7 @@ class TestImageRepo(test_utils.BaseTestCase):
         fake_uuid = str(uuid.uuid4())
         subject = self.subject_repo.get(UUID1)
         subject.subject_id = fake_uuid
-        exc = self.assertRaises(exception.ImageNotFound, self.subject_repo.save,
+        exc = self.assertRaises(exception.SubjectNotFound, self.subject_repo.save,
                                 subject)
         self.assertIn(fake_uuid, encodeutils.exception_to_unicode(exc))
 
@@ -380,14 +380,14 @@ class TestImageRepo(test_utils.BaseTestCase):
         previous_update_time = subject.updated_at
         self.subject_repo.remove(subject)
         self.assertGreater(subject.updated_at, previous_update_time)
-        self.assertRaises(exception.ImageNotFound, self.subject_repo.get, UUID1)
+        self.assertRaises(exception.SubjectNotFound, self.subject_repo.get, UUID1)
 
     def test_remove_subject_not_found(self):
         fake_uuid = str(uuid.uuid4())
         subject = self.subject_repo.get(UUID1)
         subject.subject_id = fake_uuid
         exc = self.assertRaises(
-            exception.ImageNotFound, self.subject_repo.remove, subject)
+            exception.SubjectNotFound, self.subject_repo.remove, subject)
         self.assertIn(fake_uuid, encodeutils.exception_to_unicode(exc))
 
 
@@ -398,7 +398,7 @@ class TestEncryptedLocations(test_utils.BaseTestCase):
         self.context = subject.context.RequestContext(
             user=USER1, tenant=TENANT1)
         self.subject_repo = subject.db.SubjectRepo(self.context, self.db)
-        self.subject_factory = subject.domain.ImageFactory()
+        self.subject_factory = subject.domain.SubjectFactory()
         self.crypt_key = '0123456789abcdef'
         self.config(metadata_encryption_key=self.crypt_key)
         self.foo_bar_location = [{'url': 'foo', 'metadata': {},
@@ -468,19 +468,19 @@ class TestEncryptedLocations(test_utils.BaseTestCase):
         self.assertEqual(orig_locations, subject.locations)
 
 
-class TestImageMemberRepo(test_utils.BaseTestCase):
+class TestSubjectMemberRepo(test_utils.BaseTestCase):
 
     def setUp(self):
-        super(TestImageMemberRepo, self).setUp()
+        super(TestSubjectMemberRepo, self).setUp()
         self.db = unit_test_utils.FakeDB(initialize=False)
         self.context = subject.context.RequestContext(
             user=USER1, tenant=TENANT1)
         self.subject_repo = subject.db.SubjectRepo(self.context, self.db)
-        self.subject_member_factory = subject.domain.ImageMemberFactory()
+        self.subject_member_factory = subject.domain.SubjectMemberFactory()
         self._create_subjects()
         self._create_subject_members()
         subject = self.subject_repo.get(UUID1)
-        self.subject_member_repo = subject.db.ImageMemberRepo(self.context,
+        self.subject_member_repo = subject.db.SubjectMemberRepo(self.context,
                                                             self.db, subject)
 
     def _create_subjects(self):
@@ -509,7 +509,7 @@ class TestImageMemberRepo(test_utils.BaseTestCase):
 
     def test_list_no_members(self):
         subject = self.subject_repo.get(UUID2)
-        self.subject_member_repo_uuid2 = subject.db.ImageMemberRepo(
+        self.subject_member_repo_uuid2 = subject.db.SubjectMemberRepo(
             self.context, self.db, subject)
         subject_members = self.subject_member_repo_uuid2.list()
         subject_member_ids = set([i.member_id for i in subject_members])
@@ -582,7 +582,7 @@ class TestImageMemberRepo(test_utils.BaseTestCase):
     def test_remove_subject_member_does_not_exist(self):
         fake_uuid = str(uuid.uuid4())
         subject = self.subject_repo.get(UUID2)
-        fake_member = subject.domain.ImageMemberFactory().new_subject_member(
+        fake_member = subject.domain.SubjectMemberFactory().new_subject_member(
             subject, TENANT4)
         fake_member.id = fake_uuid
         exc = self.assertRaises(exception.NotFound,

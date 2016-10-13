@@ -1,5 +1,5 @@
 ---
-  GlanceImages.create_and_list_subject:
+  GlanceSubjects.create_and_list_subject:
     -
       args:
         subject_location: "http://download.cirros-cloud.net/0.3.1/cirros-0.3.1-x86_64-disk.img"
@@ -14,7 +14,7 @@
           tenants: 1
           users_per_tenant: 1
 
-  GlanceImages.create_and_delete_subject:
+  GlanceSubjects.create_and_delete_subject:
     -
       args:
         subject_location: "http://download.cirros-cloud.net/0.3.1/cirros-0.3.1-x86_64-disk.img"

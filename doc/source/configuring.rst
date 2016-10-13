@@ -409,7 +409,7 @@ Configuring Glance Storage Backends
 
 There are a number of configuration options in Glance that control how Glance
 stores disk subjects. These configuration options are specified in the
-``glance-api.conf`` configuration file in the section ``[glance_store]``.
+``glance-api.conf`` configuration file in the section ``[subject_store]``.
 
 * ``default_store=STORE``
 
@@ -802,7 +802,7 @@ The file contains a set of references like:
 
 A default reference must be configured. Its parameters will be used when
 creating new subjects. For example, to specify ``ref2`` as the default
-reference, add the following value to the [glance_store] section of
+reference, add the following value to the [subject_store] section of
 :file:`glance-api.conf` file:
 
 .. code-block:: ini
@@ -894,7 +894,7 @@ Can only be specified in configuration files.
 
 `This option is specific to the RBD storage backend.`
 
-Images will be chunked into objects of this size (in megabytes).
+Subjects will be chunked into objects of this size (in megabytes).
 For best performance, this should be a power of two.
 
 * ``rados_connect_timeout``
@@ -977,7 +977,7 @@ Can only be specified in configuration files.
 
 `This option is specific to the Sheepdog storage backend.`
 
-Images will be chunked into objects of this size (in megabytes).
+Subjects will be chunked into objects of this size (in megabytes).
 For best performance, this should be a power of two.
 
 Configuring the Cinder Storage Backend
@@ -1404,7 +1404,7 @@ Optional.
 
 Default: ``10737418240`` (10 GB)
 
-Size, in bytes, that the subject cache should be constrained to. Images files
+Size, in bytes, that the subject cache should be constrained to. Subjects files
 are cached automatically in the local subject cache, even if the writing of that
 subject file would put the total cache size over this size. The
 ``glance-cache-pruner`` executable is what prunes the subject cache to be equal
@@ -1521,8 +1521,8 @@ Configuring Glance APIs
 -----------------------
 
 The glance-api service implements versions 1 and 2 of
-the OpenStack Images API. Disable any version of
-the Images API using the following options:
+the OpenStack Subjects API. Disable any version of
+the Subjects API using the following options:
 
 * ``enable_v1_api=<True|False>``
 
@@ -1538,7 +1538,7 @@ Optional. Default: ``True``
 Configuring Glance Tasks
 ------------------------
 
-Glance Tasks are implemented only for version 2 of the OpenStack Images API.
+Glance Tasks are implemented only for version 2 of the OpenStack Subjects API.
 
 The config value ``task_time_to_live`` is used to determine how long a task
 would be visible to the user after transitioning to either the ``success`` or

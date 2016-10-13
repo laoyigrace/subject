@@ -15,7 +15,7 @@
 import os
 import sys
 
-import glance_store
+import subject_store
 import jsonschema
 from oslo_config import cfg
 from oslo_serialization import jsonutils as json
@@ -53,7 +53,7 @@ CONF.import_group("profiler", "subject.common.wsgi")
 class ArtifactsController(object):
     def __init__(self, db_api=None, store_api=None, plugins=None):
         self.db_api = db_api or subject.db.get_api()
-        self.store_api = store_api or glance_store
+        self.store_api = store_api or subject_store
         self.plugins = plugins or loader.ArtifactsPluginLoader(
             'subject.artifacts.types')
         self.gateway = gateway.Gateway(self.db_api,
@@ -257,13 +257,13 @@ class ArtifactsController(object):
             artifact_repo.remove(artifact)
         except exception.Invalid as e:
             raise webob.exc.HTTPBadRequest(explanation=e.msg)
-        except (glance_store.Forbidden, exception.Forbidden) as e:
+        except (subject_store.Forbidden, exception.Forbidden) as e:
             raise webob.exc.HTTPForbidden(explanation=e.msg)
-        except (glance_store.NotFound, exception.NotFound) as e:
+        except (subject_store.NotFound, exception.NotFound) as e:
             msg = (_("Failed to find artifact %(artifact_id)s to delete") %
                    {'artifact_id': id})
             raise webob.exc.HTTPNotFound(explanation=msg)
-        except glance_store.exceptions.InUseByStore as e:
+        except subject_store.exceptions.InUseByStore as e:
             msg = (_("Artifact %s could not be deleted "
                      "because it is in use: %s") % (id, e.msg))  # noqa
             raise webob.exc.HTTPConflict(explanation=msg)
@@ -340,7 +340,7 @@ class ArtifactsController(object):
             raise webob.exc.HTTPBadRequest(
                 explanation=exc_message)
 
-        except glance_store.StoreAddDisabled:
+        except subject_store.StoreAddDisabled:
             msg = _("Error in store configuration. Adding artifacts to store "
                     "is disabled.")
             LOG.exception(msg)
@@ -348,8 +348,8 @@ class ArtifactsController(object):
             raise webob.exc.HTTPGone(explanation=msg, request=req,
                                      content_type='text/plain')
 
-        except (glance_store.Duplicate,
-                exception.InvalidImageStatusTransition) as e:
+        except (subject_store.Duplicate,
+                exception.InvalidSubjectStatusTransition) as e:
             LOG.exception(encodeutils.exception_to_unicode(e))
             raise webob.exc.HTTPConflict(explanation=e.msg, request=req)
 
@@ -362,7 +362,7 @@ class ArtifactsController(object):
         except exception.NotFound as e:
             raise webob.exc.HTTPNotFound(explanation=e.msg)
 
-        except glance_store.StorageFull as e:
+        except subject_store.StorageFull as e:
             msg = _("Artifact storage media "
                     "is full: %s") % encodeutils.exception_to_unicode(e)
             LOG.error(msg)
@@ -378,7 +378,7 @@ class ArtifactsController(object):
             raise webob.exc.HTTPRequestEntityTooLarge(explanation=msg,
                                                       request=req)
 
-        except exception.ImageSizeLimitExceeded as e:
+        except exception.SubjectSizeLimitExceeded as e:
             msg = _("The incoming artifact blob is "
                     "too large: %s") % encodeutils.exception_to_unicode(e)
             LOG.error(msg)
@@ -386,7 +386,7 @@ class ArtifactsController(object):
             raise webob.exc.HTTPRequestEntityTooLarge(explanation=msg,
                                                       request=req)
 
-        except glance_store.StorageWriteDenied as e:
+        except subject_store.StorageWriteDenied as e:
             msg = _("Insufficient permissions on artifact "
                     "storage media: %s") % encodeutils.exception_to_unicode(e)
             LOG.error(msg)
@@ -436,7 +436,7 @@ class ArtifactsController(object):
                 raise webob.exc.HTTPBadRequest(explanation=message)
         except exception.Forbidden as e:
             raise webob.exc.HTTPForbidden(explanation=e.msg)
-        except (glance_store.NotFound, exception.NotFound) as e:
+        except (subject_store.NotFound, exception.NotFound) as e:
             raise webob.exc.HTTPNotFound(explanation=e.msg)
         except exception.Invalid as e:
             raise webob.exc.HTTPBadRequest(explanation=e.msg)
@@ -914,7 +914,7 @@ class ResponseSerializer(wsgi.JSONResponseSerializer):
 
 
 def create_resource():
-    """Images resource factory method"""
+    """Subjects resource factory method"""
     plugins = loader.ArtifactsPluginLoader('subject.artifacts.types')
     deserializer = RequestDeserializer(plugins=plugins)
     serializer = ResponseSerializer()

@@ -34,10 +34,10 @@ TENANT3 = str(uuid.uuid4())
 TENANT4 = str(uuid.uuid4())
 
 
-class TestImages(functional.FunctionalTest):
+class TestSubjects(functional.FunctionalTest):
 
     def setUp(self):
-        super(TestImages, self).setUp()
+        super(TestSubjects, self).setUp()
         self.cleanup()
         self.api_server.deployment_flavor = 'noauth'
         self.api_server.data_api = 'subject.db.sqlalchemy.api'
@@ -53,7 +53,7 @@ class TestImages(functional.FunctionalTest):
             if pid:
                 os.kill(pid, signal.SIGKILL)
 
-        super(TestImages, self).tearDown()
+        super(TestSubjects, self).tearDown()
 
     def _url(self, path):
         return 'http://127.0.0.1:%d%s' % (self.api_port, path)
@@ -2899,18 +2899,18 @@ class TestImages(functional.FunctionalTest):
         self.assertEqual(400, response.status_code, response.text)
 
 
-class TestImagesWithRegistry(TestImages):
+class TestSubjectsWithRegistry(TestSubjects):
     def setUp(self):
-        super(TestImagesWithRegistry, self).setUp()
+        super(TestSubjectsWithRegistry, self).setUp()
         self.api_server.data_api = (
             'subject.tests.functional.v1.registry_data_api')
         self.registry_server.deployment_flavor = 'trusted-auth'
 
 
-class TestImageDirectURLVisibility(functional.FunctionalTest):
+class TestSubjectDirectURLVisibility(functional.FunctionalTest):
 
     def setUp(self):
-        super(TestImageDirectURLVisibility, self).setUp()
+        super(TestSubjectDirectURLVisibility, self).setUp()
         self.cleanup()
         self.api_server.deployment_flavor = 'noauth'
 
@@ -3108,18 +3108,18 @@ class TestImageDirectURLVisibility(functional.FunctionalTest):
         self.stop_servers()
 
 
-class TestImageDirectURLVisibilityWithRegistry(TestImageDirectURLVisibility):
+class TestSubjectDirectURLVisibilityWithRegistry(TestSubjectDirectURLVisibility):
     def setUp(self):
-        super(TestImageDirectURLVisibilityWithRegistry, self).setUp()
+        super(TestSubjectDirectURLVisibilityWithRegistry, self).setUp()
         self.api_server.data_api = (
             'subject.tests.functional.v1.registry_data_api')
         self.registry_server.deployment_flavor = 'trusted-auth'
 
 
-class TestImageLocationSelectionStrategy(functional.FunctionalTest):
+class TestSubjectLocationSelectionStrategy(functional.FunctionalTest):
 
     def setUp(self):
-        super(TestImageLocationSelectionStrategy, self).setUp()
+        super(TestSubjectLocationSelectionStrategy, self).setUp()
         self.cleanup()
         self.api_server.deployment_flavor = 'noauth'
         for i in range(3):
@@ -3134,7 +3134,7 @@ class TestImageLocationSelectionStrategy(functional.FunctionalTest):
             if pid:
                 os.kill(pid, signal.SIGKILL)
 
-        super(TestImageLocationSelectionStrategy, self).tearDown()
+        super(TestSubjectLocationSelectionStrategy, self).tearDown()
 
     def _url(self, path):
         return 'http://127.0.0.1:%d%s' % (self.api_port, path)
@@ -3210,19 +3210,19 @@ class TestImageLocationSelectionStrategy(functional.FunctionalTest):
         self.stop_servers()
 
 
-class TestImageLocationSelectionStrategyWithRegistry(
-        TestImageLocationSelectionStrategy):
+class TestSubjectLocationSelectionStrategyWithRegistry(
+        TestSubjectLocationSelectionStrategy):
     def setUp(self):
-        super(TestImageLocationSelectionStrategyWithRegistry, self).setUp()
+        super(TestSubjectLocationSelectionStrategyWithRegistry, self).setUp()
         self.api_server.data_api = (
             'subject.tests.functional.v1.registry_data_api')
         self.registry_server.deployment_flavor = 'trusted-auth'
 
 
-class TestImageMembers(functional.FunctionalTest):
+class TestSubjectMembers(functional.FunctionalTest):
 
     def setUp(self):
-        super(TestImageMembers, self).setUp()
+        super(TestSubjectMembers, self).setUp()
         self.cleanup()
         self.api_server.deployment_flavor = 'fakeauth'
         self.registry_server.deployment_flavor = 'fakeauth'
@@ -3527,9 +3527,9 @@ class TestImageMembers(functional.FunctionalTest):
         self.stop_servers()
 
 
-class TestImageMembersWithRegistry(TestImageMembers):
+class TestSubjectMembersWithRegistry(TestSubjectMembers):
     def setUp(self):
-        super(TestImageMembersWithRegistry, self).setUp()
+        super(TestSubjectMembersWithRegistry, self).setUp()
         self.api_server.data_api = (
             'subject.tests.functional.v1.registry_data_api')
         self.registry_server.deployment_flavor = 'trusted-auth'

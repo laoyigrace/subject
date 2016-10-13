@@ -88,19 +88,19 @@ msgstr "Arquivo %s carregado no banco de dados."
 
 #, python-format
 msgid "Subject %(id)s not found"
-msgstr "Imagem %(id)s não localizada"
+msgstr "Subjectm %(id)s não localizada"
 
 #, python-format
 msgid "Subject %s is deactivated"
-msgstr "Imagem %s está desativada"
+msgstr "Subjectm %s está desativada"
 
 #, python-format
 msgid "Subject %s is reactivated"
-msgstr "Imagem %s está reativada."
+msgstr "Subjectm %s está reativada."
 
 #, python-format
 msgid "Subject %s metadata has changed"
-msgstr "Metadados da Imagem %s mudaram"
+msgstr "Metadados da Subjectm %s mudaram"
 
 #, python-format
 msgid "Subject cache loaded driver '%s'."
@@ -208,7 +208,7 @@ msgstr "Armazenadas em cache com êxito todas as %d subjectns"
 
 #, python-format
 msgid "Successfully created subject %(id)s"
-msgstr "Imagem criada com êxito %(id)s"
+msgstr "Subjectm criada com êxito %(id)s"
 
 #, python-format
 msgid "Successfully deleted a membership from subject %(id)s"
@@ -216,7 +216,7 @@ msgstr "Excluída com êxito uma associação da subjectm %(id)s"
 
 #, python-format
 msgid "Successfully deleted subject %(id)s"
-msgstr "Imagem excluída com êxito %(id)s"
+msgstr "Subjectm excluída com êxito %(id)s"
 
 #, python-format
 msgid "Successfully updated a membership for subject %(id)s"

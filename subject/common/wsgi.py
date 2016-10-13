@@ -33,7 +33,7 @@ from eventlet.green import socket
 from eventlet.green import ssl
 import eventlet.greenio
 import eventlet.wsgi
-import glance_store
+import subject_store
 from oslo_concurrency import processutils
 from oslo_config import cfg
 from oslo_log import log as logging
@@ -431,11 +431,11 @@ def set_eventlet_hub():
                 reason=msg)
 
 
-def initialize_glance_store():
+def initialize_subject_store():
     """Initialize subject store."""
-    glance_store.register_opts(CONF)
-    glance_store.create_stores(CONF)
-    glance_store.verify_default_store()
+    subject_store.register_opts(CONF)
+    subject_store.create_stores(CONF)
+    subject_store.verify_default_store()
 
 
 def get_asynchronous_eventlet_pool(size=1000):
@@ -459,19 +459,19 @@ def get_asynchronous_eventlet_pool(size=1000):
 class Server(object):
     """Server class to manage multiple WSGI sockets and applications.
 
-    This class requires initialize_glance_store set to True if
+    This class requires initialize_subject_store set to True if
     subject store needs to be initialized.
     """
-    def __init__(self, threads=1000, initialize_glance_store=False):
+    def __init__(self, threads=1000, initialize_subject_store=False):
         os.umask(0o27)  # ensure files are created with the correct privileges
         self._logger = logging.getLogger("eventlet.wsgi.server")
         self.threads = threads
         self.children = set()
         self.stale_children = set()
         self.running = True
-        # NOTE(abhishek): Allows us to only re-initialize glance_store when
+        # NOTE(abhishek): Allows us to only re-initialize subject_store when
         # the API's configuration reloads.
-        self.initialize_glance_store = initialize_glance_store
+        self.initialize_subject_store = initialize_subject_store
         self.pgid = os.getpid()
         try:
             # NOTE(flaper87): Make sure this process
@@ -587,8 +587,8 @@ class Server(object):
         eventlet.wsgi.MAX_HEADER_LINE = CONF.max_header_line
         self.client_socket_timeout = CONF.client_socket_timeout or None
         self.configure_socket(old_conf, has_changed)
-        if self.initialize_glance_store:
-            initialize_glance_store()
+        if self.initialize_subject_store:
+            initialize_subject_store()
 
     def reload(self):
         """

@@ -106,7 +106,7 @@ def get_ordered_locations(locations, uri_key='url', **kwargs):
                 continue
             # NOTE(dharinic): The following conversion of ``filesystem`` and
             # ``vmware_datastore`` to ``file`` and ``vmware`` respectively
-            # are to make store names consistent in Glance and glance_store
+            # are to make store names consistent in Glance and subject_store
             # and also be backward compatible.
             # Reference: Bug 1615852
             if preferred_store == 'filesystem':

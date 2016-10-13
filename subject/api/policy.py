@@ -106,7 +106,7 @@ class SubjectRepoProxy(subject.domain.proxy.Repo):
             self.policy.enforce(self.context, 'get_subject', {})
             raise
         else:
-            self.policy.enforce(self.context, 'get_subject', ImageTarget(subject))
+            self.policy.enforce(self.context, 'get_subject', SubjectTarget(subject))
         return subject
 
     def list(self, *args, **kwargs):
@@ -126,7 +126,7 @@ class SubjectProxy(subject.domain.proxy.Subject):
 
     def __init__(self, subject, context, policy):
         self.subject = subject
-        self.target = ImageTarget(subject)
+        self.target = SubjectTarget(subject)
         self.context = context
         self.policy = policy
         super(SubjectProxy, self).__init__(subject)
@@ -143,12 +143,12 @@ class SubjectProxy(subject.domain.proxy.Subject):
 
     @property
     def locations(self):
-        return ImageLocationsProxy(self.subject.locations,
+        return SubjectLocationsProxy(self.subject.locations,
                                    self.context, self.policy)
 
     @locations.setter
     def locations(self, value):
-        if not isinstance(value, (list, ImageLocationsProxy)):
+        if not isinstance(value, (list, SubjectLocationsProxy)):
             raise exception.Invalid(_('Invalid locations: %s') % value)
         self.policy.enforce(self.context, 'set_subject_location', self.target)
         new_locations = list(value)
@@ -164,14 +164,14 @@ class SubjectProxy(subject.domain.proxy.Subject):
 
     def deactivate(self):
         LOG.debug('Attempting deactivate')
-        target = ImageTarget(self.subject)
+        target = SubjectTarget(self.subject)
         self.policy.enforce(self.context, 'deactivate', target=target)
         LOG.debug('Deactivate allowed, continue')
         self.subject.deactivate()
 
     def reactivate(self):
         LOG.debug('Attempting reactivate')
-        target = ImageTarget(self.subject)
+        target = SubjectTarget(self.subject)
         self.policy.enforce(self.context, 'reactivate', target=target)
         LOG.debug('Reactivate allowed, continue')
         self.subject.reactivate()
@@ -185,10 +185,10 @@ class SubjectProxy(subject.domain.proxy.Subject):
         return self.subject.set_data(*args, **kwargs)
 
 
-class ImageMemberProxy(subject.domain.proxy.ImageMember):
+class SubjectMemberProxy(subject.domain.proxy.SubjectMember):
 
     def __init__(self, subject_member, context, policy):
-        super(ImageMemberProxy, self).__init__(subject_member)
+        super(SubjectMemberProxy, self).__init__(subject_member)
         self.subject_member = subject_member
         self.context = context
         self.policy = policy
@@ -211,21 +211,21 @@ class SubjectFactoryProxy(subject.domain.proxy.SubjectFactory):
         return super(SubjectFactoryProxy, self).new_subject(**kwargs)
 
 
-class ImageMemberFactoryProxy(subject.domain.proxy.ImageMembershipFactory):
+class SubjectMemberFactoryProxy(subject.domain.proxy.SubjectMembershipFactory):
 
     def __init__(self, member_factory, context, policy):
-        super(ImageMemberFactoryProxy, self).__init__(
+        super(SubjectMemberFactoryProxy, self).__init__(
             member_factory,
-            proxy_class=ImageMemberProxy,
+            proxy_class=SubjectMemberProxy,
             proxy_kwargs={'context': context, 'policy': policy})
 
 
-class ImageMemberRepoProxy(subject.domain.proxy.Repo):
+class SubjectMemberRepoProxy(subject.domain.proxy.Repo):
 
     def __init__(self, member_repo, subject, context, policy):
         self.member_repo = member_repo
         self.subject = subject
-        self.target = ImageTarget(subject)
+        self.target = SubjectTarget(subject)
         self.context = context
         self.policy = policy
 
@@ -250,7 +250,7 @@ class ImageMemberRepoProxy(subject.domain.proxy.Repo):
         self.member_repo.remove(member)
 
 
-class ImageLocationsProxy(object):
+class SubjectLocationsProxy(object):
 
     __hash__ = None
 
@@ -371,7 +371,7 @@ class TaskFactoryProxy(subject.domain.proxy.TaskFactory):
             task_proxy_kwargs=proxy_kwargs)
 
 
-class ImageTarget(object):
+class SubjectTarget(object):
     SENTINEL = object()
 
     def __init__(self, target):

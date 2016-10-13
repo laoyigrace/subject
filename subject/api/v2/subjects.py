@@ -15,7 +15,7 @@
 
 import re
 
-import glance_store
+import subject_store
 from oslo_config import cfg
 from oslo_log import log as logging
 from oslo_serialization import jsonutils as json
@@ -51,7 +51,7 @@ class SubjectsController(object):
         self.db_api = db_api or subject.db.get_api()
         self.policy = policy_enforcer or policy.Enforcer()
         self.notifier = notifier or subject.notifier.Notifier()
-        self.store_api = store_api or glance_store
+        self.store_api = store_api or subject_store
         self.gateway = subject.gateway.Gateway(self.db_api, self.store_api,
                                                self.notifier, self.policy)
 
@@ -234,24 +234,24 @@ class SubjectsController(object):
             subject = subject_repo.get(subject_id)
             subject.delete()
             subject_repo.remove(subject)
-        except (glance_store.Forbidden, exception.Forbidden) as e:
+        except (subject_store.Forbidden, exception.Forbidden) as e:
             LOG.debug("User not permitted to delete subject '%s'", subject_id)
             raise webob.exc.HTTPForbidden(explanation=e.msg)
-        except (glance_store.NotFound, exception.NotFound) as e:
+        except (subject_store.NotFound, exception.NotFound) as e:
             msg = (_("Failed to find subject %(subject_id)s to delete") %
                    {'subject_id': subject_id})
             LOG.warn(msg)
             raise webob.exc.HTTPNotFound(explanation=msg)
-        except glance_store.exceptions.InUseByStore as e:
+        except subject_store.exceptions.InUseByStore as e:
             msg = (_("Subject %(id)s could not be deleted "
                      "because it is in use: %(exc)s") %
                    {"id": subject_id,
                     "exc": e.msg})
             LOG.warn(msg)
             raise webob.exc.HTTPConflict(explanation=msg)
-        except glance_store.exceptions.HasSnapshot as e:
+        except subject_store.exceptions.HasSnapshot as e:
             raise webob.exc.HTTPConflict(explanation=e.msg)
-        except exception.InvalidImageStatusTransition as e:
+        except exception.InvalidSubjectStatusTransition as e:
             raise webob.exc.HTTPBadRequest(explanation=e.msg)
         except exception.NotAuthenticated as e:
             raise webob.exc.HTTPUnauthorized(explanation=e.msg)
@@ -1013,9 +1013,9 @@ def load_custom_properties():
 
 
 def create_resource(custom_properties=None):
-    """Images resource factory method"""
+    """Subjects resource factory method"""
     schema = get_schema(custom_properties)
     deserializer = RequestDeserializer(schema)
     serializer = ResponseSerializer(schema)
-    controller = ImagesController()
+    controller = SubjectsController()
     return wsgi.Resource(controller, deserializer, serializer)

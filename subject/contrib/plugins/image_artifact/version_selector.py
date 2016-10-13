@@ -16,4 +16,4 @@ from subject.contrib.plugins.subject_artifact.v1 import subject as v1
 from subject.contrib.plugins.subject_artifact.v1_1 import subject as v1_1
 from subject.contrib.plugins.subject_artifact.v2 import subject as v2
 
-versions = [v1.ImageAsAnArtifact, v1_1.ImageAsAnArtifact, v2.ImageAsAnArtifact]
+versions = [v1.SubjectAsAnArtifact, v1_1.SubjectAsAnArtifact, v2.SubjectAsAnArtifact]

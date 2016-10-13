@@ -26,7 +26,7 @@ class ProtectedSubjectFactoryProxy(subject.domain.proxy.SubjectFactory):
                   'property_rules': self.property_rules}
         super(ProtectedSubjectFactoryProxy, self).__init__(
             subject_factory,
-            proxy_class=ProtectedImageProxy,
+            proxy_class=ProtectedSubjectProxy,
             proxy_kwargs=kwargs)
 
     def new_subject(self, **kwargs):
@@ -51,20 +51,20 @@ class ProtectedSubjectRepoProxy(subject.domain.proxy.Repo):
         self.property_rules = property_rules
         proxy_kwargs = {'context': self.context}
         super(ProtectedSubjectRepoProxy, self).__init__(
-            subject_repo, item_proxy_class=ProtectedImageProxy,
+            subject_repo, item_proxy_class=ProtectedSubjectProxy,
             item_proxy_kwargs=proxy_kwargs)
 
     def get(self, subject_id):
-        return ProtectedImageProxy(self.subject_repo.get(subject_id),
+        return ProtectedSubjectProxy(self.subject_repo.get(subject_id),
                                    self.context, self.property_rules)
 
     def list(self, *args, **kwargs):
         subjects = self.subject_repo.list(*args, **kwargs)
-        return [ProtectedImageProxy(subject, self.context, self.property_rules)
+        return [ProtectedSubjectProxy(subject, self.context, self.property_rules)
                 for subject in subjects]
 
 
-class ProtectedImageProxy(subject.domain.proxy.Subject):
+class ProtectedSubjectProxy(subject.domain.proxy.Subject):
 
     def __init__(self, subject, context, property_rules):
         self.subject = subject
@@ -75,7 +75,7 @@ class ProtectedImageProxy(subject.domain.proxy.Subject):
             self.context,
             self.subject.extra_properties,
             self.property_rules)
-        super(ProtectedImageProxy, self).__init__(self.subject)
+        super(ProtectedSubjectProxy, self).__init__(self.subject)
 
 
 class ExtraPropertiesProxy(subject.domain.ExtraProperties):

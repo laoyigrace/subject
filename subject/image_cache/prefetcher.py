@@ -18,7 +18,7 @@ Prefetches subjects into the Subject Cache
 """
 
 import eventlet
-import glance_store
+import subject_store
 from oslo_log import log as logging
 
 from subject.common import exception
@@ -52,7 +52,7 @@ class Prefetcher(base.CacheApp):
             return False
 
         location = subject_meta['location']
-        subject_data, subject_size = glance_store.get_from_backend(location,
+        subject_data, subject_size = subject_store.get_from_backend(location,
                                                                context=ctx)
         LOG.debug("Caching subject '%s'", subject_id)
         cache_tee_iter = self.cache.cache_tee_iter(subject_id, subject_data,

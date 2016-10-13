@@ -37,7 +37,7 @@ class Raise(object):
         raise self.exc
 
 
-class FakeImage(object):
+class FakeSubject(object):
     def __init__(self, subject_id=None, data=None, checksum=None, size=0,
                  virtual_size=0, locations=None, container_format='bear',
                  disk_format='rawr', status=None):
@@ -71,7 +71,7 @@ class FakeImage(object):
         self.status = 'modified-by-fake'
 
 
-class FakeImageRepo(object):
+class FakeSubjectRepo(object):
     def __init__(self, result=None):
         self.result = result
 
@@ -93,19 +93,19 @@ class FakeGateway(object):
         return self.repo
 
 
-class TestImagesController(base.StoreClearingUnitTest):
+class TestSubjectsController(base.StoreClearingUnitTest):
     def setUp(self):
-        super(TestImagesController, self).setUp()
+        super(TestSubjectsController, self).setUp()
 
         self.config(debug=True)
-        self.subject_repo = FakeImageRepo()
+        self.subject_repo = FakeSubjectRepo()
         self.gateway = FakeGateway(self.subject_repo)
-        self.controller = subject.api.v2.subject_data.ImageDataController(
+        self.controller = subject.api.v2.subject_data.SubjectDataController(
             gateway=self.gateway)
 
     def test_download(self):
         request = unit_test_utils.get_fake_request()
-        subject = FakeImage('abcd',
+        subject = FakeSubject('abcd',
                           locations=[{'url': 'http://example.com/subject',
                                       'metadata': {}, 'status': 'active'}])
         self.subject_repo.result = subject
@@ -114,7 +114,7 @@ class TestImagesController(base.StoreClearingUnitTest):
 
     def test_download_deactivated(self):
         request = unit_test_utils.get_fake_request()
-        subject = FakeImage('abcd',
+        subject = FakeSubject('abcd',
                           status='deactivated',
                           locations=[{'url': 'http://example.com/subject',
                                       'metadata': {}, 'status': 'active'}])
@@ -126,7 +126,7 @@ class TestImagesController(base.StoreClearingUnitTest):
         # NOTE(mclaren): NoContent will be raised by the ResponseSerializer
         # That's tested below.
         request = unit_test_utils.get_fake_request()
-        self.subject_repo.result = FakeImage('abcd')
+        self.subject_repo.result = FakeSubject('abcd')
         subject = self.controller.download(request, unit_test_utils.UUID2)
         self.assertEqual('abcd', subject.subject_id)
 
@@ -143,20 +143,20 @@ class TestImagesController(base.StoreClearingUnitTest):
                           request, str(uuid.uuid4()))
 
     def test_download_ok_when_get_subject_location_forbidden(self):
-        class ImageLocations(object):
+        class SubjectLocations(object):
             def __len__(self):
                 raise exception.Forbidden()
 
         request = unit_test_utils.get_fake_request()
-        subject = FakeImage('abcd')
+        subject = FakeSubject('abcd')
         self.subject_repo.result = subject
-        subject.locations = ImageLocations()
+        subject.locations = SubjectLocations()
         subject = self.controller.download(request, unit_test_utils.UUID1)
         self.assertEqual('abcd', subject.subject_id)
 
     def test_upload(self):
         request = unit_test_utils.get_fake_request()
-        subject = FakeImage('abcd')
+        subject = FakeSubject('abcd')
         self.subject_repo.result = subject
         self.controller.upload(request, unit_test_utils.UUID2, 'YYYY', 4)
         self.assertEqual('YYYY', subject.data)
@@ -164,7 +164,7 @@ class TestImagesController(base.StoreClearingUnitTest):
 
     def test_upload_status(self):
         request = unit_test_utils.get_fake_request()
-        subject = FakeImage('abcd')
+        subject = FakeSubject('abcd')
         self.subject_repo.result = subject
         insurance = {'called': False}
 
@@ -181,7 +181,7 @@ class TestImagesController(base.StoreClearingUnitTest):
 
     def test_upload_no_size(self):
         request = unit_test_utils.get_fake_request()
-        subject = FakeImage('abcd')
+        subject = FakeSubject('abcd')
         self.subject_repo.result = subject
         self.controller.upload(request, unit_test_utils.UUID2, 'YYYY', None)
         self.assertEqual('YYYY', subject.data)
@@ -189,7 +189,7 @@ class TestImagesController(base.StoreClearingUnitTest):
 
     def test_upload_invalid(self):
         request = unit_test_utils.get_fake_request()
-        subject = FakeImage('abcd')
+        subject = FakeSubject('abcd')
         subject.status = ValueError()
         self.subject_repo.result = subject
         self.assertRaises(webob.exc.HTTPBadRequest, self.controller.upload,
@@ -203,7 +203,7 @@ class TestImagesController(base.StoreClearingUnitTest):
         mocked_save = mock.Mock(side_effect=side_effect)
         mocked_delete = mock.Mock()
         request = unit_test_utils.get_fake_request()
-        subject = FakeImage('abcd')
+        subject = FakeSubject('abcd')
         subject.delete = mocked_delete
         self.subject_repo.result = subject
         self.subject_repo.save = mocked_save
@@ -214,14 +214,14 @@ class TestImagesController(base.StoreClearingUnitTest):
 
     def test_upload_non_existent_subject_during_save_initiates_deletion(self):
         def fake_save_not_found(self, from_state=None):
-            raise exception.ImageNotFound()
+            raise exception.SubjectNotFound()
 
         def fake_save_conflict(self, from_state=None):
             raise exception.Conflict()
 
         for fun in [fake_save_not_found, fake_save_conflict]:
             request = unit_test_utils.get_fake_request()
-            subject = FakeImage('abcd', locations=['http://example.com/subject'])
+            subject = FakeSubject('abcd', locations=['http://example.com/subject'])
             self.subject_repo.result = subject
             self.subject_repo.save = fun
             subject.delete = mock.Mock()
@@ -231,13 +231,13 @@ class TestImagesController(base.StoreClearingUnitTest):
 
     def test_upload_non_existent_subject_raises_subject_not_found_exception(self):
         def fake_save(self, from_state=None):
-            raise exception.ImageNotFound()
+            raise exception.SubjectNotFound()
 
         def fake_delete():
-            raise exception.ImageNotFound()
+            raise exception.SubjectNotFound()
 
         request = unit_test_utils.get_fake_request()
-        subject = FakeImage('abcd', locations=['http://example.com/subject'])
+        subject = FakeSubject('abcd', locations=['http://example.com/subject'])
         self.subject_repo.result = subject
         self.subject_repo.save = fake_save
         subject.delete = fake_delete
@@ -249,10 +249,10 @@ class TestImagesController(base.StoreClearingUnitTest):
             raise glance_store.NotFound()
 
         def fake_delete():
-            raise exception.ImageNotFound()
+            raise exception.SubjectNotFound()
 
         request = unit_test_utils.get_fake_request()
-        subject = FakeImage('abcd', locations=['http://example.com/subject'])
+        subject = FakeSubject('abcd', locations=['http://example.com/subject'])
         self.subject_repo.result = subject
         self.subject_repo.save = fake_save
         subject.delete = fake_delete
@@ -267,8 +267,8 @@ class TestImagesController(base.StoreClearingUnitTest):
 
     def test_upload_data_exists(self):
         request = unit_test_utils.get_fake_request()
-        subject = FakeImage()
-        exc = exception.InvalidImageStatusTransition(cur_status='active',
+        subject = FakeSubject()
+        exc = exception.InvalidSubjectStatusTransition(cur_status='active',
                                                      new_status='queued')
         subject.set_data = Raise(exc)
         self.subject_repo.result = subject
@@ -277,7 +277,7 @@ class TestImagesController(base.StoreClearingUnitTest):
 
     def test_upload_storage_full(self):
         request = unit_test_utils.get_fake_request()
-        subject = FakeImage()
+        subject = FakeSubject()
         subject.set_data = Raise(glance_store.StorageFull)
         self.subject_repo.result = subject
         self.assertRaises(webob.exc.HTTPRequestEntityTooLarge,
@@ -286,7 +286,7 @@ class TestImagesController(base.StoreClearingUnitTest):
 
     def test_upload_signature_verification_fails(self):
         request = unit_test_utils.get_fake_request()
-        subject = FakeImage()
+        subject = FakeSubject()
         subject.set_data = Raise(cursive_exception.SignatureVerificationError)
         self.subject_repo.result = subject
         self.assertRaises(webob.exc.HTTPBadRequest, self.controller.upload,
@@ -295,8 +295,8 @@ class TestImagesController(base.StoreClearingUnitTest):
 
     def test_subject_size_limit_exceeded(self):
         request = unit_test_utils.get_fake_request()
-        subject = FakeImage()
-        subject.set_data = Raise(exception.ImageSizeLimitExceeded)
+        subject = FakeSubject()
+        subject.set_data = Raise(exception.SubjectSizeLimitExceeded)
         self.subject_repo.result = subject
         self.assertRaises(webob.exc.HTTPRequestEntityTooLarge,
                           self.controller.upload,
@@ -311,7 +311,7 @@ class TestImagesController(base.StoreClearingUnitTest):
 
     def test_upload_storage_forbidden(self):
         request = unit_test_utils.get_fake_request(user=unit_test_utils.USER2)
-        subject = FakeImage()
+        subject = FakeSubject()
         subject.set_data = Raise(exception.Forbidden)
         self.subject_repo.result = subject
         self.assertRaises(webob.exc.HTTPForbidden, self.controller.upload,
@@ -326,7 +326,7 @@ class TestImagesController(base.StoreClearingUnitTest):
 
     def test_upload_storage_write_denied(self):
         request = unit_test_utils.get_fake_request(user=unit_test_utils.USER3)
-        subject = FakeImage()
+        subject = FakeSubject()
         subject.set_data = Raise(glance_store.StorageWriteDenied)
         self.subject_repo.result = subject
         self.assertRaises(webob.exc.HTTPServiceUnavailable,
@@ -336,7 +336,7 @@ class TestImagesController(base.StoreClearingUnitTest):
     def test_upload_storage_store_disabled(self):
         """Test that uploading an subject file raises StoreDisabled exception"""
         request = unit_test_utils.get_fake_request(user=unit_test_utils.USER3)
-        subject = FakeImage()
+        subject = FakeSubject()
         subject.set_data = Raise(glance_store.StoreAddDisabled)
         self.subject_repo.result = subject
         self.assertRaises(webob.exc.HTTPGone,
@@ -359,18 +359,18 @@ class TestImagesController(base.StoreClearingUnitTest):
                 'roles': [{'name': 'FakeRole', 'id': 'FakeID'}]
             }
         }
-        subject = FakeImage('abcd')
+        subject = FakeSubject('abcd')
         self.subject_repo.result = subject
         mock_fake_save = mock.Mock()
         mock_fake_save.side_effect = [None, exception.NotAuthenticated, None]
-        temp_save = FakeImageRepo.save
+        temp_save = FakeSubjectRepo.save
         # mocking save to raise NotAuthenticated on the second call
-        FakeImageRepo.save = mock_fake_save
+        FakeSubjectRepo.save = mock_fake_save
         self.controller.upload(request, unit_test_utils.UUID2, 'YYYY', 4)
         # check subject data
         self.assertEqual('YYYY', subject.data)
         self.assertEqual(4, subject.size)
-        FakeImageRepo.save = temp_save
+        FakeSubjectRepo.save = temp_save
         # check that token has been correctly acquired and deleted
         mock_refresher.assert_called_once_with(
             request.environ['keystone.token_auth'],
@@ -387,7 +387,7 @@ class TestImagesController(base.StoreClearingUnitTest):
         mock_refresher().side_effect = Exception()
         # request an subject upload
         request = unit_test_utils.get_fake_request()
-        subject = FakeImage('abcd')
+        subject = FakeSubject('abcd')
         self.subject_repo.result = subject
         self.controller.upload(request, unit_test_utils.UUID2, 'YYYY', 4)
         # check subject data
@@ -449,7 +449,7 @@ class TestImagesController(base.StoreClearingUnitTest):
 
     def test_restore_subject_when_upload_failed(self):
         request = unit_test_utils.get_fake_request()
-        subject = FakeImage('fake')
+        subject = FakeSubject('fake')
         subject.set_data = Raise(glance_store.StorageWriteDenied)
         self.subject_repo.result = subject
         self.assertRaises(webob.exc.HTTPServiceUnavailable,
@@ -458,10 +458,10 @@ class TestImagesController(base.StoreClearingUnitTest):
         self.assertEqual('queued', self.subject_repo.saved_subject.status)
 
 
-class TestImageDataDeserializer(test_utils.BaseTestCase):
+class TestSubjectDataDeserializer(test_utils.BaseTestCase):
 
     def setUp(self):
-        super(TestImageDataDeserializer, self).setUp()
+        super(TestSubjectDataDeserializer, self).setUp()
         self.deserializer = subject.api.v2.subject_data.RequestDeserializer()
 
     def test_upload(self):
@@ -528,10 +528,10 @@ class TestImageDataDeserializer(test_utils.BaseTestCase):
                           self.deserializer.upload, request)
 
 
-class TestImageDataSerializer(test_utils.BaseTestCase):
+class TestSubjectDataSerializer(test_utils.BaseTestCase):
 
     def setUp(self):
-        super(TestImageDataSerializer, self).setUp()
+        super(TestSubjectDataSerializer, self).setUp()
         self.serializer = subject.api.v2.subject_data.ResponseSerializer()
 
     def test_download(self):
@@ -539,7 +539,7 @@ class TestImageDataSerializer(test_utils.BaseTestCase):
         request.environ = {}
         response = webob.Response()
         response.request = request
-        subject = FakeImage(size=3, data=[b'Z', b'Z', b'Z'])
+        subject = FakeSubject(size=3, data=[b'Z', b'Z', b'Z'])
         self.serializer.download(response, subject)
         self.assertEqual(b'ZZZ', response.body)
         self.assertEqual('3', response.headers['Content-Length'])
@@ -553,7 +553,7 @@ class TestImageDataSerializer(test_utils.BaseTestCase):
         response = webob.Response()
         response.request = request
         checksum = '0745064918b49693cca64d6b6a13d28a'
-        subject = FakeImage(size=3, checksum=checksum, data=[b'Z', b'Z', b'Z'])
+        subject = FakeSubject(size=3, checksum=checksum, data=[b'Z', b'Z', b'Z'])
         self.serializer.download(response, subject)
         self.assertEqual(b'ZZZ', response.body)
         self.assertEqual('3', response.headers['Content-Length'])
@@ -575,7 +575,7 @@ class TestImageDataSerializer(test_utils.BaseTestCase):
         request.environ = {}
         response = webob.Response()
         response.request = request
-        subject = FakeImage(size=3, data=iter('ZZZ'))
+        subject = FakeSubject(size=3, data=iter('ZZZ'))
         subject.get_data = get_data
         self.assertRaises(webob.exc.HTTPForbidden,
                           self.serializer.download,
@@ -594,7 +594,7 @@ class TestImageDataSerializer(test_utils.BaseTestCase):
             request = wsgi.Request.blank('/')
             response = webob.Response()
             response.request = request
-            subject = FakeImage(size=3, data=iter('ZZZ'))
+            subject = FakeSubject(size=3, data=iter('ZZZ'))
             subject.get_data = mock_get_data
             self.assertRaises(webob.exc.HTTPNoContent,
                               self.serializer.download,
@@ -609,7 +609,7 @@ class TestImageDataSerializer(test_utils.BaseTestCase):
             request = wsgi.Request.blank('/')
             response = webob.Response()
             response.request = request
-            subject = FakeImage(size=3, data=iter('ZZZ'))
+            subject = FakeSubject(size=3, data=iter('ZZZ'))
             subject.get_data = mock_get_data
             self.assertRaises(webob.exc.HTTPServiceUnavailable,
                               self.serializer.download,
@@ -628,7 +628,7 @@ class TestImageDataSerializer(test_utils.BaseTestCase):
             request = wsgi.Request.blank('/')
             response = webob.Response()
             response.request = request
-            subject = FakeImage(size=3, data=iter('ZZZ'))
+            subject = FakeSubject(size=3, data=iter('ZZZ'))
             subject.get_data = mock_get_data
             self.assertRaises(webob.exc.HTTPBadRequest,
                               self.serializer.download,
@@ -650,7 +650,7 @@ class TestImageDataSerializer(test_utils.BaseTestCase):
             request = wsgi.Request.blank('/')
             response = webob.Response()
             response.request = request
-            subject = FakeImage(size=3, data=iter('ZZZ'))
+            subject = FakeSubject(size=3, data=iter('ZZZ'))
             subject.get_data = m_get_data
             self.assertRaises(webob.exc.HTTPBadRequest,
                               self.serializer.download,

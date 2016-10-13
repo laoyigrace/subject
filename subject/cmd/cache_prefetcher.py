@@ -33,7 +33,7 @@ possible_topdir = os.path.normpath(os.path.join(os.path.abspath(sys.argv[0]),
 if os.path.exists(os.path.join(possible_topdir, 'subject', '__init__.py')):
     sys.path.insert(0, possible_topdir)
 
-import glance_store
+import subject_store
 from oslo_log import log as logging
 
 from subject.common import config
@@ -48,9 +48,9 @@ def main():
         config.parse_cache_args()
         logging.setup(CONF, 'subject')
 
-        glance_store.register_opts(config.CONF)
-        glance_store.create_stores(config.CONF)
-        glance_store.verify_default_store()
+        subject_store.register_opts(config.CONF)
+        subject_store.create_stores(config.CONF)
+        subject_store.verify_default_store()
 
         app = prefetcher.Prefetcher()
         app.run()

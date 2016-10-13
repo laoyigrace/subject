@@ -162,13 +162,13 @@ class SubjectRepo(object):
         try:
             db_api_subject = dict(self.db_api.subject_get(self.context, subject_id))
             if db_api_subject['deleted']:
-                raise exception.ImageNotFound()
-        except (exception.ImageNotFound, exception.Forbidden):
+                raise exception.SubjectNotFound()
+        except (exception.SubjectNotFound, exception.Forbidden):
             msg = _("No subject found with ID %s") % subject_id
-            raise exception.ImageNotFound(msg)
+            raise exception.SubjectNotFound(msg)
         tags = self.db_api.subject_tag_get_all(self.context, subject_id)
         subject = self._format_subject_from_db(db_api_subject, tags)
-        return ImageProxy(subject, self.context, self.db_api)
+        return SubjectProxy(subject, self.context, self.db_api)
 
     def list(self, marker=None, limit=None, sort_key=None,
              sort_dir=None, filters=None, member_status='accepted'):
@@ -205,16 +205,21 @@ class SubjectRepo(object):
             created_at=db_subject['created_at'],
             updated_at=db_subject['updated_at'],
             visibility=visibility,
-            min_disk=db_subject['min_disk'],
-            min_ram=db_subject['min_ram'],
+            type=db_subject['type'],
+            subject_format=db_subject['subject_format'],
             protected=db_subject['protected'],
             locations=location_strategy.get_ordered_locations(locations),
             checksum=db_subject['checksum'],
             owner=db_subject['owner'],
-            disk_format=db_subject['disk_format'],
-            container_format=db_subject['container_format'],
+            tar_format=db_subject['tar_format'],
+            contributor=db_subject['contributor'],
             size=db_subject['size'],
-            virtual_size=db_subject['virtual_size'],
+            phase=db_subject['phase'],
+            language=db_subject['language'],
+            score=db_subject['score'],
+            knowledge=db_subject['knowledge'],
+            description=db_subject['description'],
+            subject=db_subject['subject'],
             extra_properties=properties,
             tags=db_tags
         )
@@ -236,16 +241,21 @@ class SubjectRepo(object):
             'name': subject.name,
             'status': subject.status,
             'created_at': subject.created_at,
-            'min_disk': subject.min_disk,
-            'min_ram': subject.min_ram,
+            'type': subject.type,
+            'subject_format': subject.subject_format,
             'protected': subject.protected,
             'locations': locations,
             'checksum': subject.checksum,
             'owner': subject.owner,
-            'disk_format': subject.disk_format,
-            'container_format': subject.container_format,
+            'tar_format': subject.tar_format,
+            'contributor': subject.contributor,
             'size': subject.size,
-            'virtual_size': subject.virtual_size,
+            'phase': subject.phase,
+            'language': subject.language,
+            'score': subject.score,
+            'knowledge': subject.knowledge,
+            'description': subject.description,
+            'subject': subject.subject,
             'is_public': subject.visibility == 'public',
             'properties': dict(subject.extra_properties),
         }
@@ -254,7 +264,7 @@ class SubjectRepo(object):
         subject_values = self._format_subject_to_db(subject)
         if (subject_values['size'] is not None
            and subject_values['size'] > CONF.subject_size_cap):
-            raise exception.ImageSizeLimitExceeded
+            raise exception.SubjectSizeLimitExceeded
         # the updated_at value is not set in the _format_subject_to_db
         # function since it is specific to subject create
         subject_values['updated_at'] = subject.updated_at
@@ -268,16 +278,16 @@ class SubjectRepo(object):
         subject_values = self._format_subject_to_db(subject)
         if (subject_values['size'] is not None
            and subject_values['size'] > CONF.subject_size_cap):
-            raise exception.ImageSizeLimitExceeded
+            raise exception.SubjectSizeLimitExceeded
         try:
             new_values = self.db_api.subject_update(self.context,
                                                   subject.subject_id,
                                                   subject_values,
                                                   purge_props=True,
                                                   from_state=from_state)
-        except (exception.ImageNotFound, exception.Forbidden):
+        except (exception.SubjectNotFound, exception.Forbidden):
             msg = _("No subject found with ID %s") % subject.subject_id
-            raise exception.ImageNotFound(msg)
+            raise exception.SubjectNotFound(msg)
         self.db_api.subject_tag_set_all(self.context, subject.subject_id,
                                       subject.tags)
         subject.updated_at = new_values['updated_at']
@@ -287,24 +297,24 @@ class SubjectRepo(object):
             self.db_api.subject_update(self.context, subject.subject_id,
                                      {'status': subject.status},
                                      purge_props=True)
-        except (exception.ImageNotFound, exception.Forbidden):
+        except (exception.SubjectNotFound, exception.Forbidden):
             msg = _("No subject found with ID %s") % subject.subject_id
-            raise exception.ImageNotFound(msg)
+            raise exception.SubjectNotFound(msg)
         # NOTE(markwash): don't update tags?
         new_values = self.db_api.subject_destroy(self.context, subject.subject_id)
         subject.updated_at = new_values['updated_at']
 
 
-class ImageProxy(subject.domain.proxy.Subject):
+class SubjectProxy(subject.domain.proxy.Subject):
 
     def __init__(self, subject, context, db_api):
         self.context = context
         self.db_api = db_api
         self.subject = subject
-        super(ImageProxy, self).__init__(subject)
+        super(SubjectProxy, self).__init__(subject)
 
 
-class ImageMemberRepo(object):
+class SubjectMemberRepo(object):
 
     def __init__(self, context, db_api, subject):
         self.context = context
@@ -312,7 +322,7 @@ class ImageMemberRepo(object):
         self.subject = subject
 
     def _format_subject_member_from_db(self, db_subject_member):
-        return subject.domain.ImageMembership(
+        return subject.domain.SubjectMembership(
             id=db_subject_member['id'],
             subject_id=db_subject_member['subject_id'],
             member_id=db_subject_member['member'],

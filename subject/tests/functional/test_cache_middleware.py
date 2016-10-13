@@ -56,7 +56,7 @@ class BaseCacheMiddlewareTest(object):
 
         # Add an subject and verify a 200 OK is returned
         subject_data = "*" * FIVE_KB
-        headers = minimal_headers('Image1')
+        headers = minimal_headers('Subject1')
         path = "http://%s:%d/v1/subjects" % ("127.0.0.1", self.api_port)
         http = httplib2.Http()
         response, content = http.request(path, 'POST', headers=headers,
@@ -66,7 +66,7 @@ class BaseCacheMiddlewareTest(object):
         self.assertEqual(hashlib.md5(subject_data).hexdigest(),
                          data['subject']['checksum'])
         self.assertEqual(FIVE_KB, data['subject']['size'])
-        self.assertEqual("Image1", data['subject']['name'])
+        self.assertEqual("Subject1", data['subject']['name'])
         self.assertTrue(data['subject']['is_public'])
 
         subject_id = data['subject']['id']
@@ -128,7 +128,7 @@ class BaseCacheMiddlewareTest(object):
         http = httplib2.Http()
         headers = {'content-type': 'application/json'}
         subject_entity = {
-            'name': 'Image1',
+            'name': 'Subject1',
             'visibility': 'public',
             'container_format': 'bare',
             'disk_format': 'raw',
@@ -187,7 +187,7 @@ class BaseCacheMiddlewareTest(object):
 
         # Add a remote subject and verify a 201 Created is returned
         remote_uri = get_http_uri(self, '2')
-        headers = {'X-Subject-Meta-Name': 'Image2',
+        headers = {'X-Subject-Meta-Name': 'Subject2',
                    'X-Subject-Meta-disk_format': 'raw',
                    'X-Subject-Meta-container_format': 'ovf',
                    'X-Subject-Meta-Is-Public': 'True',
@@ -228,7 +228,7 @@ class BaseCacheMiddlewareTest(object):
 
         # Add an subject and verify a 200 OK is returned
         subject_data = "*" * FIVE_KB
-        headers = minimal_headers('Image1')
+        headers = minimal_headers('Subject1')
         path = "http://%s:%d/v1/subjects" % ("127.0.0.1", self.api_port)
         http = httplib2.Http()
         response, content = http.request(path, 'POST', headers=headers,
@@ -238,7 +238,7 @@ class BaseCacheMiddlewareTest(object):
         self.assertEqual(hashlib.md5(subject_data).hexdigest(),
                          data['subject']['checksum'])
         self.assertEqual(FIVE_KB, data['subject']['size'])
-        self.assertEqual("Image1", data['subject']['name'])
+        self.assertEqual("Subject1", data['subject']['name'])
         self.assertTrue(data['subject']['is_public'])
 
         subject_id = data['subject']['id']
@@ -285,7 +285,7 @@ class BaseCacheMiddlewareTest(object):
         http = httplib2.Http()
         headers = {'content-type': 'application/json'}
         subject_entity = {
-            'name': 'Image1',
+            'name': 'Subject1',
             'visibility': 'public',
             'container_format': 'bare',
             'disk_format': 'raw',
@@ -345,7 +345,7 @@ class BaseCacheMiddlewareTest(object):
 
         # Add an subject and verify a 200 OK is returned
         subject_data = "*" * FIVE_KB
-        headers = minimal_headers('Image1')
+        headers = minimal_headers('Subject1')
         path = "http://%s:%d/v1/subjects" % ("127.0.0.1", self.api_port)
         http = httplib2.Http()
         response, content = http.request(path, 'POST', headers=headers,
@@ -355,7 +355,7 @@ class BaseCacheMiddlewareTest(object):
         self.assertEqual(hashlib.md5(subject_data).hexdigest(),
                          data['subject']['checksum'])
         self.assertEqual(FIVE_KB, data['subject']['size'])
-        self.assertEqual("Image1", data['subject']['name'])
+        self.assertEqual("Subject1", data['subject']['name'])
         self.assertTrue(data['subject']['is_public'])
 
         subject_id = data['subject']['id']
@@ -481,8 +481,8 @@ class BaseCacheManageMiddlewareTest(object):
         self.start_servers(**self.__dict__.copy())
         self.verify_no_subjects()
 
-        subject_id1 = self.add_subject("Image1")
-        subject_id2 = self.add_subject("Image2")
+        subject_id1 = self.add_subject("Subject1")
+        subject_id2 = self.add_subject("Subject2")
 
         # Verify subject does not yet show up in cache (we haven't "hit"
         # it yet using a GET /subjects/1 ...
@@ -550,7 +550,7 @@ class BaseCacheManageMiddlewareTest(object):
 
         self.verify_no_subjects()
 
-        subject_id = self.add_subject("Image1")
+        subject_id = self.add_subject("Subject1")
 
         # Verify subject does not yet show up in cache (we haven't "hit"
         # it yet using a GET /subjects/1 ...
@@ -814,7 +814,7 @@ filesystem_store_datadir=%(filesystem_store_datadir)s
         self.stop_servers()
 
 
-class TestImageCacheXattr(functional.FunctionalTest,
+class TestSubjectCacheXattr(functional.FunctionalTest,
                           BaseCacheMiddlewareTest):
 
     """Functional tests that exercise the subject cache using the xattr driver"""
@@ -841,7 +841,7 @@ class TestImageCacheXattr(functional.FunctionalTest,
         self.disabled = False
         self.subject_cache_driver = "xattr"
 
-        super(TestImageCacheXattr, self).setUp()
+        super(TestSubjectCacheXattr, self).setUp()
 
         self.api_server.deployment_flavor = "caching"
 
@@ -852,12 +852,12 @@ class TestImageCacheXattr(functional.FunctionalTest,
             return
 
     def tearDown(self):
-        super(TestImageCacheXattr, self).tearDown()
+        super(TestSubjectCacheXattr, self).tearDown()
         if os.path.exists(self.api_server.subject_cache_dir):
             shutil.rmtree(self.api_server.subject_cache_dir)
 
 
-class TestImageCacheManageXattr(functional.FunctionalTest,
+class TestSubjectCacheManageXattr(functional.FunctionalTest,
                                 BaseCacheManageMiddlewareTest):
 
     """
@@ -887,7 +887,7 @@ class TestImageCacheManageXattr(functional.FunctionalTest,
         self.disabled = False
         self.subject_cache_driver = "xattr"
 
-        super(TestImageCacheManageXattr, self).setUp()
+        super(TestSubjectCacheManageXattr, self).setUp()
 
         self.api_server.deployment_flavor = "cachemanagement"
 
@@ -898,12 +898,12 @@ class TestImageCacheManageXattr(functional.FunctionalTest,
             return
 
     def tearDown(self):
-        super(TestImageCacheManageXattr, self).tearDown()
+        super(TestSubjectCacheManageXattr, self).tearDown()
         if os.path.exists(self.api_server.subject_cache_dir):
             shutil.rmtree(self.api_server.subject_cache_dir)
 
 
-class TestImageCacheSqlite(functional.FunctionalTest,
+class TestSubjectCacheSqlite(functional.FunctionalTest,
                            BaseCacheMiddlewareTest):
 
     """
@@ -932,17 +932,17 @@ class TestImageCacheSqlite(functional.FunctionalTest,
         self.inited = True
         self.disabled = False
 
-        super(TestImageCacheSqlite, self).setUp()
+        super(TestSubjectCacheSqlite, self).setUp()
 
         self.api_server.deployment_flavor = "caching"
 
     def tearDown(self):
-        super(TestImageCacheSqlite, self).tearDown()
+        super(TestSubjectCacheSqlite, self).tearDown()
         if os.path.exists(self.api_server.subject_cache_dir):
             shutil.rmtree(self.api_server.subject_cache_dir)
 
 
-class TestImageCacheManageSqlite(functional.FunctionalTest,
+class TestSubjectCacheManageSqlite(functional.FunctionalTest,
                                  BaseCacheManageMiddlewareTest):
 
     """
@@ -972,11 +972,11 @@ class TestImageCacheManageSqlite(functional.FunctionalTest,
         self.disabled = False
         self.subject_cache_driver = "sqlite"
 
-        super(TestImageCacheManageSqlite, self).setUp()
+        super(TestSubjectCacheManageSqlite, self).setUp()
 
         self.api_server.deployment_flavor = "cachemanagement"
 
     def tearDown(self):
-        super(TestImageCacheManageSqlite, self).tearDown()
+        super(TestSubjectCacheManageSqlite, self).tearDown()
         if os.path.exists(self.api_server.subject_cache_dir):
             shutil.rmtree(self.api_server.subject_cache_dir)

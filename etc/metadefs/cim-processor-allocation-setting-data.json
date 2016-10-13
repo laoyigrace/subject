@@ -11,7 +11,7 @@
             "properties_target": "subject"
         },
         {
-            "name": "OS::Glance::Image",
+            "name": "OS::Glance::Subject",
             "prefix": "CIM_PASD_"
         },
         {

@@ -144,7 +144,7 @@ Get an subject and create the signature::
 
 Create the subject::
 
-  $ glance subject-create --name mySignedImage --container-format bare --disk-format qcow2 --property img_signature="$subject_signature" --property img_signature_certificate_uuid="$cert_uuid" --property img_signature_hash_method='SHA-256' --property img_signature_key_type='RSA-PSS' < mysubject
+  $ glance subject-create --name mySignedSubject --container-format bare --disk-format qcow2 --property img_signature="$subject_signature" --property img_signature_certificate_uuid="$cert_uuid" --property img_signature_hash_method='SHA-256' --property img_signature_key_type='RSA-PSS' < mysubject
 
 .. note:: Creating the subject can fail if validation does not succeed.
           This will cause the subject to be deleted.

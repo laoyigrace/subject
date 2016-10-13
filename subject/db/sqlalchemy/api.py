@@ -134,7 +134,7 @@ def _check_mutate_authorization(context, subject_ref):
         LOG.warn(_LW("Attempted to modify subject user did not own."))
         msg = _("You do not own this subject")
         if subject_ref.is_public:
-            exc_class = exception.ForbiddenPublicImage
+            exc_class = exception.ForbiddenPublicSubject
         else:
             exc_class = exception.Forbidden
 
@@ -151,7 +151,7 @@ def subject_update(context, subject_id, values, purge_props=False,
     """
     Set the given properties on an subject and update it.
 
-    :raises: ImageNotFound if subject does not exist.
+    :raises: SubjectNotFound if subject does not exist.
     """
     return _subject_update(context, values, subject_id, purge_props,
                          from_state=from_state)
@@ -232,7 +232,7 @@ def _check_subject_id(subject_id):
     """
     if (subject_id and
        len(subject_id) > models.Subject.id.property.columns[0].type.length):
-        raise exception.ImageNotFound()
+        raise exception.SubjectNotFound()
 
 
 def _subject_get(context, subject_id, session=None, force_show_deleted=False):
@@ -255,7 +255,7 @@ def _subject_get(context, subject_id, session=None, force_show_deleted=False):
     except sa_orm.exc.NoResultFound:
         msg = "No subject found with ID %s" % subject_id
         LOG.debug(msg)
-        raise exception.ImageNotFound(msg)
+        raise exception.SubjectNotFound(msg)
 
     # Make sure they can look at it
     if not is_subject_visible(context, subject):
@@ -489,8 +489,8 @@ def _make_conditions_from_filters(filters, is_public=None):
     if 'tags' in filters:
         tags = filters.pop('tags')
         for tag in tags:
-            tag_filters = [models.ImageTag.deleted == False]
-            tag_filters.extend([models.ImageTag.value == tag])
+            tag_filters = [models.SubjectTag.deleted == False]
+            tag_filters.extend([models.SubjectTag.value == tag])
             tag_conditions.append(tag_filters)
 
     filters = {k: v for k, v in filters.items() if v is not None}
@@ -553,9 +553,9 @@ def _make_conditions_from_filters(filters, is_public=None):
 
 
 def _make_subject_property_condition(key, value):
-    prop_filters = [models.ImageProperty.deleted == False]
-    prop_filters.extend([models.ImageProperty.name == key])
-    prop_filters.extend([models.ImageProperty.value == value])
+    prop_filters = [models.SubjectProperty.deleted == False]
+    prop_filters.extend([models.SubjectProperty.name == key])
+    prop_filters.extend([models.SubjectProperty.value == value])
     return prop_filters
 
 
@@ -570,12 +570,12 @@ def _select_subjects_query(context, subject_conditions, admin_as_user,
     query_member = session.query(models.Subject).join(
         models.Subject.members).filter(img_conditional_clause)
     if regular_user:
-        member_filters = [models.ImageMember.deleted == False]
+        member_filters = [models.SubjectMember.deleted == False]
         if context.owner is not None:
-            member_filters.extend([models.ImageMember.member == context.owner])
+            member_filters.extend([models.SubjectMember.member == context.owner])
             if member_status != 'all':
                 member_filters.extend([
-                    models.ImageMember.status == member_status])
+                    models.SubjectMember.status == member_status])
         query_member = query_member.filter(sa_sql.and_(*member_filters))
 
     # NOTE(venkatesh) if the 'visibility' is set to 'shared', we just
@@ -659,12 +659,12 @@ def subject_get_all(context, filters=None, marker=None, limit=None,
 
     if prop_cond:
         for prop_condition in prop_cond:
-            query = query.join(models.ImageProperty, aliased=True).filter(
+            query = query.join(models.SubjectProperty, aliased=True).filter(
                 sa_sql.and_(*prop_condition))
 
     if tag_cond:
         for tag_condition in tag_cond:
-            query = query.join(models.ImageTag, aliased=True).filter(
+            query = query.join(models.SubjectTag, aliased=True).filter(
                 sa_sql.and_(*tag_condition))
 
     marker_subject = None
@@ -816,7 +816,7 @@ def _subject_update(context, values, subject_id, purge_props=False,
             # Don't drop created_at if we're passing it in...
             _drop_protected_attrs(models.Subject, values)
             # NOTE(iccha-sethi): updated_at must be explicitly set in case
-            #                   only ImageProperty table was modifited
+            #                   only SubjectProperty table was modifited
             values['updated_at'] = timeutils.utcnow()
 
         if subject_id:
@@ -827,7 +827,7 @@ def _subject_update(context, values, subject_id, purge_props=False,
             mandatory_status = True if new_status else False
             _validate_subject(values, mandatory_status=mandatory_status)
 
-            # Validate fields for Images table. This is similar to what is done
+            # Validate fields for Subjects table. This is similar to what is done
             # for the query result update except that we need to do it prior
             # in this case.
             values = {key: values[key] for key in values
@@ -872,12 +872,12 @@ def _subject_update(context, values, subject_id, purge_props=False,
 def subject_location_add(context, subject_id, location, session=None):
     deleted = location['status'] in ('deleted', 'pending_delete')
     delete_time = timeutils.utcnow() if deleted else None
-    location_ref = models.ImageLocation(subject_id=subject_id,
-                                        value=location['url'],
-                                        meta_data=location['metadata'],
-                                        status=location['status'],
-                                        deleted=deleted,
-                                        deleted_at=delete_time)
+    location_ref = models.SubjectLocation(subject_id=subject_id,
+                                          value=location['url'],
+                                          meta_data=location['metadata'],
+                                          status=location['status'],
+                                          deleted=deleted,
+                                          deleted_at=delete_time)
     session = session or get_session()
     location_ref.save(session=session)
 
@@ -891,7 +891,7 @@ def subject_location_update(context, subject_id, location, session=None):
 
     try:
         session = session or get_session()
-        location_ref = session.query(models.ImageLocation).filter_by(
+        location_ref = session.query(models.SubjectLocation).filter_by(
             id=loc_id).filter_by(subject_id=subject_id).one()
 
         deleted = location['status'] in ('deleted', 'pending_delete')
@@ -921,7 +921,7 @@ def subject_location_delete(context, subject_id, location_id, status,
 
     try:
         session = session or get_session()
-        location_ref = session.query(models.ImageLocation).filter_by(
+        location_ref = session.query(models.SubjectLocation).filter_by(
             id=location_id).filter_by(subject_id=subject_id).one()
 
         delete_time = delete_time or timeutils.utcnow()
@@ -941,12 +941,12 @@ def subject_location_delete(context, subject_id, location_id, status,
 def _subject_locations_set(context, subject_id, locations, session=None):
     # NOTE(zhiyan): 1. Remove records from DB for deleted locations
     session = session or get_session()
-    query = session.query(models.ImageLocation).filter_by(
+    query = session.query(models.SubjectLocation).filter_by(
         subject_id=subject_id).filter_by(deleted=False)
 
     loc_ids = [loc['id'] for loc in locations if loc.get('id')]
     if loc_ids:
-        query = query.filter(~models.ImageLocation.id.in_(loc_ids))
+        query = query.filter(~models.SubjectLocation.id.in_(loc_ids))
 
     for loc_id in [loc_ref.id for loc_ref in query.all()]:
         subject_location_delete(context, subject_id, loc_id, 'deleted',
@@ -964,7 +964,7 @@ def _subject_locations_delete_all(context, subject_id,
                                 delete_time=None, session=None):
     """Delete all subject locations for given subject"""
     session = session or get_session()
-    location_refs = session.query(models.ImageLocation).filter_by(
+    location_refs = session.query(models.SubjectLocation).filter_by(
         subject_id=subject_id).filter_by(deleted=False).all()
 
     for loc_id in [loc_ref.id for loc_ref in location_refs]:
@@ -1014,8 +1014,8 @@ def _subject_child_entry_delete_all(child_model_cls, subject_id, delete_time=Non
     using the parent subject's id.
 
     The child entry ORM model class can be one of the following:
-    model.ImageLocation, model.ImageProperty, model.ImageMember and
-    model.ImageTag.
+    model.SubjectLocation, model.SubjectProperty, model.SubjectMember and
+    model.SubjectTag.
 
     :param child_model_cls: the ORM model class.
     :param subject_id: id of the subject whose child entries are to be deleted.
@@ -1038,8 +1038,8 @@ def _subject_child_entry_delete_all(child_model_cls, subject_id, delete_time=Non
 
 
 def subject_property_create(context, values, session=None):
-    """Create an ImageProperty object."""
-    prop_ref = models.ImageProperty()
+    """Create an SubjectProperty object."""
+    prop_ref = models.SubjectProperty()
     prop = _subject_property_update(context, prop_ref, values, session=session)
     return prop.to_dict()
 
@@ -1048,7 +1048,7 @@ def _subject_property_update(context, prop_ref, values, session=None):
     """
     Used internally by subject_property_create and subject_property_update.
     """
-    _drop_protected_attrs(models.ImageProperty, values)
+    _drop_protected_attrs(models.SubjectProperty, values)
     values["deleted"] = False
     prop_ref.update(values)
     prop_ref.save(session=session)
@@ -1060,7 +1060,7 @@ def subject_property_delete(context, prop_ref, subject_ref, session=None):
     Used internally by subject_property_create and subject_property_update.
     """
     session = session or get_session()
-    prop = session.query(models.ImageProperty).filter_by(subject_id=subject_ref,
+    prop = session.query(models.SubjectProperty).filter_by(subject_id=subject_ref,
                                                          name=prop_ref).one()
     prop.delete(session=session)
     return prop
@@ -1069,7 +1069,7 @@ def subject_property_delete(context, prop_ref, subject_ref, session=None):
 def _subject_property_delete_all(context, subject_id, delete_time=None,
                                session=None):
     """Delete all subject properties for given subject"""
-    props_updated_count = _subject_child_entry_delete_all(models.ImageProperty,
+    props_updated_count = _subject_child_entry_delete_all(models.SubjectProperty,
                                                         subject_id,
                                                         delete_time,
                                                         session)
@@ -1077,8 +1077,8 @@ def _subject_property_delete_all(context, subject_id, delete_time=None,
 
 
 def subject_member_create(context, values, session=None):
-    """Create an ImageMember object."""
-    memb_ref = models.ImageMember()
+    """Create an SubjectMember object."""
+    memb_ref = models.SubjectMember()
     _subject_member_update(context, memb_ref, values, session=session)
     return _subject_member_format(memb_ref)
 
@@ -1098,7 +1098,7 @@ def _subject_member_format(member_ref):
 
 
 def subject_member_update(context, memb_id, values):
-    """Update an ImageMember object."""
+    """Update an SubjectMember object."""
     session = get_session()
     memb_ref = _subject_member_get(context, memb_id, session)
     _subject_member_update(context, memb_ref, values, session)
@@ -1107,7 +1107,7 @@ def subject_member_update(context, memb_id, values):
 
 def _subject_member_update(context, memb_ref, values, session=None):
     """Apply supplied dictionary of values to a Member object."""
-    _drop_protected_attrs(models.ImageMember, values)
+    _drop_protected_attrs(models.SubjectMember, values)
     values["deleted"] = False
     values.setdefault('can_share', False)
     memb_ref.update(values)
@@ -1116,7 +1116,7 @@ def _subject_member_update(context, memb_ref, values, session=None):
 
 
 def subject_member_delete(context, memb_id, session=None):
-    """Delete an ImageMember object."""
+    """Delete an SubjectMember object."""
     session = session or get_session()
     member_ref = _subject_member_get(context, memb_id, session)
     _subject_member_delete(context, member_ref, session)
@@ -1129,7 +1129,7 @@ def _subject_member_delete(context, memb_ref, session):
 def _subject_member_delete_all(context, subject_id, delete_time=None,
                              session=None):
     """Delete all subject members for given subject"""
-    members_updated_count = _subject_child_entry_delete_all(models.ImageMember,
+    members_updated_count = _subject_child_entry_delete_all(models.SubjectMember,
                                                           subject_id,
                                                           delete_time,
                                                           session)
@@ -1137,8 +1137,8 @@ def _subject_member_delete_all(context, subject_id, delete_time=None,
 
 
 def _subject_member_get(context, memb_id, session):
-    """Fetch an ImageMember entity by id."""
-    query = session.query(models.ImageMember)
+    """Fetch an SubjectMember entity by id."""
+    query = session.query(models.SubjectMember)
     query = query.filter_by(id=memb_id)
     return query.one()
 
@@ -1165,7 +1165,7 @@ def subject_member_find(context, subject_id=None, member=None,
 
 def _subject_member_find(context, session, subject_id=None,
                        member=None, status=None, include_deleted=False):
-    query = session.query(models.ImageMember)
+    query = session.query(models.SubjectMember)
     if not include_deleted:
         query = query.filter_by(deleted=False)
 
@@ -1173,16 +1173,16 @@ def _subject_member_find(context, session, subject_id=None,
         query = query.join(models.Subject)
         filters = [
             models.Subject.owner == context.owner,
-            models.ImageMember.member == context.owner,
+            models.SubjectMember.member == context.owner,
         ]
         query = query.filter(sa_sql.or_(*filters))
 
     if subject_id is not None:
-        query = query.filter(models.ImageMember.subject_id == subject_id)
+        query = query.filter(models.SubjectMember.subject_id == subject_id)
     if member is not None:
-        query = query.filter(models.ImageMember.member == member)
+        query = query.filter(models.SubjectMember.member == member)
     if status is not None:
-        query = query.filter(models.ImageMember.status == status)
+        query = query.filter(models.SubjectMember.status == status)
 
     return query.all()
 
@@ -1198,9 +1198,9 @@ def subject_member_count(context, subject_id):
         msg = _("Subject id is required.")
         raise exception.Invalid(msg)
 
-    query = session.query(models.ImageMember)
+    query = session.query(models.SubjectMember)
     query = query.filter_by(deleted=False)
-    query = query.filter(models.ImageMember.subject_id == str(subject_id))
+    query = query.filter(models.SubjectMember.subject_id == str(subject_id))
 
     return query.count()
 
@@ -1227,7 +1227,7 @@ def subject_tag_set_all(context, subject_id, tags):
 def subject_tag_create(context, subject_id, value, session=None):
     """Create an subject tag."""
     session = session or get_session()
-    tag_ref = models.ImageTag(subject_id=subject_id, value=value)
+    tag_ref = models.SubjectTag(subject_id=subject_id, value=value)
     tag_ref.save(session=session)
     return tag_ref['value']
 
@@ -1236,7 +1236,7 @@ def subject_tag_delete(context, subject_id, value, session=None):
     """Delete an subject tag."""
     _check_subject_id(subject_id)
     session = session or get_session()
-    query = session.query(models.ImageTag).filter_by(
+    query = session.query(models.SubjectTag).filter_by(
         subject_id=subject_id).filter_by(
             value=value).filter_by(deleted=False)
     try:
@@ -1249,10 +1249,10 @@ def subject_tag_delete(context, subject_id, value, session=None):
 
 def _subject_tag_delete_all(context, subject_id, delete_time=None, session=None):
     """Delete all subject tags for given subject"""
-    tags_updated_count = _subject_child_entry_delete_all(models.ImageTag,
-                                                       subject_id,
-                                                       delete_time,
-                                                       session)
+    tags_updated_count = _subject_child_entry_delete_all(models.SubjectTag,
+                                                         subject_id,
+                                                         delete_time,
+                                                         session)
     return tags_updated_count
 
 
@@ -1260,7 +1260,7 @@ def subject_tag_get_all(context, subject_id, session=None):
     """Get a list of tags for a specific subject."""
     _check_subject_id(subject_id)
     session = session or get_session()
-    tags = session.query(models.ImageTag.value).filter_by(
+    tags = session.query(models.SubjectTag.value).filter_by(
         subject_id=subject_id).filter_by(deleted=False).all()
     return [tag[0] for tag in tags]
 

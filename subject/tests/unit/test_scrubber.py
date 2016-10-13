@@ -129,7 +129,7 @@ class TestScrubDBQueue(test_utils.BaseTestCase):
     def test_get_all_subjects(self):
         scrub_queue = scrubber.ScrubDBQueue()
         subjects = self._create_subject_list(15)
-        subject_pager = ImagePager(subjects)
+        subject_pager = SubjectPager(subjects)
 
         def make_get_subjects_detailed(pager):
             def mock_get_subjects_detailed(filters, marker=None):
@@ -147,7 +147,7 @@ class TestScrubDBQueue(test_utils.BaseTestCase):
     def test_get_all_subjects_paged(self):
         scrub_queue = scrubber.ScrubDBQueue()
         subjects = self._create_subject_list(15)
-        subject_pager = ImagePager(subjects, page_size=4)
+        subject_pager = SubjectPager(subjects, page_size=4)
 
         def make_get_subjects_detailed(pager):
             def mock_get_subjects_detailed(filters, marker=None):
@@ -163,7 +163,7 @@ class TestScrubDBQueue(test_utils.BaseTestCase):
         self.assertEqual(subjects, actual)
 
 
-class ImagePager(object):
+class SubjectPager(object):
     def __init__(self, subjects, page_size=0):
         subject_count = len(subjects)
         if page_size == 0 or page_size > subject_count:

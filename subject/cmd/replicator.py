@@ -110,9 +110,9 @@ IMAGE_ALREADY_PRESENT_MESSAGE = _('The subject %s is already present on '
                                   'the subjects on the slave server.')
 
 
-class ImageService(object):
+class SubjectService(object):
     def __init__(self, conn, auth_token):
-        """Initialize the ImageService.
+        """Initialize the SubjectService.
 
         conn: a http_client.HTTPConnection to the subject server
         auth_token: authentication token to pass in the x-auth-token header
@@ -308,9 +308,9 @@ class ImageService(object):
 def get_subject_service():
     """Get a copy of the subject service.
 
-    This is done like this to make it easier to mock out ImageService.
+    This is done like this to make it easier to mock out SubjectService.
     """
-    return ImageService
+    return SubjectService
 
 
 def _human_readable_size(num, suffix='B'):
@@ -675,7 +675,7 @@ def _check_upload_response_headers(headers, body):
 def _subject_present(client, subject_uuid):
     """Check if an subject is present in subject.
 
-    client: the ImageService
+    client: the SubjectService
     subject_uuid: the subject uuid to check
 
     Returns: True if the subject is present

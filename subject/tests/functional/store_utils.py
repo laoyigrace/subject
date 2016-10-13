@@ -29,7 +29,7 @@ from six.moves import BaseHTTPServer
 FIVE_KB = 5 * units.Ki
 
 
-class RemoteImageHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+class RemoteSubjectHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def do_HEAD(self):
         """
         Respond to an subject HEAD request fake metadata
@@ -70,7 +70,7 @@ class RemoteImageHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
 def setup_http(test):
     server_class = BaseHTTPServer.HTTPServer
-    remote_server = server_class(('127.0.0.1', 0), RemoteImageHandler)
+    remote_server = server_class(('127.0.0.1', 0), RemoteSubjectHandler)
     remote_ip, remote_port = remote_server.server_address
 
     def serve_requests(httpd):

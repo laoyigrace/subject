@@ -1,6 +1,6 @@
 {
-    "display_name": "Common Image Properties",
-    "namespace": "OS::Glance::CommonImageProperties",
+    "display_name": "Common Subject Properties",
+    "namespace": "OS::Glance::CommonSubjectProperties",
     "description": "When adding an subject to Glance, you may specify some common subject properties that may prove useful to consumers of your subject.",
     "protected": true,
     "resource_type_associations" : [

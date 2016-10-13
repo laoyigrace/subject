@@ -145,7 +145,7 @@ class SubjectFactory(object):
         return self.helper.proxy(self.base.new_subject(**kwargs))
 
 
-class ImageMembershipFactory(object):
+class SubjectMembershipFactory(object):
     def __init__(self, base, proxy_class=None, proxy_kwargs=None):
         self.helper = Helper(proxy_class, proxy_kwargs)
         self.base = base
@@ -169,16 +169,21 @@ class Subject(object):
     created_at = _proxy('base', 'created_at')
     updated_at = _proxy('base', 'updated_at')
     visibility = _proxy('base', 'visibility')
-    min_disk = _proxy('base', 'min_disk')
-    min_ram = _proxy('base', 'min_ram')
+    type = _proxy('base', 'type')
+    subject_format = _proxy('base', 'subject_format')
     protected = _proxy('base', 'protected')
     locations = _proxy('base', 'locations')
     checksum = _proxy('base', 'checksum')
     owner = _proxy('base', 'owner')
-    disk_format = _proxy('base', 'disk_format')
-    container_format = _proxy('base', 'container_format')
+    tar_format = _proxy('base', 'tar_format')
+    contributor = _proxy('base', 'contributor')
     size = _proxy('base', 'size')
-    virtual_size = _proxy('base', 'virtual_size')
+    phase = _proxy('base', 'phase')
+    language = _proxy('base', 'language')
+    score = _proxy('base', 'score')
+    knowledge = _proxy('base', 'knowledge')
+    description = _proxy('base', 'description')
+    subject = _proxy('base', 'subject')
     extra_properties = _proxy('base', 'extra_properties')
     tags = _proxy('base', 'tags')
 
@@ -198,7 +203,7 @@ class Subject(object):
         return self.base.get_data(*args, **kwargs)
 
 
-class ImageMember(object):
+class SubjectMember(object):
     def __init__(self, base):
         self.base = base
 

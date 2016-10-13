@@ -82,7 +82,7 @@ class TestRegistryV1Client(base.IsolatedUnitTest, test_utils.RegistryAPIMixIn):
             'name': 'fake subject #2'
         }
         subjects = self.client.get_subjects()
-        self.assertEqualImages(subjects, (UUID2,), unjsonify=False)
+        self.assertEqualSubjects(subjects, (UUID2,), unjsonify=False)
 
         for k, v in fixture.items():
             self.assertEqual(v, subjects[0][k])
@@ -113,7 +113,7 @@ class TestRegistryV1Client(base.IsolatedUnitTest, test_utils.RegistryAPIMixIn):
 
         subjects = self.client.get_subjects(sort_key='name', sort_dir='asc')
 
-        self.assertEqualImages(subjects, (UUID3, UUID2, UUID4), unjsonify=False)
+        self.assertEqualSubjects(subjects, (UUID3, UUID2, UUID4), unjsonify=False)
 
     def test_get_index_sort_status_desc(self):
         """
@@ -134,7 +134,7 @@ class TestRegistryV1Client(base.IsolatedUnitTest, test_utils.RegistryAPIMixIn):
 
         subjects = self.client.get_subjects(sort_key='status', sort_dir='desc')
 
-        self.assertEqualImages(subjects, (UUID3, UUID4, UUID2), unjsonify=False)
+        self.assertEqualSubjects(subjects, (UUID3, UUID4, UUID2), unjsonify=False)
 
     def test_get_index_sort_disk_format_asc(self):
         """
@@ -158,7 +158,7 @@ class TestRegistryV1Client(base.IsolatedUnitTest, test_utils.RegistryAPIMixIn):
         subjects = self.client.get_subjects(sort_key='disk_format',
                                         sort_dir='asc')
 
-        self.assertEqualImages(subjects, (UUID3, UUID4, UUID2), unjsonify=False)
+        self.assertEqualSubjects(subjects, (UUID3, UUID4, UUID2), unjsonify=False)
 
     def test_get_index_sort_container_format_desc(self):
         """
@@ -183,7 +183,7 @@ class TestRegistryV1Client(base.IsolatedUnitTest, test_utils.RegistryAPIMixIn):
         subjects = self.client.get_subjects(sort_key='container_format',
                                         sort_dir='desc')
 
-        self.assertEqualImages(subjects, (UUID2, UUID4, UUID3), unjsonify=False)
+        self.assertEqualSubjects(subjects, (UUID2, UUID4, UUID3), unjsonify=False)
 
     def test_get_index_sort_size_asc(self):
         """
@@ -206,7 +206,7 @@ class TestRegistryV1Client(base.IsolatedUnitTest, test_utils.RegistryAPIMixIn):
 
         subjects = self.client.get_subjects(sort_key='size', sort_dir='asc')
 
-        self.assertEqualImages(subjects, (UUID4, UUID2, UUID3), unjsonify=False)
+        self.assertEqualSubjects(subjects, (UUID4, UUID2, UUID3), unjsonify=False)
 
     def test_get_index_sort_created_at_asc(self):
         """
@@ -229,7 +229,7 @@ class TestRegistryV1Client(base.IsolatedUnitTest, test_utils.RegistryAPIMixIn):
 
         subjects = self.client.get_subjects(sort_key='created_at', sort_dir='asc')
 
-        self.assertEqualImages(subjects, (UUID2, UUID4, UUID3), unjsonify=False)
+        self.assertEqualSubjects(subjects, (UUID2, UUID4, UUID3), unjsonify=False)
 
     def test_get_index_sort_updated_at_desc(self):
         """
@@ -254,7 +254,7 @@ class TestRegistryV1Client(base.IsolatedUnitTest, test_utils.RegistryAPIMixIn):
 
         subjects = self.client.get_subjects(sort_key='updated_at', sort_dir='desc')
 
-        self.assertEqualImages(subjects, (UUID3, UUID4, UUID2), unjsonify=False)
+        self.assertEqualSubjects(subjects, (UUID3, UUID4, UUID2), unjsonify=False)
 
     def test_get_subject_index_marker(self):
         """Test correct set of subjects returned with marker param."""
@@ -272,7 +272,7 @@ class TestRegistryV1Client(base.IsolatedUnitTest, test_utils.RegistryAPIMixIn):
 
         subjects = self.client.get_subjects(marker=UUID4)
 
-        self.assertEqualImages(subjects, (UUID3, UUID2), unjsonify=False)
+        self.assertEqualSubjects(subjects, (UUID3, UUID2), unjsonify=False)
 
     def test_get_subject_index_invalid_marker(self):
         """Test exception is raised when marker is invalid"""
@@ -341,7 +341,7 @@ class TestRegistryV1Client(base.IsolatedUnitTest, test_utils.RegistryAPIMixIn):
 
         subjects = self.client.get_subjects(marker=UUID3, limit=1)
 
-        self.assertEqualImages(subjects, (UUID2,), unjsonify=False)
+        self.assertEqualSubjects(subjects, (UUID2,), unjsonify=False)
 
     def test_get_subject_index_limit_None(self):
         """Test correct set of subjects returned with limit param == None."""
@@ -395,7 +395,7 @@ class TestRegistryV1Client(base.IsolatedUnitTest, test_utils.RegistryAPIMixIn):
 
         subjects = self.client.get_subjects_detailed(marker=UUID3, limit=1)
 
-        self.assertEqualImages(subjects, (UUID2,), unjsonify=False)
+        self.assertEqualSubjects(subjects, (UUID2,), unjsonify=False)
 
     def test_get_subject_details_invalid_marker(self):
         """Test exception is raised when marker is invalid"""
@@ -538,22 +538,22 @@ class TestRegistryV1Client(base.IsolatedUnitTest, test_utils.RegistryAPIMixIn):
 
         # Check a standard list, 4 subjects in db (2 deleted)
         subjects = self.client.get_subjects_detailed(filters={})
-        self.assertEqualImages(subjects, (UUID4, UUID2), unjsonify=False)
+        self.assertEqualSubjects(subjects, (UUID4, UUID2), unjsonify=False)
 
         # Expect 3 subjects (1 deleted)
         filters = {'changes-since': iso1}
         subjects = self.client.get_subjects(filters=filters)
-        self.assertEqualImages(subjects, (UUID4, UUID3, UUID2), unjsonify=False)
+        self.assertEqualSubjects(subjects, (UUID4, UUID3, UUID2), unjsonify=False)
 
         # Expect 1 subjects (0 deleted)
         filters = {'changes-since': iso2}
         subjects = self.client.get_subjects_detailed(filters=filters)
-        self.assertEqualImages(subjects, (UUID4,), unjsonify=False)
+        self.assertEqualSubjects(subjects, (UUID4,), unjsonify=False)
 
         # Expect 0 subjects (0 deleted)
         filters = {'changes-since': iso4}
         subjects = self.client.get_subjects(filters=filters)
-        self.assertEqualImages(subjects, (), unjsonify=False)
+        self.assertEqualSubjects(subjects, (), unjsonify=False)
 
     def test_get_subject_details_with_size_min(self):
         """Tests that a detailed call can be filtered by size_min"""
@@ -618,7 +618,7 @@ class TestRegistryV1Client(base.IsolatedUnitTest, test_utils.RegistryAPIMixIn):
         subjects = self.client.get_subjects_detailed(sort_key='disk_format',
                                                  sort_dir='asc')
 
-        self.assertEqualImages(subjects, (UUID3, UUID4, UUID2), unjsonify=False)
+        self.assertEqualSubjects(subjects, (UUID3, UUID4, UUID2), unjsonify=False)
 
     def test_get_subject(self):
         """Tests that the detailed info about an subject returned"""

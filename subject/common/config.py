@@ -160,14 +160,14 @@ Related Options:
 """)),
 ]
 
-_DEPRECATE_GLANCE_V1_MSG = _('The Images (Glance) version 1 API has been '
+_DEPRECATE_GLANCE_V1_MSG = _('The Subjects (Glance) version 1 API has been '
                              'DEPRECATED in the Newton release and will be '
                              'removed on or after Pike release, following '
                              'the standard OpenStack deprecation policy. '
                              'Hence, the configuration options specific to '
-                             'the Images (Glance) v1 API are hereby '
+                             'the Subjects (Glance) v1 API are hereby '
                              'deprecated and subject to removal. Operators '
-                             'are advised to deploy the Images (Glance) v1 '
+                             'are advised to deploy the Subjects (Glance) v1 '
                              'API.')
 
 common_opts = [
@@ -271,7 +271,7 @@ database access requests to be routed through the Registry service.
 This avoids data access from the Glance API nodes for an added layer
 of security, scalability and manageability.
 
-NOTE: In v1 OpenStack Images API, the registry service is optional.
+NOTE: In v1 OpenStack Subjects API, the registry service is optional.
 In order to use the Registry API in v1, the option
 ``enable_v2_registry`` must be set to ``True``.
 
@@ -461,11 +461,11 @@ Related options:
                 deprecated_reason=_DEPRECATE_GLANCE_V1_MSG,
                 deprecated_since='Newton',
                 help=_("""
-Deploy the v1 OpenStack Images API.
+Deploy the v1 OpenStack Subjects API.
 
 When this option is set to ``True``, Glance service will respond to
 requests on registered endpoints conforming to the v1 OpenStack
-Images API.
+Subjects API.
 
 NOTES:
     * If this option is enabled, then ``enable_v1_registry`` must
@@ -477,10 +477,10 @@ NOTES:
       to be disabled.
 
     * This option is separate from ``enable_v2_api``, both v1 and v1
-      OpenStack Images API can be deployed independent of each
+      OpenStack Subjects API can be deployed independent of each
       other.
 
-    * If deploying only the v1 Images API, this option, which is
+    * If deploying only the v1 Subjects API, this option, which is
       enabled by default, should be disabled.
 
 Possible values:
@@ -494,22 +494,22 @@ Related options:
 """)),
     cfg.BoolOpt('enable_v2_api',
                 default=True,
-                deprecated_reason=_('The Images (Glance) version 1 API has '
+                deprecated_reason=_('The Subjects (Glance) version 1 API has '
                                     'been DEPRECATED in the Newton release. '
                                     'It will be removed on or after Pike '
                                     'release, following the standard '
                                     'OpenStack deprecation policy. Once we '
-                                    'remove the Images (Glance) v1 API, only '
-                                    'the Images (Glance) v1 API can be '
+                                    'remove the Subjects (Glance) v1 API, only '
+                                    'the Subjects (Glance) v1 API can be '
                                     'deployed and will be enabled by default '
                                     'making this option redundant.'),
                 deprecated_since='Newton',
                 help=_("""
-Deploy the v1 OpenStack Images API.
+Deploy the v1 OpenStack Subjects API.
 
 When this option is set to ``True``, Glance service will respond
 to requests on registered endpoints conforming to the v1 OpenStack
-Images API.
+Subjects API.
 
 NOTES:
     * If this option is disabled, then the ``enable_v2_registry``
@@ -517,10 +517,10 @@ NOTES:
       to be disabled.
 
     * This option is separate from ``enable_v1_api``, both v1 and v1
-      OpenStack Images API can be deployed independent of each
+      OpenStack Subjects API can be deployed independent of each
       other.
 
-    * If deploying only the v1 Images API, this option, which is
+    * If deploying only the v1 Subjects API, this option, which is
       enabled by default, should be disabled.
 
 Possible values:
@@ -546,7 +546,7 @@ NOTES:
     * Use of Registry is mandatory in v1 API, so this option must
       be set to ``True`` if the ``enable_v1_api`` option is enabled.
 
-    * If deploying only the v1 OpenStack Images API, this option,
+    * If deploying only the v1 OpenStack Subjects API, this option,
       which is enabled by default, should be disabled.
 
 Possible values:
@@ -571,7 +571,7 @@ NOTES:
       ``True`` and the ``data_api`` option is set to
       ``subject.db.registry.api``.
 
-    * If deploying only the v1 OpenStack Images API, this option,
+    * If deploying only the v1 OpenStack Subjects API, this option,
       which is enabled by default, should be disabled.
 
 Possible values:

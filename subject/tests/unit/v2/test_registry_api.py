@@ -148,7 +148,7 @@ class TestRegistryRPC(base.IsolatedUnitTest):
         req.body = jsonutils.dump_as_bytes(cmd)
         res = req.get_response(self.api)
         res_dict = jsonutils.loads(res.body)[0]
-        self.assertEqual('subject.common.exception.ImageNotFound',
+        self.assertEqual('subject.common.exception.SubjectNotFound',
                          res_dict["_error"]["cls"])
 
     def test_get_index(self):

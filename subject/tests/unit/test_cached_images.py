@@ -39,7 +39,7 @@ class FakePolicyEnforcer(policy.Enforcer):
         return 'pass'
 
 
-class FakeCache(subject_cache.ImageCache):
+class FakeCache(subject_cache.SubjectCache):
     def __init__(self):
         self.init_driver()
         self.deleted_subjects = []
@@ -83,9 +83,9 @@ class TestController(testtools.TestCase):
                           cached_subjects.Controller)
 
 
-class TestCachedImages(testtools.TestCase):
+class TestCachedSubjects(testtools.TestCase):
     def setUp(self):
-        super(TestCachedImages, self).setUp()
+        super(TestCachedSubjects, self).setUp()
         test_controller = FakeController()
         self.controller = test_controller
 

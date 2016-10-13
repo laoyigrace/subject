@@ -1,12 +1,12 @@
 {
-    "namespace": "OS::Compute::LibvirtImage",
-    "display_name": "libvirt Driver Options for Images",
-    "description": "The libvirt Compute Driver Options for Glance Images.  \n\nThese are properties specific to compute drivers.  For a list of all hypervisors, see here: https://wiki.openstack.org/wiki/HypervisorSupportMatrix.",
+    "namespace": "OS::Compute::LibvirtSubject",
+    "display_name": "libvirt Driver Options for Subjects",
+    "description": "The libvirt Compute Driver Options for Glance Subjects.  \n\nThese are properties specific to compute drivers.  For a list of all hypervisors, see here: https://wiki.openstack.org/wiki/HypervisorSupportMatrix.",
     "visibility": "public",
     "protected": true,
     "resource_type_associations": [
         {
-            "name": "OS::Glance::Image"
+            "name": "OS::Glance::Subject"
         }
     ],
     "properties": {

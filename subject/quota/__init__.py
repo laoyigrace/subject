@@ -14,7 +14,7 @@
 
 import copy
 
-import glance_store as store
+import subject_store as store
 from oslo_config import cfg
 from oslo_log import log as logging
 from oslo_utils import encodeutils
@@ -44,7 +44,7 @@ def _enforce_subject_tag_quota(tags):
         return
 
     if len(tags) > CONF.subject_tag_quota:
-        raise exception.ImageTagLimitExceeded(attempted=len(tags),
+        raise exception.SubjectTagLimitExceeded(attempted=len(tags),
                                               maximum=CONF.subject_tag_quota)
 
 
@@ -79,7 +79,7 @@ def _enforce_subject_location_quota(subject, locations, is_setter=False):
     attempted = attempted if not is_setter else len(locations)
     maximum = CONF.subject_location_quota
     if attempted > maximum:
-        raise exception.ImageLocationLimitExceeded(attempted=attempted,
+        raise exception.SubjectLocationLimitExceeded(attempted=attempted,
                                                    maximum=maximum)
 
 
@@ -102,7 +102,7 @@ class SubjectRepoProxy(subject.domain.proxy.Repo):
         maximum = CONF.subject_property_quota
         if attempted > maximum:
             kwargs = {'attempted': attempted, 'maximum': maximum}
-            exc = exception.ImagePropertyLimitExceeded(**kwargs)
+            exc = exception.SubjectPropertyLimitExceeded(**kwargs)
             LOG.debug(encodeutils.exception_to_unicode(exc))
             raise exc
 
@@ -130,7 +130,7 @@ class SubjectFactoryProxy(subject.domain.proxy.SubjectFactory):
         return super(SubjectFactoryProxy, self).new_subject(tags=tags, **kwargs)
 
 
-class QuotaImageTagsProxy(object):
+class QuotaSubjectTagsProxy(object):
 
     def __init__(self, orig_set):
         if orig_set is None:
@@ -163,16 +163,16 @@ class QuotaImageTagsProxy(object):
         return getattr(self.tags, name)
 
 
-class ImageMemberFactoryProxy(subject.domain.proxy.ImageMembershipFactory):
+class SubjectMemberFactoryProxy(subject.domain.proxy.SubjectMembershipFactory):
 
     def __init__(self, member_factory, context, db_api, store_utils):
         self.db_api = db_api
         self.context = context
         proxy_kwargs = {'context': context, 'db_api': db_api,
                         'store_utils': store_utils}
-        super(ImageMemberFactoryProxy, self).__init__(
+        super(SubjectMemberFactoryProxy, self).__init__(
             member_factory,
-            proxy_class=ImageMemberProxy,
+            proxy_class=SubjectMemberProxy,
             proxy_kwargs=proxy_kwargs)
 
     def _enforce_subject_member_quota(self, subject):
@@ -185,16 +185,16 @@ class ImageMemberFactoryProxy(subject.domain.proxy.ImageMembershipFactory):
         attempted = current_member_count + 1
         maximum = CONF.subject_member_quota
         if attempted > maximum:
-            raise exception.ImageMemberLimitExceeded(attempted=attempted,
+            raise exception.SubjectMemberLimitExceeded(attempted=attempted,
                                                      maximum=maximum)
 
     def new_subject_member(self, subject, member_id):
         self._enforce_subject_member_quota(subject)
-        return super(ImageMemberFactoryProxy, self).new_subject_member(subject,
+        return super(SubjectMemberFactoryProxy, self).new_subject_member(subject,
                                                                      member_id)
 
 
-class QuotaImageLocationsProxy(object):
+class QuotaSubjectLocationsProxy(object):
 
     def __init__(self, subject, context, db_api):
         self.subject = subject
@@ -302,7 +302,7 @@ class SubjectProxy(subject.domain.proxy.Subject):
             data = utils.LimitingReader(data, remaining)
         try:
             self.subject.set_data(data, size=size)
-        except exception.ImageSizeLimitExceeded:
+        except exception.SubjectSizeLimitExceeded:
             raise exception.StorageQuotaFull(subject_size=size,
                                              remaining=remaining)
 
@@ -342,7 +342,7 @@ class SubjectProxy(subject.domain.proxy.Subject):
 
     @property
     def tags(self):
-        return QuotaImageTagsProxy(self.subject.tags)
+        return QuotaSubjectTagsProxy(self.subject.tags)
 
     @tags.setter
     def tags(self, value):
@@ -351,7 +351,7 @@ class SubjectProxy(subject.domain.proxy.Subject):
 
     @property
     def locations(self):
-        return QuotaImageLocationsProxy(self.subject,
+        return QuotaSubjectLocationsProxy(self.subject,
                                         self.context,
                                         self.db_api)
 
@@ -359,7 +359,7 @@ class SubjectProxy(subject.domain.proxy.Subject):
     def locations(self, value):
         _enforce_subject_location_quota(self.subject, value, is_setter=True)
 
-        if not isinstance(value, (list, QuotaImageLocationsProxy)):
+        if not isinstance(value, (list, QuotaSubjectLocationsProxy)):
             raise exception.Invalid(_('Invalid locations: %s') % value)
 
         required_size = _calc_required_size(self.context,
@@ -376,11 +376,11 @@ class SubjectProxy(subject.domain.proxy.Subject):
         return bool(current_props.difference(self.orig_props))
 
 
-class ImageMemberProxy(subject.domain.proxy.ImageMember):
+class SubjectMemberProxy(subject.domain.proxy.SubjectMember):
 
     def __init__(self, subject_member, context, db_api, store_utils):
         self.subject_member = subject_member
         self.context = context
         self.db_api = db_api
         self.store_utils = store_utils
-        super(ImageMemberProxy, self).__init__(subject_member)
+        super(SubjectMemberProxy, self).__init__(subject_member)

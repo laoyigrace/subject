@@ -49,10 +49,10 @@ class TestMiscellaneous(functional.FunctionalTest):
         self.cleanup()
         self.start_servers()
 
-        # 1. POST /subjects with public subject named Image1
+        # 1. POST /subjects with public subject named Subject1
         # attribute and no custom properties. Verify a 200 OK is returned
         subject_data = "*" * FIVE_KB
-        headers = minimal_headers('Image1')
+        headers = minimal_headers('Subject1')
         path = "http://%s:%d/v1/subjects" % ("127.0.0.1", self.api_port)
         http = httplib2.Http()
         response, content = http.request(path, 'POST', headers=headers,
@@ -62,7 +62,7 @@ class TestMiscellaneous(functional.FunctionalTest):
         self.assertEqual(hashlib.md5(subject_data).hexdigest(),
                          data['subject']['checksum'])
         self.assertEqual(FIVE_KB, data['subject']['size'])
-        self.assertEqual("Image1", data['subject']['name'])
+        self.assertEqual("Subject1", data['subject']['name'])
         self.assertTrue(data['subject']['is_public'])
 
         # 2. REMOVE the subject from the filesystem
@@ -76,7 +76,7 @@ class TestMiscellaneous(functional.FunctionalTest):
         http = httplib2.Http()
         response, content = http.request(path, 'HEAD')
         self.assertEqual(200, response.status)
-        self.assertEqual("Image1", response['x-subject-meta-name'])
+        self.assertEqual("Subject1", response['x-subject-meta-name'])
 
         # 4. GET /subjects/1
         # Verify the api throws the appropriate 404 error
@@ -110,7 +110,7 @@ class TestMiscellaneous(functional.FunctionalTest):
         self.assertEqual('{"subjects": []}', content)
 
         headers = {'Content-Type': 'application/octet-stream',
-                   'X-Subject-Meta-Name': 'ImageName',
+                   'X-Subject-Meta-Name': 'SubjectName',
                    'X-Subject-Meta-Disk-Format': 'Invalid', }
         ignored, content = http.request(path, 'POST', headers=headers)
 

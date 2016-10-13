@@ -6,7 +6,7 @@
     "protected": true,
     "resource_type_associations": [
         {
-            "name": "OS::Glance::Image",
+            "name": "OS::Glance::Subject",
             "prefix": "hw_"
         },
         {

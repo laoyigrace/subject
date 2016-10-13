@@ -17,7 +17,7 @@ from subject.common.glare import definitions
 import subject.contrib.plugins.subject_artifact.v1.subject as v1
 
 
-class ImageAsAnArtifact(v1.ImageAsAnArtifact):
+class SubjectAsAnArtifact(v1.SubjectAsAnArtifact):
     __type_version__ = '1.1'
 
     icons = definitions.BinaryObjectList()

@@ -37,12 +37,12 @@ _delayed_delete_imported = False
 
 
 def _import_delayed_delete():
-    # glance_store (indirectly) imports subject.domain therefore we can't put
+    # subject_store (indirectly) imports subject.domain therefore we can't put
     # the CONF.import_opt outside - we have to do it in a convoluted/indirect
     # way!
     global _delayed_delete_imported
     if not _delayed_delete_imported:
-        CONF.import_opt('delayed_delete', 'glance_store')
+        CONF.import_opt('delayed_delete', 'subject_store')
         _delayed_delete_imported = True
 
 
@@ -117,16 +117,21 @@ class Subject(object):
         self.updated_at = updated_at
         self.name = kwargs.pop('name', None)
         self.visibility = kwargs.pop('visibility', 'private')
-        self.min_disk = kwargs.pop('min_disk', 0)
-        self.min_ram = kwargs.pop('min_ram', 0)
+        self.type = kwargs.pop('type', 0)
+        self.subject_format = kwargs.pop('subject_format', 0)
         self.protected = kwargs.pop('protected', False)
         self.locations = kwargs.pop('locations', [])
         self.checksum = kwargs.pop('checksum', None)
         self.owner = kwargs.pop('owner', None)
-        self._disk_format = kwargs.pop('disk_format', None)
-        self._container_format = kwargs.pop('container_format', None)
+        self.tar_format = kwargs.pop('tar_format', None)
+        self.contributor = kwargs.pop('contributor', None)
         self.size = kwargs.pop('size', None)
-        self.virtual_size = kwargs.pop('virtual_size', None)
+        self.phase = kwargs.pop('phase', None)
+        self.language = kwargs.pop('language', None)
+        self.score = kwargs.pop('score', None)
+        self.knowledge = kwargs.pop('knowledge', None)
+        self.description = kwargs.pop('description', None)
+        self.subject = kwargs.pop('subject', None)
         extra_properties = kwargs.pop('extra_properties', {})
         self.extra_properties = ExtraProperties(extra_properties)
         self.tags = kwargs.pop('tags', [])
@@ -144,7 +149,7 @@ class Subject(object):
         if has_status:
             if status not in self.valid_state_targets[self._status]:
                 kw = {'cur_status': self._status, 'new_status': status}
-                e = exception.InvalidImageStatusTransition(**kw)
+                e = exception.InvalidSubjectStatusTransition(**kw)
                 LOG.debug(e)
                 raise e
 
@@ -186,58 +191,20 @@ class Subject(object):
         self._tags = set(value)
 
     @property
-    def container_format(self):
-        return self._container_format
+    def tar_format(self):
+        return self._tar_format
 
-    @container_format.setter
-    def container_format(self, value):
-        if hasattr(self, '_container_format') and self.status != 'queued':
-            msg = _("Attribute container_format can be only replaced "
+    @tar_format.setter
+    def tar_format(self, value):
+        if hasattr(self, '_tar_format') and self.status != 'queued':
+            msg = _("Attribute _tar_format can be only replaced "
                     "for a queued subject.")
             raise exception.Forbidden(message=msg)
-        self._container_format = value
-
-    @property
-    def disk_format(self):
-        return self._disk_format
-
-    @disk_format.setter
-    def disk_format(self, value):
-        if hasattr(self, '_disk_format') and self.status != 'queued':
-            msg = _("Attribute disk_format can be only replaced "
-                    "for a queued subject.")
-            raise exception.Forbidden(message=msg)
-        self._disk_format = value
-
-    @property
-    def min_disk(self):
-        return self._min_disk
-
-    @min_disk.setter
-    def min_disk(self, value):
-        if value and value < 0:
-            extra_msg = _('Cannot be a negative value')
-            raise exception.InvalidParameterValue(value=value,
-                                                  param='min_disk',
-                                                  extra_msg=extra_msg)
-        self._min_disk = value
-
-    @property
-    def min_ram(self):
-        return self._min_ram
-
-    @min_ram.setter
-    def min_ram(self, value):
-        if value and value < 0:
-            extra_msg = _('Cannot be a negative value')
-            raise exception.InvalidParameterValue(value=value,
-                                                  param='min_ram',
-                                                  extra_msg=extra_msg)
-        self._min_ram = value
+        self._tar_format = value
 
     def delete(self):
         if self.protected:
-            raise exception.ProtectedImageDelete(subject_id=self.subject_id)
+            raise exception.ProtectedSubjectDelete(subject_id=self.subject_id)
         if CONF.delayed_delete and self.locations:
             self.status = 'pending_delete'
         else:
@@ -305,7 +272,7 @@ class ExtraProperties(collections.MutableMapping, dict):
         return dict(self).keys()
 
 
-class ImageMembership(object):
+class SubjectMembership(object):
 
     def __init__(self, subject_id, member_id, created_at, updated_at,
                  id=None, status=None):
@@ -328,13 +295,13 @@ class ImageMembership(object):
         self._status = status
 
 
-class ImageMemberFactory(object):
+class SubjectMemberFactory(object):
 
     def new_subject_member(self, subject, member_id):
         created_at = timeutils.utcnow()
         updated_at = created_at
 
-        return ImageMembership(subject_id=subject.subject_id, member_id=member_id,
+        return SubjectMembership(subject_id=subject.subject_id, member_id=member_id,
                                created_at=created_at, updated_at=updated_at,
                                status='pending')
 

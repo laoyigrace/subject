@@ -13,7 +13,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 from cursive import exception as cursive_exception
-import glance_store
+import subject_store
 from oslo_config import cfg
 from oslo_log import log as logging
 from oslo_utils import encodeutils
@@ -36,13 +36,13 @@ LOG = logging.getLogger(__name__)
 CONF = cfg.CONF
 
 
-class ImageDataController(object):
+class SubjectDataController(object):
     def __init__(self, db_api=None, store_api=None,
                  policy_enforcer=None, notifier=None,
                  gateway=None):
         if gateway is None:
             db_api = db_api or subject.db.get_api()
-            store_api = store_api or glance_store
+            store_api = store_api or subject_store
             policy = policy_enforcer or subject.api.policy.Enforcer()
             notifier = notifier or subject.notifier.Notifier()
             gateway = subject.gateway.Gateway(db_api, store_api,
@@ -134,8 +134,8 @@ class ImageDataController(object):
                              {"trust": refresher.trust_id,
                               "msg": encodeutils.exception_to_unicode(e)})
 
-            except (glance_store.NotFound,
-                    exception.ImageNotFound,
+            except (subject_store.NotFound,
+                    exception.SubjectNotFound,
                     exception.Conflict):
                 msg = (_("Subject %s could not be found after upload. "
                          "The subject may have been deleted during the "
@@ -145,7 +145,7 @@ class ImageDataController(object):
                 # NOTE(sridevi): Cleaning up the uploaded chunks.
                 try:
                     subject.delete()
-                except exception.ImageNotFound:
+                except exception.SubjectNotFound:
                     # NOTE(sridevi): Ignore this exception
                     pass
                 raise webob.exc.HTTPGone(explanation=msg,
@@ -172,7 +172,7 @@ class ImageDataController(object):
             raise webob.exc.HTTPBadRequest(
                 explanation=encodeutils.exception_to_unicode(e))
 
-        except glance_store.StoreAddDisabled:
+        except subject_store.StoreAddDisabled:
             msg = _("Error in store configuration. Adding subjects to store "
                     "is disabled.")
             LOG.exception(msg)
@@ -180,7 +180,7 @@ class ImageDataController(object):
             raise webob.exc.HTTPGone(explanation=msg, request=req,
                                      content_type='text/plain')
 
-        except exception.InvalidImageStatusTransition as e:
+        except exception.InvalidSubjectStatusTransition as e:
             msg = encodeutils.exception_to_unicode(e)
             LOG.exception(msg)
             raise webob.exc.HTTPConflict(explanation=e.msg, request=req)
@@ -194,7 +194,7 @@ class ImageDataController(object):
         except exception.NotFound as e:
             raise webob.exc.HTTPNotFound(explanation=e.msg)
 
-        except glance_store.StorageFull as e:
+        except subject_store.StorageFull as e:
             msg = _("Subject storage media "
                     "is full: %s") % encodeutils.exception_to_unicode(e)
             LOG.error(msg)
@@ -210,7 +210,7 @@ class ImageDataController(object):
             raise webob.exc.HTTPRequestEntityTooLarge(explanation=msg,
                                                       request=req)
 
-        except exception.ImageSizeLimitExceeded as e:
+        except exception.SubjectSizeLimitExceeded as e:
             msg = _("The incoming subject is "
                     "too large: %s") % encodeutils.exception_to_unicode(e)
             LOG.error(msg)
@@ -218,7 +218,7 @@ class ImageDataController(object):
             raise webob.exc.HTTPRequestEntityTooLarge(explanation=msg,
                                                       request=req)
 
-        except glance_store.StorageWriteDenied as e:
+        except subject_store.StorageWriteDenied as e:
             msg = _("Insufficient permissions on subject "
                     "storage media: %s") % encodeutils.exception_to_unicode(e)
             LOG.error(msg)
@@ -301,12 +301,12 @@ class ResponseSerializer(wsgi.JSONResponseSerializer):
             # an iterator very strange
             response.app_iter = iter(subject.get_data(offset=offset,
                                                     chunk_size=chunk_size))
-        except glance_store.NotFound as e:
+        except subject_store.NotFound as e:
             raise webob.exc.HTTPNoContent(explanation=e.msg)
-        except glance_store.RemoteServiceUnavailable as e:
+        except subject_store.RemoteServiceUnavailable as e:
             raise webob.exc.HTTPServiceUnavailable(explanation=e.msg)
-        except (glance_store.StoreGetNotSupported,
-                glance_store.StoreRandomGetNotSupported) as e:
+        except (subject_store.StoreGetNotSupported,
+                subject_store.StoreRandomGetNotSupported) as e:
             raise webob.exc.HTTPBadRequest(explanation=e.msg)
         except exception.Forbidden as e:
             LOG.debug("User not permitted to download subject '%s'", subject)
@@ -328,5 +328,5 @@ def create_resource():
     """Subject data resource factory method"""
     deserializer = RequestDeserializer()
     serializer = ResponseSerializer()
-    controller = ImageDataController()
+    controller = SubjectDataController()
     return wsgi.Resource(controller, deserializer, serializer)

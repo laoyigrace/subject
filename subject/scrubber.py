@@ -17,7 +17,7 @@ import calendar
 import time
 
 import eventlet
-from glance_store import exceptions as store_exceptions
+from subject_store import exceptions as store_exceptions
 from oslo_config import cfg
 from oslo_log import log as logging
 from oslo_utils import encodeutils

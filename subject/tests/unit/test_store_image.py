@@ -33,7 +33,7 @@ TENANT2 = '2c014f32-55eb-467d-8fcb-4bd706012f81'
 TENANT3 = '228c6da5-29cd-4d67-9457-ed632e083fc0'
 
 
-class ImageRepoStub(object):
+class SubjectRepoStub(object):
     def add(self, subject):
         return subject
 
@@ -41,7 +41,7 @@ class ImageRepoStub(object):
         return subject
 
 
-class ImageStub(object):
+class SubjectStub(object):
     def __init__(self, subject_id, status=None, locations=None,
                  visibility=None, extra_properties=None):
         self.subject_id = subject_id
@@ -58,19 +58,19 @@ class ImageStub(object):
         return FakeMemberRepo(self, [TENANT1, TENANT2])
 
 
-class ImageFactoryStub(object):
+class SubjectFactoryStub(object):
     def new_subject(self, subject_id=None, name=None, visibility='private',
                   min_disk=0, min_ram=0, protected=False, owner=None,
                   disk_format=None, container_format=None,
                   extra_properties=None, tags=None, **other_args):
-        return ImageStub(subject_id, visibility=visibility,
+        return SubjectStub(subject_id, visibility=visibility,
                          extra_properties=extra_properties, **other_args)
 
 
 class FakeMemberRepo(object):
     def __init__(self, subject, tenants=None):
         self.subject = subject
-        self.factory = subject.domain.ImageMemberFactory()
+        self.factory = subject.domain.SubjectMemberFactory()
         self.tenants = tenants or []
 
     def list(self, *args, **kwargs):
@@ -84,14 +84,14 @@ class FakeMemberRepo(object):
         self.tenants.remove(member.member_id)
 
 
-class TestStoreImage(utils.BaseTestCase):
+class TestStoreSubject(utils.BaseTestCase):
     def setUp(self):
         locations = [{'url': '%s/%s' % (BASE_URI, UUID1),
                       'metadata': {}, 'status': 'active'}]
-        self.subject_stub = ImageStub(UUID1, 'active', locations)
+        self.subject_stub = SubjectStub(UUID1, 'active', locations)
         self.store_api = unit_test_utils.FakeStoreAPI()
         self.store_utils = unit_test_utils.FakeStoreUtils(self.store_api)
-        super(TestStoreImage, self).setUp()
+        super(TestStoreSubject, self).setUp()
 
     def test_subject_delete(self):
         subject = subject.location.SubjectProxy(self.subject_stub, {},
@@ -141,7 +141,7 @@ class TestStoreImage(utils.BaseTestCase):
 
     def test_subject_set_data(self):
         context = subject.context.RequestContext(user=USER1)
-        subject_stub = ImageStub(UUID2, status='queued', locations=[])
+        subject_stub = SubjectStub(UUID2, status='queued', locations=[])
         subject = subject.location.SubjectProxy(subject_stub, context,
                                               self.store_api, self.store_utils)
         subject.set_data('YYYY', 4)
@@ -153,7 +153,7 @@ class TestStoreImage(utils.BaseTestCase):
 
     def test_subject_set_data_location_metadata(self):
         context = subject.context.RequestContext(user=USER1)
-        subject_stub = ImageStub(UUID2, status='queued', locations=[])
+        subject_stub = SubjectStub(UUID2, status='queued', locations=[])
         loc_meta = {'key': 'value5032'}
         store_api = unit_test_utils.FakeStoreAPI(store_metadata=loc_meta)
         store_utils = unit_test_utils.FakeStoreUtils(store_api)
@@ -174,7 +174,7 @@ class TestStoreImage(utils.BaseTestCase):
 
     def test_subject_set_data_unknown_size(self):
         context = subject.context.RequestContext(user=USER1)
-        subject_stub = ImageStub(UUID2, status='queued', locations=[])
+        subject_stub = SubjectStub(UUID2, status='queued', locations=[])
         subject = subject.location.SubjectProxy(subject_stub, context,
                                               self.store_api, self.store_utils)
         subject.set_data('YYYY', None)
@@ -198,7 +198,7 @@ class TestStoreImage(utils.BaseTestCase):
             'img_signature_key_type': 'TYPE',
             'img_signature': 'VALID'
         }
-        subject_stub = ImageStub(UUID2, status='queued',
+        subject_stub = SubjectStub(UUID2, status='queued',
                                extra_properties=extra_properties)
         self.stubs.Set(signature_utils, 'get_verifier',
                        unit_test_utils.fake_get_verifier)
@@ -218,7 +218,7 @@ class TestStoreImage(utils.BaseTestCase):
             'img_signature_key_type': 'TYPE',
             'img_signature': 'INVALID'
         }
-        subject_stub = ImageStub(UUID2, status='queued',
+        subject_stub = SubjectStub(UUID2, status='queued',
                                extra_properties=extra_properties)
         self.stubs.Set(signature_utils, 'get_verifier',
                        unit_test_utils.fake_get_verifier)
@@ -235,7 +235,7 @@ class TestStoreImage(utils.BaseTestCase):
             'img_signature_key_type': 'TYPE',
             'img_signature': 'INVALID'
         }
-        subject_stub = ImageStub(UUID2, status='queued',
+        subject_stub = SubjectStub(UUID2, status='queued',
                                extra_properties=extra_properties)
         self.stubs.Set(signature_utils, 'get_verifier',
                        unit_test_utils.fake_get_verifier)
@@ -248,7 +248,7 @@ class TestStoreImage(utils.BaseTestCase):
         self.assertEqual('active', subject.status)
 
     def _add_subject(self, context, subject_id, data, len):
-        subject_stub = ImageStub(subject_id, status='queued', locations=[])
+        subject_stub = SubjectStub(subject_id, status='queued', locations=[])
         subject = subject.location.SubjectProxy(subject_stub, context,
                                               self.store_api, self.store_utils)
         subject.set_data(data, len)
@@ -547,7 +547,7 @@ class TestStoreImage(utils.BaseTestCase):
         self.assertEqual(2, len(self.store_api.data.keys()))
 
         context = subject.context.RequestContext(user=USER1)
-        subject_stub1 = ImageStub('fake_subject_id', status='queued', locations=[])
+        subject_stub1 = SubjectStub('fake_subject_id', status='queued', locations=[])
         subject1 = subject.location.SubjectProxy(subject_stub1, context,
                                                self.store_api, self.store_utils)
 
@@ -569,7 +569,7 @@ class TestStoreImage(utils.BaseTestCase):
         context = subject.context.RequestContext(user=USER1)
         (subject1, subject_stub1) = self._add_subject(context, UUID2, 'XXXX', 4)
 
-        subject_stub2 = ImageStub('fake_subject_id', status='queued', locations=[])
+        subject_stub2 = SubjectStub('fake_subject_id', status='queued', locations=[])
         subject2 = subject.location.SubjectProxy(subject_stub2, context,
                                                self.store_api, self.store_utils)
 
@@ -594,7 +594,7 @@ class TestStoreImage(utils.BaseTestCase):
         (subject1, subject_stub1) = self._add_subject(context, UUID2, 'XXXX', 4)
         (subject2, subject_stub2) = self._add_subject(context, UUID3, 'YYYY', 4)
 
-        subject_stub3 = ImageStub('fake_subject_id', status='queued', locations=[])
+        subject_stub3 = SubjectStub('fake_subject_id', status='queued', locations=[])
         subject3 = subject.location.SubjectProxy(subject_stub3, context,
                                                self.store_api, self.store_utils)
 
@@ -622,7 +622,7 @@ class TestStoreImage(utils.BaseTestCase):
         context = subject.context.RequestContext(user=USER1)
         (subject1, subject_stub1) = self._add_subject(context, UUID2, 'XXXX', 4)
         (subject2, subject_stub2) = self._add_subject(context, UUID3, 'YYYY', 4)
-        subject_stub3 = ImageStub('fake_subject_id', status='queued', locations=[])
+        subject_stub3 = SubjectStub('fake_subject_id', status='queued', locations=[])
 
         subject3 = subject.location.SubjectProxy(subject_stub3, context,
                                                self.store_api, self.store_utils)
@@ -650,7 +650,7 @@ class TestStoreImage(utils.BaseTestCase):
         context = subject.context.RequestContext(user=USER1)
         (subject1, subject_stub1) = self._add_subject(context, UUID2, 'XXXX', 4)
         (subject2, subject_stub2) = self._add_subject(context, UUID3, 'YYYY', 4)
-        subject_stub3 = ImageStub('fake_subject_id', status='queued', locations=[])
+        subject_stub3 = SubjectStub('fake_subject_id', status='queued', locations=[])
         subject3 = subject.location.SubjectProxy(subject_stub3, context,
                                                self.store_api, self.store_utils)
 
@@ -679,7 +679,7 @@ class TestStoreImage(utils.BaseTestCase):
         (subject1, subject_stub1) = self._add_subject(context, UUID2, 'XXXX', 4)
         (subject2, subject_stub2) = self._add_subject(context, UUID3, 'YYYY', 4)
 
-        subject_stub3 = ImageStub('fake_subject_id', status='queued', locations=[])
+        subject_stub3 = SubjectStub('fake_subject_id', status='queued', locations=[])
         subject3 = subject.location.SubjectProxy(subject_stub3, context,
                                                self.store_api, self.store_utils)
 
@@ -712,7 +712,7 @@ class TestStoreImage(utils.BaseTestCase):
         location2 = {'url': UUID2, 'metadata': {}}
         location3 = {'url': UUID3, 'metadata': {}}
 
-        subject_stub3 = ImageStub('fake_subject_id', status='queued', locations=[])
+        subject_stub3 = SubjectStub('fake_subject_id', status='queued', locations=[])
         subject3 = subject.location.SubjectProxy(subject_stub3, context,
                                                self.store_api, self.store_utils)
         subject3.locations += [location2, location3]
@@ -732,15 +732,15 @@ class TestStoreImage(utils.BaseTestCase):
         subject2.delete()
 
 
-class TestStoreImageRepo(utils.BaseTestCase):
+class TestStoreSubjectRepo(utils.BaseTestCase):
     def setUp(self):
-        super(TestStoreImageRepo, self).setUp()
+        super(TestStoreSubjectRepo, self).setUp()
         self.store_api = unit_test_utils.FakeStoreAPI()
         store_utils = unit_test_utils.FakeStoreUtils(self.store_api)
-        self.subject_stub = ImageStub(UUID1)
+        self.subject_stub = SubjectStub(UUID1)
         self.subject = subject.location.SubjectProxy(self.subject_stub, {},
                                                    self.store_api, store_utils)
-        self.subject_repo_stub = ImageRepoStub()
+        self.subject_repo_stub = SubjectRepoStub()
         self.subject_repo = subject.location.SubjectRepoProxy(self.subject_repo_stub,
                                                             {}, self.store_api,
                                                             store_utils)
@@ -749,7 +749,7 @@ class TestStoreImageRepo(utils.BaseTestCase):
         patcher.start()
         self.addCleanup(patcher.stop)
         self.fake_member_repo = FakeMemberRepo(self.subject, [TENANT1, TENANT2])
-        self.subject_member_repo = subject.location.ImageMemberRepoProxy(
+        self.subject_member_repo = subject.location.SubjectMemberRepoProxy(
             self.fake_member_repo,
             self.subject,
             {}, self.store_api)
@@ -809,7 +809,7 @@ class TestStoreImageRepo(utils.BaseTestCase):
         self.subject_stub.locations = [{'url': 'glug', 'metadata': {},
                                       'status': 'active'}]
         self.subject_stub.visibility = 'private'
-        membership = subject.domain.ImageMembership(
+        membership = subject.domain.SubjectMembership(
             UUID1, TENANT3, None, None, status='accepted')
         self.subject_member_repo.add(membership)
         self.assertIn('glug', self.store_api.acls)
@@ -822,7 +822,7 @@ class TestStoreImageRepo(utils.BaseTestCase):
         self.subject_stub.locations = [{'url': 'glug', 'metadata': {},
                                       'status': 'active'}]
         self.subject_stub.visibility = 'private'
-        membership = subject.domain.ImageMembership(
+        membership = subject.domain.SubjectMembership(
             UUID1, TENANT1, None, None, status='accepted')
         self.subject_member_repo.remove(membership)
         self.assertIn('glug', self.store_api.acls)
@@ -832,14 +832,14 @@ class TestStoreImageRepo(utils.BaseTestCase):
         self.assertEqual([TENANT2], acls['read'])
 
 
-class TestImageFactory(unit_test_base.StoreClearingUnitTest):
+class TestSubjectFactory(unit_test_base.StoreClearingUnitTest):
 
     def setUp(self):
-        super(TestImageFactory, self).setUp()
+        super(TestSubjectFactory, self).setUp()
         store_api = unit_test_utils.FakeStoreAPI()
         store_utils = unit_test_utils.FakeStoreUtils(store_api)
         self.subject_factory = subject.location.SubjectFactoryProxy(
-            ImageFactoryStub(),
+            SubjectFactoryStub(),
             subject.context.RequestContext(user=USER1),
             store_api,
             store_utils)

@@ -24,10 +24,10 @@ from subject.common import store_utils
 import subject.tests.utils as test_utils
 
 
-class TestImageImport(test_utils.BaseTestCase):
+class TestSubjectImport(test_utils.BaseTestCase):
 
     def setUp(self):
-        super(TestImageImport, self).setUp()
+        super(TestSubjectImport, self).setUp()
 
     def test_run(self):
         with mock.patch.object(subject_import_script,

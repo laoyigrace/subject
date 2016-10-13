@@ -16,7 +16,7 @@
 
 import abc
 
-import glance_store
+import subject_store
 from oslo_config import cfg
 from oslo_log import log as logging
 import oslo_messaging
@@ -165,7 +165,7 @@ def format_subject_notification(subject):
 
 
 def format_subject_member_notification(subject_member):
-    """Given a subject.domain.ImageMember object, return a dictionary of relevant
+    """Given a subject.domain.SubjectMember object, return a dictionary of relevant
     notification information.
     """
     return {
@@ -376,7 +376,7 @@ class NotificationFactoryProxy(object):
         pass
 
 
-class ImageProxy(NotificationProxy, domain_proxy.Subject):
+class SubjectProxy(NotificationProxy, domain_proxy.Subject):
     def get_super_class(self):
         return domain_proxy.Subject
 
@@ -424,12 +424,12 @@ class ImageProxy(NotificationProxy, domain_proxy.Subject):
         notify_error = self.notifier.error
         try:
             self.repo.set_data(data, size)
-        except glance_store.StorageFull as e:
+        except subject_store.StorageFull as e:
             msg = (_("Subject storage media is full: %s") %
                    encodeutils.exception_to_unicode(e))
             _send_notification(notify_error, 'subject.upload', msg)
             raise webob.exc.HTTPRequestEntityTooLarge(explanation=msg)
-        except glance_store.StorageWriteDenied as e:
+        except subject_store.StorageWriteDenied as e:
             msg = (_("Insufficient permissions on subject storage media: %s")
                    % encodeutils.exception_to_unicode(e))
             _send_notification(notify_error, 'subject.upload', msg)
@@ -482,9 +482,9 @@ class ImageProxy(NotificationProxy, domain_proxy.Subject):
             self.send_notification('subject.activate', self.repo)
 
 
-class ImageMemberProxy(NotificationProxy, domain_proxy.ImageMember):
+class SubjectMemberProxy(NotificationProxy, domain_proxy.SubjectMember):
     def get_super_class(self):
-        return domain_proxy.ImageMember
+        return domain_proxy.SubjectMember
 
 
 class SubjectFactoryProxy(NotificationFactoryProxy, domain_proxy.SubjectFactory):
@@ -492,7 +492,7 @@ class SubjectFactoryProxy(NotificationFactoryProxy, domain_proxy.SubjectFactory)
         return domain_proxy.SubjectFactory
 
     def get_proxy_class(self):
-        return ImageProxy
+        return SubjectProxy
 
 
 class SubjectRepoProxy(NotificationRepoProxy, domain_proxy.Repo):
@@ -500,7 +500,7 @@ class SubjectRepoProxy(NotificationRepoProxy, domain_proxy.Repo):
         return domain_proxy.Repo
 
     def get_proxy_class(self):
-        return ImageProxy
+        return SubjectProxy
 
     def get_payload(self, obj):
         return format_subject_notification(obj)
@@ -520,7 +520,7 @@ class SubjectRepoProxy(NotificationRepoProxy, domain_proxy.Repo):
         })
 
 
-class ImageMemberRepoProxy(NotificationBase, domain_proxy.MemberRepo):
+class SubjectMemberRepoProxy(NotificationBase, domain_proxy.MemberRepo):
 
     def __init__(self, repo, subject, context, notifier):
         self.repo = repo
@@ -537,21 +537,21 @@ class ImageMemberRepoProxy(NotificationBase, domain_proxy.MemberRepo):
         return domain_proxy.MemberRepo
 
     def get_proxy_class(self):
-        return ImageMemberProxy
+        return SubjectMemberProxy
 
     def get_payload(self, obj):
         return format_subject_member_notification(obj)
 
     def save(self, member, from_state=None):
-        super(ImageMemberRepoProxy, self).save(member, from_state=from_state)
+        super(SubjectMemberRepoProxy, self).save(member, from_state=from_state)
         self.send_notification('subject.member.update', member)
 
     def add(self, member):
-        super(ImageMemberRepoProxy, self).add(member)
+        super(SubjectMemberRepoProxy, self).add(member)
         self.send_notification('subject.member.create', member)
 
     def remove(self, member):
-        super(ImageMemberRepoProxy, self).remove(member)
+        super(SubjectMemberRepoProxy, self).remove(member)
         self.send_notification('subject.member.delete', member, extra_payload={
             'deleted': True, 'deleted_at': timeutils.isotime()
         })

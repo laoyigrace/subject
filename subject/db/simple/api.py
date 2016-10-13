@@ -360,7 +360,7 @@ def _do_pagination(context, subjects, marker, limit, show_deleted,
                 start = i + 1
                 break
         else:
-            raise exception.ImageNotFound()
+            raise exception.SubjectNotFound()
 
     end = start + limit if limit is not None else None
     return subjects[start:end]
@@ -405,12 +405,12 @@ def _subject_get(context, subject_id, force_show_deleted=False, status=None):
         subject = DATA['subjects'][subject_id]
     except KeyError:
         LOG.warn(_LW('Could not find subject %s') % subject_id)
-        raise exception.ImageNotFound()
+        raise exception.SubjectNotFound()
 
     if subject['deleted'] and not (force_show_deleted
                                  or context.can_see_deleted):
         LOG.warn(_LW('Unable to get deleted subject'))
-        raise exception.ImageNotFound()
+        raise exception.SubjectNotFound()
 
     if not is_subject_visible(context, subject):
         LOG.warn(_LW('Unable to get unowned subject'))
@@ -712,7 +712,7 @@ def subject_update(context, subject_id, subject_values, purge_props=False,
     try:
         subject = DATA['subjects'][subject_id]
     except KeyError:
-        raise exception.ImageNotFound()
+        raise exception.SubjectNotFound()
 
     location_data = subject_values.pop('locations', None)
     if location_data is not None:
@@ -764,7 +764,7 @@ def subject_destroy(context, subject_id):
         return _normalize_locations(context,
                                     copy.deepcopy(DATA['subjects'][subject_id]))
     except KeyError:
-        raise exception.ImageNotFound()
+        raise exception.SubjectNotFound()
 
 
 @log_call

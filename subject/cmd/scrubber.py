@@ -31,7 +31,7 @@ if os.path.exists(os.path.join(possible_topdir, 'subject', '__init__.py')):
     sys.path.insert(0, possible_topdir)
 import eventlet
 
-import glance_store
+import subject_store
 from oslo_config import cfg
 from oslo_log import log as logging
 
@@ -53,11 +53,11 @@ def main():
         config.parse_args()
         logging.setup(CONF, 'subject')
 
-        glance_store.register_opts(config.CONF)
-        glance_store.create_stores(config.CONF)
-        glance_store.verify_default_store()
+        subject_store.register_opts(config.CONF)
+        subject_store.create_stores(config.CONF)
+        subject_store.verify_default_store()
 
-        app = scrubber.Scrubber(glance_store)
+        app = scrubber.Scrubber(subject_store)
 
         if CONF.daemon:
             server = scrubber.Daemon(CONF.wakeup_time)

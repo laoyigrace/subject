@@ -32,7 +32,7 @@ CONF = {'default_store': 'file',
 
 class TestStoreLocation(base.StoreClearingUnitTest):
 
-    class FakeImageProxy(object):
+    class FakeSubjectProxy(object):
         size = None
         context = None
         store_api = mock.Mock()
@@ -51,13 +51,13 @@ class TestStoreLocation(base.StoreClearingUnitTest):
             loc2 = {'url': 'file:///fake2.img.tar.gz', 'metadata': {}}
 
             # Test for insert location
-            subject1 = TestStoreLocation.FakeImageProxy()
+            subject1 = TestStoreLocation.FakeSubjectProxy()
             locations = subject.location.StoreLocations(subject1, [])
             locations.insert(0, loc2)
             self.assertEqual(1, subject1.size)
 
             # Test for set_attr of _locations_proxy
-            subject2 = TestStoreLocation.FakeImageProxy()
+            subject2 = TestStoreLocation.FakeSubjectProxy()
             locations = subject.location.StoreLocations(subject2, [loc1])
             locations[0] = loc2
             self.assertIn(loc2, locations)
@@ -70,7 +70,7 @@ class TestStoreLocation(base.StoreClearingUnitTest):
         loc3 = {'url': 'filesystem:///foo.img.tar.gz', 'metadata': {}}
 
         # Test for insert location
-        subject1 = TestStoreLocation.FakeImageProxy()
+        subject1 = TestStoreLocation.FakeSubjectProxy()
         locations = subject.location.StoreLocations(subject1, [])
         self.assertRaises(exception.BadStoreUri, locations.insert, 0, loc1)
         self.assertRaises(exception.BadStoreUri, locations.insert, 0, loc3)
@@ -78,7 +78,7 @@ class TestStoreLocation(base.StoreClearingUnitTest):
         self.assertNotIn(loc3, locations)
 
         # Test for set_attr of _locations_proxy
-        subject2 = TestStoreLocation.FakeImageProxy()
+        subject2 = TestStoreLocation.FakeSubjectProxy()
         locations = subject.location.StoreLocations(subject2, [loc1])
         self.assertRaises(exception.BadStoreUri, locations.insert, 0, loc2)
         self.assertNotIn(loc2, locations)

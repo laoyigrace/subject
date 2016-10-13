@@ -535,7 +535,7 @@ class RegistryAPIMixIn(object):
         self.assertEqual(res.status_int, http_resp)
         return res
 
-    def assertEqualImages(self, res, uuids, key='subjects', unjsonify=True):
+    def assertEqualSubjects(self, res, uuids, key='subjects', unjsonify=True):
         subjects = jsonutils.loads(res.body)[key] if unjsonify else res
         self.assertEqual(len(subjects), len(uuids))
         for i, value in enumerate(uuids):

@@ -809,14 +809,14 @@ msgstr ""
 
 #, python-format
 msgid "Subject %(id)s not found"
-msgstr "Imagem %(id)s não localizada"
+msgstr "Subjectm %(id)s não localizada"
 
 #, python-format
 msgid ""
 "Subject %(subject_id)s could not be found after upload. The subject may have been "
 "deleted during the upload: %(error)s"
 msgstr ""
-"Imagem %(subject_id)s não pôde ser localizada após o upload. A subjectm pode ter "
+"Subjectm %(subject_id)s não pôde ser localizada após o upload. A subjectm pode ter "
 "sido excluída durante o upload: %(error)s"
 
 #, python-format
@@ -841,7 +841,7 @@ msgstr ""
 
 #, python-format
 msgid "Subject %s is deactivated"
-msgstr "Imagem %s está desativada"
+msgstr "Subjectm %s está desativada"
 
 #, python-format
 msgid "Subject %s is not active"
@@ -849,11 +849,11 @@ msgstr "A subjectm %s não está ativa"
 
 #, python-format
 msgid "Subject %s not found."
-msgstr "Imagem %s não localizada."
+msgstr "Subjectm %s não localizada."
 
 #, python-format
 msgid "Subject exceeds the storage quota: %s"
-msgstr "Imagem excede a cota de armazenamento: %s"
+msgstr "Subjectm excede a cota de armazenamento: %s"
 
 msgid "Subject id is required."
 msgstr "ID da subjectm é obrigatório."
@@ -898,15 +898,15 @@ msgstr "A subjectm o identificador %s já existe!"
 
 #, python-format
 msgid "Subject with identifier %s has been deleted."
-msgstr "Imagem com identificador %s foi excluída."
+msgstr "Subjectm com identificador %s foi excluída."
 
 #, python-format
 msgid "Subject with identifier %s not found"
-msgstr "Imagem com identificador %s não localizada"
+msgstr "Subjectm com identificador %s não localizada"
 
 #, python-format
 msgid "Subject with the given id %(subject_id)s was not found"
-msgstr "Imagem com o ID fornecido %(subject_id)s não foi localizada"
+msgstr "Subjectm com o ID fornecido %(subject_id)s não foi localizada"
 
 #, python-format
 msgid ""
@@ -1805,7 +1805,7 @@ msgid ""
 "The Subject %(subject_id)s object being created by this task %(task_id)s, is no "
 "longer in valid status for further processing."
 msgstr ""
-"O objeto da Imagem %(subject_id)s que está sendo criado por esta tarefa "
+"O objeto da Subjectm %(subject_id)s que está sendo criado por esta tarefa "
 "%(task_id)s não está mais no status válido para processamento adicional."
 
 msgid "The Store URI was malformed."

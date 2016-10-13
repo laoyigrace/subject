@@ -26,8 +26,8 @@ that is divided into layers. Specific tasks are implemented
 by each layer.
 
 All the file (Subject data) operations are performed using
-glance_store library, which is responsible for interaction with external
-storage back ends and (or) local filesystem(s). The glance_store library
+subject_store library, which is responsible for interaction with external
+storage back ends and (or) local filesystem(s). The subject_store library
 provides a uniform interface to access the backend stores.
 
 Glance uses a central database (Glance DB) that is shared amongst all
@@ -59,7 +59,7 @@ but are not extensively tested upstream.
          there exist the following storage systems, none of which make use
          of anything else: Filesystem, Swift, Ceph, "ellipses", Sheepdog.
          A complete list is given by the currently  available drivers in
-         glance_store/_drivers.
+         subject_store/_drivers.
 
 .. centered:: Subject 1. OpenStack Glance Architecture
 

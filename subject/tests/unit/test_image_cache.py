@@ -38,7 +38,7 @@ FIXTURE_LENGTH = 1024
 FIXTURE_DATA = b'*' * FIXTURE_LENGTH
 
 
-class ImageCacheTestCase(object):
+class SubjectCacheTestCase(object):
 
     def _setup_fixture_file(self):
         FIXTURE_FILE = six.BytesIO(FIXTURE_DATA)
@@ -409,7 +409,7 @@ class ImageCacheTestCase(object):
         md5.update(subject)
         checksum = md5.hexdigest()
 
-        cache = subject_cache.ImageCache()
+        cache = subject_cache.SubjectCache()
         img_iter = cache.get_caching_iter(subject_id, checksum, [subject])
         for chunk in img_iter:
             pass
@@ -421,7 +421,7 @@ class ImageCacheTestCase(object):
         subject_id = 123
         checksum = "foobar"  # bad.
 
-        cache = subject_cache.ImageCache()
+        cache = subject_cache.SubjectCache()
         img_iter = cache.get_caching_iter(subject_id, checksum, [subject])
 
         def reader():
@@ -432,8 +432,8 @@ class ImageCacheTestCase(object):
         self.assertFalse(cache.is_cached(subject_id))
 
 
-class TestImageCacheXattr(test_utils.BaseTestCase,
-                          ImageCacheTestCase):
+class TestSubjectCacheXattr(test_utils.BaseTestCase,
+                          SubjectCacheTestCase):
 
     """Tests subject caching when xattr is used in cache"""
 
@@ -443,7 +443,7 @@ class TestImageCacheXattr(test_utils.BaseTestCase,
         are working (python-xattr installed and xattr support on the
         filesystem)
         """
-        super(TestImageCacheXattr, self).setUp()
+        super(TestSubjectCacheXattr, self).setUp()
 
         if getattr(self, 'disable', False):
             return
@@ -464,7 +464,7 @@ class TestImageCacheXattr(test_utils.BaseTestCase,
         self.config(subject_cache_dir=self.cache_dir,
                     subject_cache_driver='xattr',
                     subject_cache_max_size=5 * units.Ki)
-        self.cache = subject_cache.ImageCache()
+        self.cache = subject_cache.SubjectCache()
 
         if not xattr_writes_supported(self.cache_dir):
             self.inited = True
@@ -473,8 +473,8 @@ class TestImageCacheXattr(test_utils.BaseTestCase,
             return
 
 
-class TestImageCacheSqlite(test_utils.BaseTestCase,
-                           ImageCacheTestCase):
+class TestSubjectCacheSqlite(test_utils.BaseTestCase,
+                           SubjectCacheTestCase):
 
     """Tests subject caching when SQLite is used in cache"""
 
@@ -483,7 +483,7 @@ class TestImageCacheSqlite(test_utils.BaseTestCase,
         Test to see if the pre-requisites for the subject cache
         are working (python-sqlite3 installed)
         """
-        super(TestImageCacheSqlite, self).setUp()
+        super(TestSubjectCacheSqlite, self).setUp()
 
         if getattr(self, 'disable', False):
             return
@@ -503,13 +503,13 @@ class TestImageCacheSqlite(test_utils.BaseTestCase,
         self.config(subject_cache_dir=self.cache_dir,
                     subject_cache_driver='sqlite',
                     subject_cache_max_size=5 * units.Ki)
-        self.cache = subject_cache.ImageCache()
+        self.cache = subject_cache.SubjectCache()
 
 
-class TestImageCacheNoDep(test_utils.BaseTestCase):
+class TestSubjectCacheNoDep(test_utils.BaseTestCase):
 
     def setUp(self):
-        super(TestImageCacheNoDep, self).setUp()
+        super(TestSubjectCacheNoDep, self).setUp()
 
         self.driver = None
 
@@ -518,7 +518,7 @@ class TestImageCacheNoDep(test_utils.BaseTestCase):
 
         mox_fixture = self.useFixture(moxstubout.MoxStubout())
         self.stubs = mox_fixture.stubs
-        self.stubs.Set(subject_cache.ImageCache, 'init_driver', init_driver)
+        self.stubs.Set(subject_cache.SubjectCache, 'init_driver', init_driver)
 
     def test_get_caching_iter_when_write_fails(self):
 
@@ -538,7 +538,7 @@ class TestImageCacheNoDep(test_utils.BaseTestCase):
                 yield FailingFile()
 
         self.driver = FailingFileDriver()
-        cache = subject_cache.ImageCache()
+        cache = subject_cache.SubjectCache()
         data = [b'a', b'b', b'c', b'Fail', b'd', b'e', b'f']
 
         caching_iter = cache.get_caching_iter('dummy_id', None, iter(data))
@@ -556,7 +556,7 @@ class TestImageCacheNoDep(test_utils.BaseTestCase):
                 raise IOError
 
         self.driver = OpenFailingDriver()
-        cache = subject_cache.ImageCache()
+        cache = subject_cache.SubjectCache()
         data = [b'a', b'b', b'c', b'd', b'e', b'f']
 
         caching_iter = cache.get_caching_iter('dummy_id', None, iter(data))

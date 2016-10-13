@@ -6,13 +6,13 @@
     "protected": true,
     "resource_type_associations": [
         {
-            "name": "OS::Glance::Image",
+            "name": "OS::Glance::Subject",
             "prefix": "cinder_"
         }
     ],
     "properties": {
         "img_volume_type": {
-            "title": "Image Volume Type",
+            "title": "Subject Volume Type",
             "description": "Specifies the volume type that should be applied during new volume creation with a subject. This value is passed to Cinder when creating a new volume. Priority of volume type related parameters are 1.volume_type(via API or CLI), 2.cinder_img_volume_type, 3.default_volume_type(via cinder.conf). If not specified, volume_type or default_volume_type will be referred based on their priority.",
             "type": "string"
         }

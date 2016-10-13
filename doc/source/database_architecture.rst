@@ -120,7 +120,7 @@ Subject property methods
 #. ``subject_property_create(context, values)`` — creates
    a property record with parameters listed in the *values* dictionary
    for an subject with *values['id']*. Returns a dictionary representation
-   of a newly created *ImageProperty* object.
+   of a newly created *SubjectProperty* object.
 #. ``subject_property_delete(context, prop_ref, subject_ref)`` — deletes an
    existing property record with a name *prop_ref* for an subject with
    the identifier *subject_ref*.
@@ -133,7 +133,7 @@ Subject member methods
 #. ``subject_member_create(context, values)`` — creates a member record
    with properties listed in the *values* dictionary for an subject
    with *values['id']*. Returns a dictionary representation
-   of a newly created *ImageMember* object.
+   of a newly created *SubjectMember* object.
 #. ``subject_member_update(context, memb_id, values)`` — updates an
    existing member record with properties listed in the *values*
    dictionary for an subject with *values['id']*. Returns a dictionary
@@ -185,7 +185,7 @@ of an *Subject* object.
    :figwidth: 100%
    :align: center
    :alt: The glance database schema is depicted by 5 tables.
-         The table named Images has the following columns:
+         The table named Subjects has the following columns:
          id: varchar(36);
          name: varchar(255), nullable;
          size: bigint(20), nullable;
@@ -205,7 +205,7 @@ of an *Subject* object.
          virtual_size: bigint(20), nullable;.
          The table named subject_locations has the following columns:
          id: int(11), primary;
-         subject_id: varchar(36), refers to column named id in table Images;
+         subject_id: varchar(36), refers to column named id in table Subjects;
          value: text;
          created_at: datetime;
          updated_at: datetime, nullable;
@@ -215,7 +215,7 @@ of an *Subject* object.
          status: varchar(30);.
          The table named subject_members has the following columns:
          id: int(11), primary;
-         subject_id: varchar(36), refers to column named id in table Images;
+         subject_id: varchar(36), refers to column named id in table Subjects;
          member: varchar(255);
          can_share: tinyint(1);
          created_at: datetime;
@@ -225,7 +225,7 @@ of an *Subject* object.
          status: varchar(20;.
          The table named subject_tags has the following columns:
          id: int(11), primary;
-         subject_id: varchar(36), refers to column named id in table Images;
+         subject_id: varchar(36), refers to column named id in table Subjects;
          value: varchar(255);
          created_at: datetime;
          updated_at: datetime, nullable;
@@ -233,7 +233,7 @@ of an *Subject* object.
          deleted: tinyint(1);.
          The table named subject_properties has the following columns:
          id: int(11), primary;
-         subject_id: varchar(36), refers to column named id in table Images;
+         subject_id: varchar(36), refers to column named id in table Subjects;
          name: varchar(255);
          value: text, nullable;
          created_at: datetime;

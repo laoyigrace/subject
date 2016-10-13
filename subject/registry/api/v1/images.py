@@ -120,7 +120,7 @@ class Controller(object):
         try:
             return self.db_api.subject_get_all(context, filters=filters,
                                              **params)
-        except exception.ImageNotFound:
+        except exception.SubjectNotFound:
             LOG.warn(_LW("Invalid marker. Subject %(id)s could not be "
                          "found.") % {'id': params.get('marker')})
             msg = _("Invalid marker. Subject could not be found.")
@@ -360,7 +360,7 @@ class Controller(object):
         try:
             subject = self.db_api.subject_get(req.context, id)
             LOG.debug("Successfully retrieved subject %(id)s", {'id': id})
-        except exception.ImageNotFound:
+        except exception.SubjectNotFound:
             LOG.info(_LI("Subject %(id)s not found"), {'id': id})
             raise exc.HTTPNotFound()
         except exception.Forbidden:
@@ -390,7 +390,7 @@ class Controller(object):
             deleted_subject = self.db_api.subject_destroy(req.context, id)
             LOG.info(_LI("Successfully deleted subject %(id)s"), {'id': id})
             return dict(subject=make_subject_dict(deleted_subject))
-        except exception.ForbiddenPublicImage:
+        except exception.ForbiddenPublicSubject:
             LOG.info(_LI("Delete denied for public subject %(id)s"), {'id': id})
             raise exc.HTTPForbidden()
         except exception.Forbidden:
@@ -399,7 +399,7 @@ class Controller(object):
             LOG.info(_LI("Access denied to subject %(id)s but returning"
                          " 'not found'"), {'id': id})
             return exc.HTTPNotFound()
-        except exception.ImageNotFound:
+        except exception.SubjectNotFound:
             LOG.info(_LI("Subject %(id)s not found"), {'id': id})
             return exc.HTTPNotFound()
         except Exception:
@@ -503,12 +503,12 @@ class Controller(object):
                      "Got error: %s") % encodeutils.exception_to_unicode(e))
             LOG.error(msg)
             return exc.HTTPBadRequest(msg)
-        except exception.ImageNotFound:
+        except exception.SubjectNotFound:
             LOG.info(_LI("Subject %(id)s not found"), {'id': id})
             raise exc.HTTPNotFound(body='Subject not found',
                                    request=req,
                                    content_type='text/plain')
-        except exception.ForbiddenPublicImage:
+        except exception.ForbiddenPublicSubject:
             LOG.info(_LI("Update denied for public subject %(id)s"), {'id': id})
             raise exc.HTTPForbidden()
         except exception.Forbidden:
@@ -561,7 +561,7 @@ def make_subject_dict(subject):
 
 
 def create_resource():
-    """Images resource factory method."""
+    """Subjects resource factory method."""
     deserializer = wsgi.JSONRequestDeserializer()
     serializer = wsgi.JSONResponseSerializer()
     return wsgi.Resource(Controller(), deserializer, serializer)

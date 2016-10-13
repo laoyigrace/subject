@@ -15,7 +15,7 @@
 
 import copy
 
-import glance_store
+import subject_store
 from oslo_log import log as logging
 from oslo_serialization import jsonutils
 from oslo_utils import encodeutils
@@ -37,13 +37,13 @@ import subject.schema
 LOG = logging.getLogger(__name__)
 
 
-class ImageMembersController(object):
+class SubjectMembersController(object):
     def __init__(self, db_api=None, policy_enforcer=None, notifier=None,
                  store_api=None):
         self.db_api = db_api or subject.db.get_api()
         self.policy = policy_enforcer or policy.Enforcer()
         self.notifier = notifier or subject.notifier.Notifier()
-        self.store_api = store_api or glance_store
+        self.store_api = store_api or subject_store
         self.gateway = subject.gateway.Gateway(self.db_api, self.store_api,
                                                self.notifier, self.policy)
 
@@ -125,7 +125,7 @@ class ImageMembersController(object):
                                        "subject_id": subject_id}
             LOG.warning(msg)
             raise webob.exc.HTTPConflict(explanation=msg)
-        except exception.ImageMemberLimitExceeded as e:
+        except exception.SubjectMemberLimitExceeded as e:
             msg = (_("Subject member limit exceeded for subject %(id)s: %(e)s:")
                    % {"id": subject_id,
                       "e": encodeutils.exception_to_unicode(e)})
@@ -386,5 +386,5 @@ def create_resource():
     """Subject Members resource factory method"""
     deserializer = RequestDeserializer()
     serializer = ResponseSerializer()
-    controller = ImageMembersController()
+    controller = SubjectMembersController()
     return wsgi.Resource(controller, deserializer, serializer)

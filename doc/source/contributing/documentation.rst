@@ -18,7 +18,7 @@ which you may want to contribute:
 
   The Glance Documentation (what you're reading right now) lives in the source
   code tree under ``doc/source``.  It consists of information for developers
-  working on Glance, information for consumers of the OpenStack Images APIs
+  working on Glance, information for consumers of the OpenStack Subjects APIs
   implemented by Glance, and information for operators deploying Glance.  Thus
   there's a wide range of documents to which you could contribute.
 

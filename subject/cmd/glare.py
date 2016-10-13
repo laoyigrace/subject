@@ -31,7 +31,7 @@ from oslo_utils import encodeutils
 eventlet.patcher.monkey_patch(all=False, socket=True, time=True,
                               select=True, thread=True, os=True)
 
-import glance_store
+import subject_store
 from oslo_config import cfg
 from oslo_log import log as logging
 import oslo_messaging
@@ -50,7 +50,7 @@ logging.register_options(CONF)
 
 KNOWN_EXCEPTIONS = (RuntimeError,
                     exception.WorkerCreationFailure,
-                    glance_store.exceptions.BadStoreConfiguration)
+                    subject_store.exceptions.BadStoreConfiguration)
 
 
 def fail(e):
@@ -76,7 +76,7 @@ def main():
         else:
             osprofiler.web.disable()
 
-        server = wsgi.Server(initialize_glance_store=True)
+        server = wsgi.Server(initialize_subject_store=True)
         server.start(config.load_paste_app('glare-api'), default_port=9494)
         server.wait()
     except KNOWN_EXCEPTIONS as e:

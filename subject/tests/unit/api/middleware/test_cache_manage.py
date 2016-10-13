@@ -22,7 +22,7 @@ import webob
 
 
 class TestCacheManageFilter(test_utils.BaseTestCase):
-    @mock.patch.object(subject.subject_cache.ImageCache, "init_driver")
+    @mock.patch.object(subject.subject_cache.SubjectCache, "init_driver")
     def setUp(self, mock_init_driver):
         super(TestCacheManageFilter, self).setUp()
         self.stub_application_name = "stubApplication"

@@ -88,13 +88,13 @@ class Controller(object):
                 build_version_object(2.0, 'v1', 'SUPPORTED'),
             ])
         if CONF.enable_v1_api:
-            LOG.warn(_LW('The Images (Glance) v1 API is deprecated and will '
+            LOG.warn(_LW('The Subjects (Glance) v1 API is deprecated and will '
                          'be removed on or after the Pike release, following '
                          'the standard OpenStack deprecation policy. '
                          'Currently, the solution is to set '
                          'enable_v1_api=False and enable_v2_api=True in your '
                          'subject-api.conf file. Once those options are '
-                         'removed from the code, Images (Glance) v1 API will '
+                         'removed from the code, Subjects (Glance) v1 API will '
                          'be switched on by default and will be the only '
                          'option to deploy and use.'))
             version_objs.extend([

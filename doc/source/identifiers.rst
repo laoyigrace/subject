@@ -17,7 +17,7 @@
 Subject Identifiers
 =================
 
-Images are uniquely identified by way of a URI that
+Subjects are uniquely identified by way of a URI that
 matches the following signature::
 
   <Glance Server Location>/v1/subjects/<ID>

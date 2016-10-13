@@ -155,7 +155,7 @@ CONF = cfg.CONF
 CONF.register_opts(subject_cache_opts)
 
 
-class ImageCache(object):
+class SubjectCache(object):
 
     """Provides an LRU cache for subject data."""
 

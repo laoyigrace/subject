@@ -193,7 +193,7 @@ class TestRegistryAPI(base.IsolatedUnitTest, test_utils.RegistryAPIMixIn):
         db_api.subject_create(self.context, extra_fixture)
 
         res = self.get_api_response_ext(200, url='/subjects?marker=%s' % UUID4)
-        self.assertEqualImages(res, (UUID5, UUID2))
+        self.assertEqualSubjects(res, (UUID5, UUID2))
 
     def test_get_index_unknown_marker(self):
         """
@@ -274,7 +274,7 @@ class TestRegistryAPI(base.IsolatedUnitTest, test_utils.RegistryAPIMixIn):
 
         res = self.get_api_response_ext(
             200, url='/subjects?marker=%s&limit=1' % UUID3)
-        self.assertEqualImages(res, (UUID2,))
+        self.assertEqualSubjects(res, (UUID2,))
 
     def test_get_index_filter_on_user_defined_properties(self):
         """
@@ -446,7 +446,7 @@ class TestRegistryAPI(base.IsolatedUnitTest, test_utils.RegistryAPIMixIn):
         db_api.subject_create(self.context, extra_fixture)
 
         res = self.get_api_response_ext(200, url='/subjects')
-        self.assertEqualImages(res, (UUID3, UUID4, UUID5, UUID2))
+        self.assertEqualSubjects(res, (UUID3, UUID4, UUID5, UUID2))
 
     def test_get_index_bad_sort_key(self):
         """Ensure a 400 is returned when a bad sort_key is provided."""
@@ -512,7 +512,7 @@ class TestRegistryAPI(base.IsolatedUnitTest, test_utils.RegistryAPIMixIn):
 
         url = '/subjects?sort_key=name&sort_dir=asc'
         res = self.get_api_response_ext(200, url=url)
-        self.assertEqualImages(res, (UUID3, UUID2, UUID4))
+        self.assertEqualSubjects(res, (UUID3, UUID2, UUID4))
 
     def test_get_index_sort_status_desc(self):
         """
@@ -532,7 +532,7 @@ class TestRegistryAPI(base.IsolatedUnitTest, test_utils.RegistryAPIMixIn):
 
         res = self.get_api_response_ext(200, url=(
             '/subjects?sort_key=status&sort_dir=desc'))
-        self.assertEqualImages(res, (UUID3, UUID4, UUID2))
+        self.assertEqualSubjects(res, (UUID3, UUID4, UUID2))
 
     def test_get_index_sort_disk_format_asc(self):
         """
@@ -553,7 +553,7 @@ class TestRegistryAPI(base.IsolatedUnitTest, test_utils.RegistryAPIMixIn):
 
         res = self.get_api_response_ext(200, url=(
             '/subjects?sort_key=disk_format&sort_dir=asc'))
-        self.assertEqualImages(res, (UUID3, UUID4, UUID2))
+        self.assertEqualSubjects(res, (UUID3, UUID4, UUID2))
 
     def test_get_index_sort_container_format_desc(self):
         """
@@ -575,7 +575,7 @@ class TestRegistryAPI(base.IsolatedUnitTest, test_utils.RegistryAPIMixIn):
 
         url = '/subjects?sort_key=container_format&sort_dir=desc'
         res = self.get_api_response_ext(200, url=url)
-        self.assertEqualImages(res, (UUID2, UUID4, UUID3))
+        self.assertEqualSubjects(res, (UUID2, UUID4, UUID3))
 
     def test_get_index_sort_size_asc(self):
         """
@@ -596,7 +596,7 @@ class TestRegistryAPI(base.IsolatedUnitTest, test_utils.RegistryAPIMixIn):
 
         url = '/subjects?sort_key=size&sort_dir=asc'
         res = self.get_api_response_ext(200, url=url)
-        self.assertEqualImages(res, (UUID4, UUID2, UUID3))
+        self.assertEqualSubjects(res, (UUID4, UUID2, UUID3))
 
     def test_get_index_sort_created_at_asc(self):
         """
@@ -619,7 +619,7 @@ class TestRegistryAPI(base.IsolatedUnitTest, test_utils.RegistryAPIMixIn):
 
         res = self.get_api_response_ext(200, url=(
             '/subjects?sort_key=created_at&sort_dir=asc'))
-        self.assertEqualImages(res, (UUID2, UUID4, UUID3))
+        self.assertEqualSubjects(res, (UUID2, UUID4, UUID3))
 
     def test_get_index_sort_updated_at_desc(self):
         """
@@ -644,7 +644,7 @@ class TestRegistryAPI(base.IsolatedUnitTest, test_utils.RegistryAPIMixIn):
 
         res = self.get_api_response_ext(200, url=(
             '/subjects?sort_key=updated_at&sort_dir=desc'))
-        self.assertEqualImages(res, (UUID3, UUID4, UUID2))
+        self.assertEqualSubjects(res, (UUID3, UUID4, UUID2))
 
     def test_get_details(self):
         """
@@ -981,38 +981,38 @@ class TestRegistryAPI(base.IsolatedUnitTest, test_utils.RegistryAPIMixIn):
 
         # Check a standard list, 4 subjects in db (2 deleted)
         res = self.get_api_response_ext(200, url='/subjects/detail')
-        self.assertEqualImages(res, (UUID4, UUID2))
+        self.assertEqualSubjects(res, (UUID4, UUID2))
 
         # Expect 3 subjects (1 deleted)
         res = self.get_api_response_ext(200, url=(
             '/subjects/detail?changes-since=%s' % iso1))
-        self.assertEqualImages(res, (UUID4, UUID3, UUID2))
+        self.assertEqualSubjects(res, (UUID4, UUID3, UUID2))
 
         # Expect 1 subjects (0 deleted)
         res = self.get_api_response_ext(200, url=(
             '/subjects/detail?changes-since=%s' % iso2))
-        self.assertEqualImages(res, (UUID4,))
+        self.assertEqualSubjects(res, (UUID4,))
 
         # Expect 1 subjects (0 deleted)
         res = self.get_api_response_ext(200, url=(
             '/subjects/detail?changes-since=%s' % hour_before))
-        self.assertEqualImages(res, (UUID4,))
+        self.assertEqualSubjects(res, (UUID4,))
 
         # Expect 0 subjects (0 deleted)
         res = self.get_api_response_ext(200, url=(
             '/subjects/detail?changes-since=%s' % hour_after))
-        self.assertEqualImages(res, ())
+        self.assertEqualSubjects(res, ())
 
         # Expect 0 subjects (0 deleted)
         res = self.get_api_response_ext(200, url=(
             '/subjects/detail?changes-since=%s' % iso4))
-        self.assertEqualImages(res, ())
+        self.assertEqualSubjects(res, ())
 
         for param in [date_only1, date_only2, date_only3]:
             # Expect 3 subjects (1 deleted)
             res = self.get_api_response_ext(200, url=(
                 '/subjects/detail?changes-since=%s' % param))
-            self.assertEqualImages(res, (UUID4, UUID3, UUID2))
+            self.assertEqualSubjects(res, (UUID4, UUID3, UUID2))
 
         # Bad request (empty changes-since param)
         self.get_api_response_ext(400,
@@ -1200,7 +1200,7 @@ class TestRegistryAPI(base.IsolatedUnitTest, test_utils.RegistryAPIMixIn):
 
         res = self.get_api_response_ext(200, url=(
             '/subjects/detail?sort_key=name&sort_dir=asc'))
-        self.assertEqualImages(res, (UUID3, UUID2, UUID4))
+        self.assertEqualSubjects(res, (UUID3, UUID2, UUID4))
 
     def test_create_subject(self):
         """Tests that the /subjects POST registry API creates the subject"""

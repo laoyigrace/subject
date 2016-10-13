@@ -13,7 +13,7 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-import glance_store
+import subject_store
 
 from subject.api import authorization
 from subject.api import policy
@@ -31,7 +31,7 @@ class Gateway(object):
     def __init__(self, db_api=None, store_api=None, notifier=None,
                  policy_enforcer=None):
         self.db_api = db_api or subject.db.get_api()
-        self.store_api = store_api or glance_store
+        self.store_api = store_api or subject_store
         self.store_utils = store_utils
         self.notifier = notifier or subject.notifier.Notifier()
         self.policy = policy_enforcer or policy.Enforcer()
@@ -58,12 +58,12 @@ class Gateway(object):
         return authorized_subject_factory
 
     def get_subject_member_factory(self, context):
-        subject_factory = subject.domain.ImageMemberFactory()
-        quota_subject_factory = subject.quota.ImageMemberFactoryProxy(
+        subject_factory = subject.domain.SubjectMemberFactory()
+        quota_subject_factory = subject.quota.SubjectMemberFactoryProxy(
             subject_factory, context, self.db_api, self.store_utils)
-        policy_member_factory = policy.ImageMemberFactoryProxy(
+        policy_member_factory = policy.SubjectMemberFactoryProxy(
             quota_subject_factory, context, self.policy)
-        authorized_subject_factory = authorization.ImageMemberFactoryProxy(
+        authorized_subject_factory = authorization.SubjectMemberFactoryProxy(
             policy_member_factory, context)
         return authorized_subject_factory
 
@@ -90,15 +90,15 @@ class Gateway(object):
         return authorized_subject_repo
 
     def get_member_repo(self, subject, context):
-        subject_member_repo = subject.db.ImageMemberRepo(
+        subject_member_repo = subject.db.SubjectMemberRepo(
             context, self.db_api, subject)
-        store_subject_repo = subject.location.ImageMemberRepoProxy(
+        store_subject_repo = subject.location.SubjectMemberRepoProxy(
             subject_member_repo, subject, context, self.store_api)
-        policy_member_repo = policy.ImageMemberRepoProxy(
+        policy_member_repo = policy.SubjectMemberRepoProxy(
             store_subject_repo, subject, context, self.policy)
-        notifier_member_repo = subject.notifier.ImageMemberRepoProxy(
+        notifier_member_repo = subject.notifier.SubjectMemberRepoProxy(
             policy_member_repo, subject, context, self.notifier)
-        authorized_member_repo = authorization.ImageMemberRepoProxy(
+        authorized_member_repo = authorization.SubjectMemberRepoProxy(
             notifier_member_repo, subject, context)
 
         return authorized_member_repo

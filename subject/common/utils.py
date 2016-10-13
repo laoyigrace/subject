@@ -233,7 +233,7 @@ class LimitingReader(object):
         for chunk in self.data:
             self.bytes_read += len(chunk)
             if self.bytes_read > self.limit:
-                raise exception.ImageSizeLimitExceeded()
+                raise exception.SubjectSizeLimitExceeded()
             else:
                 yield chunk
 
@@ -241,7 +241,7 @@ class LimitingReader(object):
         result = self.data.read(i)
         self.bytes_read += len(result)
         if self.bytes_read > self.limit:
-            raise exception.ImageSizeLimitExceeded()
+            raise exception.SubjectSizeLimitExceeded()
         return result
 
 

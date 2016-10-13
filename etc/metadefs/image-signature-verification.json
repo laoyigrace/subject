@@ -1,27 +1,27 @@
 {
     "namespace": "OS::Glance::Signatures",
-    "display_name": "Image Signature Verification",
-    "description": "Image signature verification allows the user to verify that an subject has not been modified prior to booting the subject.",
+    "display_name": "Subject Signature Verification",
+    "description": "Subject signature verification allows the user to verify that an subject has not been modified prior to booting the subject.",
     "visibility": "public",
     "protected": false,
     "resource_type_associations": [
         {
-            "name": "OS::Glance::Image"
+            "name": "OS::Glance::Subject"
         }
     ],
     "properties": {
         "img_signature": {
-            "title": "Image Signature",
+            "title": "Subject Signature",
             "description": "The signature of the subject data encoded in base64 format.",
             "type": "string"
         },
         "img_signature_certificate_uuid": {
-            "title": "Image Signature Certificate UUID",
+            "title": "Subject Signature Certificate UUID",
             "description": "The UUID used to retrieve the certificate from the key manager.",
             "type": "string"
         },
         "img_signature_hash_method": {
-            "title": "Image Signature Hash Method",
+            "title": "Subject Signature Hash Method",
             "description": "The hash method used in creating the signature.",
             "type": "string",
             "enum": [
@@ -32,7 +32,7 @@
             ]
         },
         "img_signature_key_type": {
-            "title": "Image Signature Key Type",
+            "title": "Subject Signature Key Type",
             "description": "The key type used in creating the signature.",
             "type": "string",
             "enum": [

@@ -12,10 +12,10 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from subject.subject_cache import ImageCache
+from subject.subject_cache import SubjectCache
 
 
 class CacheApp(object):
 
     def __init__(self):
-        self.cache = ImageCache()
+        self.cache = SubjectCache()

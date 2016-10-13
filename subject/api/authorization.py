@@ -34,9 +34,9 @@ def is_subject_mutable(context, subject):
 
 def proxy_subject(context, subject):
     if is_subject_mutable(context, subject):
-        return ImageProxy(subject, context)
+        return SubjectProxy(subject, context)
     else:
-        return ImmutableImageProxy(subject, context)
+        return ImmutableSubjectProxy(subject, context)
 
 
 def is_member_mutable(context, member):
@@ -100,7 +100,7 @@ class SubjectRepoProxy(subject.domain.proxy.Repo):
         self.subject_repo = subject_repo
         proxy_kwargs = {'context': self.context}
         super(SubjectRepoProxy, self).__init__(subject_repo,
-                                               item_proxy_class=ImageProxy,
+                                               item_proxy_class=SubjectProxy,
                                                item_proxy_kwargs=proxy_kwargs)
 
     def get(self, subject_id):
@@ -112,17 +112,17 @@ class SubjectRepoProxy(subject.domain.proxy.Repo):
         return [proxy_subject(self.context, i) for i in subjects]
 
 
-class ImageMemberRepoProxy(subject.domain.proxy.MemberRepo):
+class SubjectMemberRepoProxy(subject.domain.proxy.MemberRepo):
 
     def __init__(self, member_repo, subject, context):
         self.member_repo = member_repo
         self.subject = subject
         self.context = context
         proxy_kwargs = {'context': self.context}
-        super(ImageMemberRepoProxy, self).__init__(
+        super(SubjectMemberRepoProxy, self).__init__(
             subject,
             member_repo,
-            member_proxy_class=ImageMemberProxy,
+            member_proxy_class=SubjectMemberProxy,
             member_proxy_kwargs=proxy_kwargs)
         self._check_subject_visibility()
 
@@ -185,7 +185,7 @@ class SubjectFactoryProxy(subject.domain.proxy.SubjectFactory):
         self.context = context
         kwargs = {'context': self.context}
         super(SubjectFactoryProxy, self).__init__(subject_factory,
-                                                  proxy_class=ImageProxy,
+                                                  proxy_class=SubjectProxy,
                                                   proxy_kwargs=kwargs)
 
     def new_subject(self, **kwargs):
@@ -200,15 +200,15 @@ class SubjectFactoryProxy(subject.domain.proxy.SubjectFactory):
         return super(SubjectFactoryProxy, self).new_subject(owner=owner, **kwargs)
 
 
-class ImageMemberFactoryProxy(subject.domain.proxy.ImageMembershipFactory):
+class SubjectMemberFactoryProxy(subject.domain.proxy.SubjectMembershipFactory):
 
     def __init__(self, subject_member_factory, context):
         self.subject_member_factory = subject_member_factory
         self.context = context
         kwargs = {'context': self.context}
-        super(ImageMemberFactoryProxy, self).__init__(
+        super(SubjectMemberFactoryProxy, self).__init__(
             subject_member_factory,
-            proxy_class=ImageMemberProxy,
+            proxy_class=SubjectMemberProxy,
             proxy_kwargs=kwargs)
 
     def new_subject_member(self, subject, member_id):
@@ -301,7 +301,7 @@ class ImmutableTags(set):
     update = forbidden
 
 
-class ImmutableImageProxy(object):
+class ImmutableSubjectProxy(object):
     def __init__(self, base, context):
         self.base = base
         self.context = context
@@ -406,20 +406,20 @@ class ImmutableTaskStubProxy(object):
     updated_at = _immutable_attr('base', 'updated_at')
 
 
-class ImageProxy(subject.domain.proxy.Subject):
+class SubjectProxy(subject.domain.proxy.Subject):
 
     def __init__(self, subject, context):
         self.subject = subject
         self.context = context
-        super(ImageProxy, self).__init__(subject)
+        super(SubjectProxy, self).__init__(subject)
 
 
-class ImageMemberProxy(subject.domain.proxy.ImageMember):
+class SubjectMemberProxy(subject.domain.proxy.SubjectMember):
 
     def __init__(self, subject_member, context):
         self.subject_member = subject_member
         self.context = context
-        super(ImageMemberProxy, self).__init__(subject_member)
+        super(SubjectMemberProxy, self).__init__(subject_member)
 
 
 class TaskProxy(subject.domain.proxy.Task):
@@ -441,7 +441,7 @@ class TaskFactoryProxy(subject.domain.proxy.TaskFactory):
     def new_task(self, **kwargs):
         owner = kwargs.get('owner', self.context.owner)
 
-        # NOTE(nikhil): Unlike Images, Tasks are expected to have owner.
+        # NOTE(nikhil): Unlike Subjects, Tasks are expected to have owner.
         # We currently do not allow even admins to set the owner to None.
         if owner is not None and (owner == self.context.owner
                                   or self.context.is_admin):

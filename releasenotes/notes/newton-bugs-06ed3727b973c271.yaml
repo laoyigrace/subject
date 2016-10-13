@@ -47,7 +47,7 @@ fixes:
       byte unicode character is passed
     * bug 1532243: glance fails silently if a task flow
       can not be loaded
-    * bug 1568894: glance_store options missing in
+    * bug 1568894: subject_store options missing in
       glance-scrubber.conf and glance-cache.conf sample
       files
     * bug 1568723: secure_proxy_ssl_header not in sample

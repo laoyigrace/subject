@@ -122,9 +122,9 @@ class FakeHTTPConnection(object):
         return FakeResponse(self.reqs[self.last_req])
 
 
-class ImageServiceTestCase(test_utils.BaseTestCase):
+class SubjectServiceTestCase(test_utils.BaseTestCase):
     def test_rest_errors(self):
-        c = glance_replicator.ImageService(FakeHTTPConnection(), 'noauth')
+        c = glance_replicator.SubjectService(FakeHTTPConnection(), 'noauth')
 
         for code, exc in [(400, webob.exc.HTTPBadRequest),
                           (401, webob.exc.HTTPUnauthorized),
@@ -139,7 +139,7 @@ class ImageServiceTestCase(test_utils.BaseTestCase):
                               '5dcddce0-cba5-4f18-9cf4-9853c7b207a6')
 
     def test_rest_get_subjects(self):
-        c = glance_replicator.ImageService(FakeHTTPConnection(), 'noauth')
+        c = glance_replicator.SubjectService(FakeHTTPConnection(), 'noauth')
 
         # Two subjects, one of which is queued
         resp = {'subjects': [IMG_RESPONSE_ACTIVE, IMG_RESPONSE_QUEUED]}
@@ -157,7 +157,7 @@ class ImageServiceTestCase(test_utils.BaseTestCase):
         self.assertEqual(2, c.conn.count)
 
     def test_rest_get_subject(self):
-        c = glance_replicator.ImageService(FakeHTTPConnection(), 'noauth')
+        c = glance_replicator.SubjectService(FakeHTTPConnection(), 'noauth')
 
         subject_contents = 'THISISTHEIMAGEBODY'
         c.conn.prime_request('GET',
@@ -173,7 +173,7 @@ class ImageServiceTestCase(test_utils.BaseTestCase):
              ('gerkin', 12),
              ('x-subject-meta-property-frog', 11),
              ('x-subject-meta-property-duck', 12)]
-        o = glance_replicator.ImageService._header_list_to_dict(i)
+        o = glance_replicator.SubjectService._header_list_to_dict(i)
         self.assertIn('banana', o)
         self.assertIn('gerkin', o)
         self.assertIn('properties', o)
@@ -182,7 +182,7 @@ class ImageServiceTestCase(test_utils.BaseTestCase):
         self.assertNotIn('x-subject-meta-banana', o)
 
     def test_rest_get_subject_meta(self):
-        c = glance_replicator.ImageService(FakeHTTPConnection(), 'noauth')
+        c = glance_replicator.SubjectService(FakeHTTPConnection(), 'noauth')
 
         c.conn.prime_request('HEAD',
                              'v1/subjects/%s' % IMG_RESPONSE_ACTIVE['id'],
@@ -198,7 +198,7 @@ class ImageServiceTestCase(test_utils.BaseTestCase):
              'properties': {'frog': 1,
                             'kernel_id': None}
              }
-        o = glance_replicator.ImageService._dict_to_headers(i)
+        o = glance_replicator.SubjectService._dict_to_headers(i)
         self.assertIn('x-subject-meta-banana', o)
         self.assertIn('x-subject-meta-gerkin', o)
         self.assertIn('x-subject-meta-property-frog', o)
@@ -207,7 +207,7 @@ class ImageServiceTestCase(test_utils.BaseTestCase):
         self.assertNotIn('properties', o)
 
     def test_rest_add_subject(self):
-        c = glance_replicator.ImageService(FakeHTTPConnection(), 'noauth')
+        c = glance_replicator.SubjectService(FakeHTTPConnection(), 'noauth')
 
         subject_body = 'THISISANIMAGEBODYFORSURE!'
         subject_meta_with_proto = {
@@ -229,10 +229,10 @@ class ImageServiceTestCase(test_utils.BaseTestCase):
         self.assertEqual(1, c.conn.count)
 
     def test_rest_add_subject_meta(self):
-        c = glance_replicator.ImageService(FakeHTTPConnection(), 'noauth')
+        c = glance_replicator.SubjectService(FakeHTTPConnection(), 'noauth')
 
         subject_meta = {'id': '5dcddce0-cba5-4f18-9cf4-9853c7b207a6'}
-        subject_meta_headers = glance_replicator.ImageService._dict_to_headers(
+        subject_meta_headers = glance_replicator.SubjectService._dict_to_headers(
             subject_meta)
         subject_meta_headers['x-auth-token'] = 'noauth'
         subject_meta_headers['Content-Type'] = 'application/octet-stream'
@@ -273,7 +273,7 @@ FAKEIMAGES_LIVEMASTER = [{'status': 'active', 'size': 100,
                           'id': '15648dd7-8dd0-401c-bd51-550e1ba9a088'}]
 
 
-class FakeImageService(object):
+class FakeSubjectService(object):
     def __init__(self, http_conn, authtoken):
         self.authtoken = authtoken
 
@@ -299,7 +299,7 @@ class FakeImageService(object):
 
 
 def get_subject_service():
-    return FakeImageService
+    return FakeSubjectService
 
 
 def check_no_args(command, args):
@@ -592,7 +592,7 @@ class ReplicationUtilitiesTestCase(test_utils.BaseTestCase):
             glance_replicator._check_upload_response_headers, {}, None)
 
     def test_subject_present(self):
-        client = FakeImageService(None, 'noauth')
+        client = FakeSubjectService(None, 'noauth')
         self.assertTrue(glance_replicator._subject_present(
             client, '5dcddce0-cba5-4f18-9cf4-9853c7b207a6'))
         self.assertFalse(glance_replicator._subject_present(

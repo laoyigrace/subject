@@ -47,7 +47,7 @@ class Controller(rpc.Controller):
 
 
 def create_resource():
-    """Images resource factory method."""
+    """Subjects resource factory method."""
     deserializer = rpc.RPCJSONDeserializer()
     serializer = rpc.RPCJSONSerializer()
     return wsgi.Resource(Controller(), deserializer, serializer)

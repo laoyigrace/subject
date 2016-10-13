@@ -271,7 +271,7 @@ class TestUploadUtils(base.StoreClearingUnitTest):
 
     def test_upload_data_to_store_size_limit_exceeded(self):
         self._test_upload_data_to_store_exception_with_notify(
-            exception.ImageSizeLimitExceeded,
+            exception.SubjectSizeLimitExceeded,
             webob.exc.HTTPRequestEntityTooLarge)
 
     def test_upload_data_to_store_http_error(self):
@@ -301,7 +301,7 @@ class TestUploadUtils(base.StoreClearingUnitTest):
             ext_update_data={'size': 10}) as (location, checksum, subject_meta,
                                               subject_data, store, notifier,
                                               update_data):
-            exc = exception.ImageNotFound
+            exc = exception.SubjectNotFound
             with patch.object(registry, 'update_subject_metadata',
                               side_effect=exc) as mock_update_subject_metadata:
                 with patch.object(upload_utils,

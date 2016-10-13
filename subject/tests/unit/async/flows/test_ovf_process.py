@@ -139,7 +139,7 @@ class TestOvfProcessTask(test_utils.BaseTestCase):
         # testserver-not-tar.ova package is not in tar format
         ova_file_path = os.path.join(self.test_ova_dir,
                                      'testserver-not-tar.ova')
-        iextractor = ovf_process.OVAImageExtractor()
+        iextractor = ovf_process.OVASubjectExtractor()
         with open(ova_file_path, 'rb') as ova_file:
             self.assertRaises(tarfile.ReadError, iextractor.extract, ova_file)
 
@@ -147,7 +147,7 @@ class TestOvfProcessTask(test_utils.BaseTestCase):
         # testserver-no-disk.ova package contains no disk subject file
         ova_file_path = os.path.join(self.test_ova_dir,
                                      'testserver-no-disk.ova')
-        iextractor = ovf_process.OVAImageExtractor()
+        iextractor = ovf_process.OVASubjectExtractor()
         with open(ova_file_path, 'rb') as ova_file:
             self.assertRaises(KeyError, iextractor.extract, ova_file)
 
@@ -155,7 +155,7 @@ class TestOvfProcessTask(test_utils.BaseTestCase):
         # testserver-no-ovf.ova package contains no ovf file
         ova_file_path = os.path.join(self.test_ova_dir,
                                      'testserver-no-ovf.ova')
-        iextractor = ovf_process.OVAImageExtractor()
+        iextractor = ovf_process.OVASubjectExtractor()
         with open(ova_file_path, 'rb') as ova_file:
             self.assertRaises(RuntimeError, iextractor.extract, ova_file)
 
@@ -164,6 +164,6 @@ class TestOvfProcessTask(test_utils.BaseTestCase):
         # invalid xml
         ova_file_path = os.path.join(self.test_ova_dir,
                                      'testserver-bad-ovf.ova')
-        iextractor = ovf_process.OVAImageExtractor()
+        iextractor = ovf_process.OVASubjectExtractor()
         with open(ova_file_path, 'rb') as ova_file:
             self.assertRaises(ParseError, iextractor._parse_OVF, ova_file)

@@ -83,20 +83,20 @@ def _domain_fixture(id, **kwargs):
         'id': id,
     }
     properties.update(kwargs)
-    return subject.domain.ImageMembership(**properties)
+    return subject.domain.SubjectMembership(**properties)
 
 
-class TestImageMembersController(test_utils.BaseTestCase):
+class TestSubjectMembersController(test_utils.BaseTestCase):
 
     def setUp(self):
-        super(TestImageMembersController, self).setUp()
+        super(TestSubjectMembersController, self).setUp()
         self.db = unit_test_utils.FakeDB(initialize=False)
         self.store = unit_test_utils.FakeStoreAPI()
         self.policy = unit_test_utils.FakePolicyEnforcer()
         self.notifier = unit_test_utils.FakeNotifier()
         self._create_subjects()
         self._create_subject_members()
-        self.controller = subject.api.v2.subject_members.ImageMembersController(
+        self.controller = subject.api.v2.subject_members.SubjectMembersController(
             self.db,
             self.policy,
             self.notifier,
@@ -415,10 +415,10 @@ class TestImageMembersController(test_utils.BaseTestCase):
                           request, subject_id, member_id)
 
 
-class TestImageMembersSerializer(test_utils.BaseTestCase):
+class TestSubjectMembersSerializer(test_utils.BaseTestCase):
 
     def setUp(self):
-        super(TestImageMembersSerializer, self).setUp()
+        super(TestSubjectMembersSerializer, self).setUp()
         self.serializer = subject.api.v2.subject_members.ResponseSerializer()
         self.fixtures = [
             _domain_fixture(id='1', subject_id=UUID2, member_id=TENANT1,
@@ -510,10 +510,10 @@ class TestImageMembersSerializer(test_utils.BaseTestCase):
         self.assertEqual('application/json', response.content_type)
 
 
-class TestImagesDeserializer(test_utils.BaseTestCase):
+class TestSubjectsDeserializer(test_utils.BaseTestCase):
 
     def setUp(self):
-        super(TestImagesDeserializer, self).setUp()
+        super(TestSubjectsDeserializer, self).setUp()
         self.deserializer = subject.api.v2.subject_members.RequestDeserializer()
 
     def test_create(self):

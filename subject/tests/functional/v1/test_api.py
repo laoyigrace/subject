@@ -51,7 +51,7 @@ class TestApi(functional.FunctionalTest):
     def test_checksum_32_chars_at_subject_create(self):
         self.cleanup()
         self.start_servers(**self.__dict__.copy())
-        headers = minimal_headers('Image1')
+        headers = minimal_headers('Subject1')
         subject_data = "*" * FIVE_KB
 
         # checksum can be no longer that 32 characters (String(32))
@@ -68,7 +68,7 @@ class TestApi(functional.FunctionalTest):
         self.start_servers(**self.__dict__.copy())
         # Integer field can't be greater than max 8-byte signed integer
         for param in ['min_disk', 'min_ram']:
-            headers = minimal_headers('Image1')
+            headers = minimal_headers('Subject1')
             # check that long numbers result in 400
             headers['X-Subject-Meta-%s' % param] = str(sys.maxint + 1)
             content = self._check_subject_create(headers, 400)
@@ -90,7 +90,7 @@ class TestApi(functional.FunctionalTest):
         - Verify no public subjects
         1. GET /subjects/detail
         - Verify no public subjects
-        2. POST /subjects with public subject named Image1
+        2. POST /subjects with public subject named Subject1
         and no custom properties
         - Verify 201 returned
         3. HEAD subject
@@ -123,7 +123,7 @@ class TestApi(functional.FunctionalTest):
         - Attempt to replace members with an overlimit amount
         17. PUT subject/members/member11
         - Attempt to add a member while at limit
-        18. POST /subjects with another public subject named Image2
+        18. POST /subjects with another public subject named Subject2
         - attribute and three custom properties, "distro", "arch" & "foo"
         - Verify a 200 OK is returned
         19. HEAD subject2
@@ -176,10 +176,10 @@ class TestApi(functional.FunctionalTest):
         self.assertEqual(200, response.status)
         self.assertEqual('{"subjects": []}', content)
 
-        # 2. POST /subjects with public subject named Image1
+        # 2. POST /subjects with public subject named Subject1
         # attribute and no custom properties. Verify a 200 OK is returned
         subject_data = "*" * FIVE_KB
-        headers = minimal_headers('Image1')
+        headers = minimal_headers('Subject1')
         path = "http://%s:%d/v1/subjects" % ("127.0.0.1", self.api_port)
         http = httplib2.Http()
         response, content = http.request(path, 'POST', headers=headers,
@@ -190,7 +190,7 @@ class TestApi(functional.FunctionalTest):
         self.assertEqual(hashlib.md5(subject_data).hexdigest(),
                          data['subject']['checksum'])
         self.assertEqual(FIVE_KB, data['subject']['size'])
-        self.assertEqual("Image1", data['subject']['name'])
+        self.assertEqual("Subject1", data['subject']['name'])
         self.assertTrue(data['subject']['is_public'])
 
         # 3. HEAD subject
@@ -200,7 +200,7 @@ class TestApi(functional.FunctionalTest):
         http = httplib2.Http()
         response, content = http.request(path, 'HEAD')
         self.assertEqual(200, response.status)
-        self.assertEqual("Image1", response['x-subject-meta-name'])
+        self.assertEqual("Subject1", response['x-subject-meta-name'])
 
         # 4. GET subject
         # Verify all information on subject we just added is correct
@@ -212,7 +212,7 @@ class TestApi(functional.FunctionalTest):
 
         expected_subject_headers = {
             'x-subject-meta-id': subject_id,
-            'x-subject-meta-name': 'Image1',
+            'x-subject-meta-name': 'Subject1',
             'x-subject-meta-is_public': 'True',
             'x-subject-meta-status': 'active',
             'x-subject-meta-disk_format': 'raw',
@@ -252,7 +252,7 @@ class TestApi(functional.FunctionalTest):
             {"container_format": "ovf",
              "disk_format": "raw",
              "id": subject_id,
-             "name": "Image1",
+             "name": "Subject1",
              "checksum": "c2e5db72bd7fd153f53ede5da5a06de3",
              "size": 5120}]}
         self.assertEqual(expected_result, jsonutils.loads(content))
@@ -266,7 +266,7 @@ class TestApi(functional.FunctionalTest):
 
         expected_subject = {
             "status": "active",
-            "name": "Image1",
+            "name": "Subject1",
             "deleted": False,
             "container_format": "ovf",
             "disk_format": "raw",
@@ -318,7 +318,7 @@ class TestApi(functional.FunctionalTest):
 
         expected_subject = {
             "status": "active",
-            "name": "Image1",
+            "name": "Subject1",
             "deleted": False,
             "container_format": "ovf",
             "disk_format": "raw",
@@ -435,11 +435,11 @@ class TestApi(functional.FunctionalTest):
         response, content = http.request(path, 'PUT')
         self.assertEqual(413, response.status)
 
-        # 18. POST /subjects with another public subject named Image2
+        # 18. POST /subjects with another public subject named Subject2
         # attribute and three custom properties, "distro", "arch" & "foo".
         # Verify a 200 OK is returned
         subject_data = "*" * FIVE_KB
-        headers = minimal_headers('Image2')
+        headers = minimal_headers('Subject2')
         headers['X-Subject-Meta-Property-Distro'] = 'Ubuntu'
         headers['X-Subject-Meta-Property-Arch'] = 'i386'
         headers['X-Subject-Meta-Property-foo'] = 'bar'
@@ -453,7 +453,7 @@ class TestApi(functional.FunctionalTest):
         self.assertEqual(hashlib.md5(subject_data).hexdigest(),
                          data['subject']['checksum'])
         self.assertEqual(FIVE_KB, data['subject']['size'])
-        self.assertEqual("Image2", data['subject']['name'])
+        self.assertEqual("Subject2", data['subject']['name'])
         self.assertTrue(data['subject']['is_public'])
         self.assertEqual('Ubuntu', data['subject']['properties']['distro'])
         self.assertEqual('i386', data['subject']['properties']['arch'])
@@ -466,7 +466,7 @@ class TestApi(functional.FunctionalTest):
         http = httplib2.Http()
         response, content = http.request(path, 'HEAD')
         self.assertEqual(200, response.status)
-        self.assertEqual("Image2", response['x-subject-meta-name'])
+        self.assertEqual("Subject2", response['x-subject-meta-name'])
 
         # 20. GET /subjects
         # Verify 2 public subjects
@@ -610,7 +610,7 @@ class TestApi(functional.FunctionalTest):
         """
         We test the following sequential series of actions::
 
-            0. POST /subjects with public subject named Image1
+            0. POST /subjects with public subject named Subject1
                and no custom properties
                - Verify 201 returned
             1. HEAD subject
@@ -628,7 +628,7 @@ class TestApi(functional.FunctionalTest):
         self.start_servers(**self.__dict__.copy())
 
         subject_data = "*" * FIVE_KB
-        headers = minimal_headers('Image1')
+        headers = minimal_headers('Subject1')
         path = "http://%s:%d/v1/subjects" % ("127.0.0.1", self.api_port)
         http = httplib2.Http()
         response, content = http.request(path, 'POST', headers=headers,
@@ -639,7 +639,7 @@ class TestApi(functional.FunctionalTest):
         self.assertEqual(hashlib.md5(subject_data).hexdigest(),
                          data['subject']['checksum'])
         self.assertEqual(FIVE_KB, data['subject']['size'])
-        self.assertEqual("Image1", data['subject']['name'])
+        self.assertEqual("Subject1", data['subject']['name'])
         self.assertTrue(data['subject']['is_public'])
 
         # 1. HEAD subject
@@ -649,7 +649,7 @@ class TestApi(functional.FunctionalTest):
         http = httplib2.Http()
         response, content = http.request(path, 'HEAD')
         self.assertEqual(200, response.status)
-        self.assertEqual("Image1", response['x-subject-meta-name'])
+        self.assertEqual("Subject1", response['x-subject-meta-name'])
 
         # 2. GET /subjects
         # Verify one public subject
@@ -662,7 +662,7 @@ class TestApi(functional.FunctionalTest):
             {"container_format": "ovf",
              "disk_format": "raw",
              "id": subject_id,
-             "name": "Image1",
+             "name": "Subject1",
              "checksum": "c2e5db72bd7fd153f53ede5da5a06de3",
              "size": 5120}]}
         self.assertEqual(expected_result, jsonutils.loads(content))
@@ -691,7 +691,7 @@ class TestApi(functional.FunctionalTest):
         """
         We test the following sequential series of actions:
 
-        0. POST /subjects with public subject named Image1
+        0. POST /subjects with public subject named Subject1
         and no custom properties
         - Verify 201 returned
         1. HEAD subject
@@ -707,7 +707,7 @@ class TestApi(functional.FunctionalTest):
         self.start_servers(**self.__dict__.copy())
 
         subject_data = "*" * FIVE_KB
-        headers = minimal_headers('Image1')
+        headers = minimal_headers('Subject1')
         path = "http://%s:%d/v1/subjects" % ("127.0.0.1", self.api_port)
         http = httplib2.Http()
         response, content = http.request(path, 'POST', headers=headers,
@@ -718,7 +718,7 @@ class TestApi(functional.FunctionalTest):
         self.assertEqual(hashlib.md5(subject_data).hexdigest(),
                          data['subject']['checksum'])
         self.assertEqual(FIVE_KB, data['subject']['size'])
-        self.assertEqual("Image1", data['subject']['name'])
+        self.assertEqual("Subject1", data['subject']['name'])
         self.assertTrue(data['subject']['is_public'])
 
         # 1. HEAD subject
@@ -728,7 +728,7 @@ class TestApi(functional.FunctionalTest):
         http = httplib2.Http()
         response, content = http.request(path, 'HEAD')
         self.assertEqual(200, response.status)
-        self.assertEqual("Image1", response['x-subject-meta-name'])
+        self.assertEqual("Subject1", response['x-subject-meta-name'])
 
         # 2. GET /subjects
         # Verify one public subject
@@ -741,7 +741,7 @@ class TestApi(functional.FunctionalTest):
             {"container_format": "ovf",
              "disk_format": "raw",
              "id": subject_id,
-             "name": "Image1",
+             "name": "Subject1",
              "checksum": "c2e5db72bd7fd153f53ede5da5a06de3",
              "size": 5120}]}
         self.assertEqual(expected_result, jsonutils.loads(content))
@@ -766,7 +766,7 @@ class TestApi(functional.FunctionalTest):
     def test_status_cannot_be_manipulated_directly(self):
         self.cleanup()
         self.start_servers(**self.__dict__.copy())
-        headers = minimal_headers('Image1')
+        headers = minimal_headers('Subject1')
 
         # Create a 'queued' subject
         http = httplib2.Http()

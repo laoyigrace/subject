@@ -131,9 +131,9 @@ Location
 --------
 
 The sixth layer of the domain model is used for interaction with the store via
-the ``glance_store`` library, like upload and download, and for managing an
+the ``subject_store`` library, like upload and download, and for managing an
 subject location. On this layer, an subject is validated before the upload. If
-the validation succeeds, an subject is written to the ``glance_store`` library.
+the validation succeeds, an subject is written to the ``subject_store`` library.
 
 This sixth layer of the domain model is responsible for:
 
@@ -149,6 +149,6 @@ Database
 On the seventh layer of the domain model:
 
 * The methods to interact with the database API are implemented.
-* Images are converted to the corresponding format to be recorded in the
+* Subjects are converted to the corresponding format to be recorded in the
   database. And the information received from the database is
   converted to an Subject object.

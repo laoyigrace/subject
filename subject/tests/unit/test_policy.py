@@ -29,7 +29,7 @@ from subject.tests import utils as test_utils
 UUID1 = 'c80a1a6c-bd1f-41c5-90ee-81afedb1d58d'
 
 
-class ImageRepoStub(object):
+class SubjectRepoStub(object):
     def get(self, *args, **kwargs):
         return 'subject_from_get'
 
@@ -43,7 +43,7 @@ class ImageRepoStub(object):
         return ['subject_from_list_0', 'subject_from_list_1']
 
 
-class ImageStub(object):
+class SubjectStub(object):
     def __init__(self, subject_id=None, visibility='private',
                  container_format='bear', disk_format='raw',
                  status='active', extra_properties=None):
@@ -62,7 +62,7 @@ class ImageStub(object):
         self.status = 'deleted'
 
 
-class ImageFactoryStub(object):
+class SubjectFactoryStub(object):
     def new_subject(self, subject_id=None, name=None, visibility='private',
                   min_disk=0, min_ram=0, protected=False, owner=None,
                   disk_format=None, container_format=None,
@@ -90,7 +90,7 @@ class MemberRepoStub(object):
         subject_member.output = 'member_repo_remove'
 
 
-class ImageMembershipStub(object):
+class SubjectMembershipStub(object):
     def __init__(self, output=None):
         self.output = output
 
@@ -215,14 +215,14 @@ class TestPolicyEnforcerNoFile(base.IsolatedUnitTest):
         enforcer.enforce(admin_context, 'manage_subject_cache', {})
 
 
-class TestImagePolicy(test_utils.BaseTestCase):
+class TestSubjectPolicy(test_utils.BaseTestCase):
     def setUp(self):
-        self.subject_stub = ImageStub(UUID1)
-        self.subject_repo_stub = ImageRepoStub()
-        self.subject_factory_stub = ImageFactoryStub()
+        self.subject_stub = SubjectStub(UUID1)
+        self.subject_repo_stub = SubjectRepoStub()
+        self.subject_factory_stub = SubjectFactoryStub()
         self.policy = mock.Mock()
         self.policy.enforce = mock.Mock()
-        super(TestImagePolicy, self).setUp()
+        super(TestSubjectPolicy, self).setUp()
 
     def test_publicize_subject_not_allowed(self):
         self.policy.enforce.side_effect = exception.Forbidden
@@ -258,7 +258,7 @@ class TestImagePolicy(test_utils.BaseTestCase):
     def test_get_subject_not_allowed(self):
         self.policy.enforce.side_effect = exception.Forbidden
         subject_target = mock.Mock()
-        with mock.patch.object(subject.api.policy, 'ImageTarget') as target:
+        with mock.patch.object(subject.api.policy, 'SubjectTarget') as target:
             target.return_value = subject_target
             subject_repo = subject.api.policy.SubjectRepoProxy(self.subject_repo_stub,
                                                              {}, self.policy)
@@ -268,7 +268,7 @@ class TestImagePolicy(test_utils.BaseTestCase):
 
     def test_get_subject_allowed(self):
         subject_target = mock.Mock()
-        with mock.patch.object(subject.api.policy, 'ImageTarget') as target:
+        with mock.patch.object(subject.api.policy, 'SubjectTarget') as target:
             target.return_value = subject_target
             subject_repo = subject.api.policy.SubjectRepoProxy(self.subject_repo_stub,
                                                              {}, self.policy)
@@ -346,8 +346,8 @@ class TestImagePolicy(test_utils.BaseTestCase):
         extra_properties = {
             'test_key': 'test_4321'
         }
-        subject_stub = ImageStub(UUID1, extra_properties=extra_properties)
-        with mock.patch('subject.api.policy.ImageTarget'):
+        subject_stub = SubjectStub(UUID1, extra_properties=extra_properties)
+        with mock.patch('subject.api.policy.SubjectTarget'):
             subject = subject.api.policy.SubjectProxy(subject_stub, {}, self.policy)
         target = subject.target
         self.policy.enforce.side_effect = exception.Forbidden
@@ -368,9 +368,9 @@ class TestMemberPolicy(test_utils.BaseTestCase):
     def setUp(self):
         self.policy = mock.Mock()
         self.policy.enforce = mock.Mock()
-        self.subject_stub = ImageStub(UUID1)
+        self.subject_stub = SubjectStub(UUID1)
         subject = subject.api.policy.SubjectProxy(self.subject_stub, {}, self.policy)
-        self.member_repo = subject.api.policy.ImageMemberRepoProxy(
+        self.member_repo = subject.api.policy.SubjectMemberRepoProxy(
             MemberRepoStub(), subject, {}, self.policy)
         self.target = self.member_repo.target
         super(TestMemberPolicy, self).setUp()
@@ -382,7 +382,7 @@ class TestMemberPolicy(test_utils.BaseTestCase):
                                                     self.target)
 
     def test_add_member_allowed(self):
-        subject_member = ImageMembershipStub()
+        subject_member = SubjectMembershipStub()
         self.member_repo.add(subject_member)
         self.assertEqual('member_repo_add', subject_member.output)
         self.policy.enforce.assert_called_once_with({}, "add_member",
@@ -407,7 +407,7 @@ class TestMemberPolicy(test_utils.BaseTestCase):
                                                     self.target)
 
     def test_modify_member_allowed(self):
-        subject_member = ImageMembershipStub()
+        subject_member = SubjectMembershipStub()
         self.member_repo.save(subject_member)
         self.assertEqual('member_repo_save', subject_member.output)
         self.policy.enforce.assert_called_once_with({}, "modify_member",
@@ -432,7 +432,7 @@ class TestMemberPolicy(test_utils.BaseTestCase):
                                                     self.target)
 
     def test_delete_member_allowed(self):
-        subject_member = ImageMembershipStub()
+        subject_member = SubjectMembershipStub()
         self.member_repo.remove(subject_member)
         self.assertEqual('member_repo_remove', subject_member.output)
         self.policy.enforce.assert_called_once_with({}, "delete_member",

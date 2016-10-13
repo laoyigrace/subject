@@ -15,7 +15,7 @@
 from subject.common.glare import definitions
 
 
-class ImageAsAnArtifact(definitions.ArtifactType):
+class SubjectAsAnArtifact(definitions.ArtifactType):
     __type_name__ = 'Subject'
     __endpoint__ = 'subjects'
 

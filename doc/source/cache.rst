@@ -104,7 +104,7 @@ executable.
 The recommended practice is to use ``cron`` to fire ``glance-cache-cleaner``
 at a semi-regular interval.
 
-Prefetching Images into the Subject Cache
+Prefetching Subjects into the Subject Cache
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Some installations have base (sometimes called "golden") subjects that are
@@ -131,7 +131,7 @@ Once you have queued the subjects you wish to prefetch, call the
 ``glance-cache-prefetcher`` executable, which will prefetch all queued subjects
 concurrently, logging the results of the fetch for each subject.
 
-Finding Which Images are in the Subject Cache
+Finding Which Subjects are in the Subject Cache
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can find out which subjects are in the subject cache using one of the
@@ -158,7 +158,7 @@ following methods:
 
     Note that the subject's cache hit is not shown using this method.
 
-Manually Removing Images from the Subject Cache
+Manually Removing Subjects from the Subject Cache
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If the ``cachemanage`` middleware is enabled, you may call

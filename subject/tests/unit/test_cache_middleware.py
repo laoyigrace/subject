@@ -28,7 +28,7 @@ from subject.tests.unit import base
 from subject.tests.unit import utils as unit_test_utils
 
 
-class ImageStub(object):
+class SubjectStub(object):
     def __init__(self, subject_id, extra_properties=None, visibility='private'):
         if extra_properties is None:
             extra_properties = {}
@@ -143,14 +143,14 @@ class TestCacheMiddlewareChecksumVerification(base.IsolatedUnitTest):
         self.assertIsNone(cache_filter.cache.subject_checksum)
 
 
-class FakeImageSerializer(object):
+class FakeSubjectSerializer(object):
     def show(self, response, raw_response):
         return True
 
 
 class ProcessRequestTestCacheFilter(subject.api.middleware.cache.CacheFilter):
     def __init__(self):
-        self.serializer = FakeImageSerializer()
+        self.serializer = FakeSubjectSerializer()
 
         class DummyCache(object):
             def __init__(self):
@@ -222,7 +222,7 @@ class TestCacheMiddlewareProcessRequest(base.IsolatedUnitTest):
         """
         def fake_process_v1_request(request, subject_id, subject_iterator,
                                     subject_meta):
-            raise exception.ImageNotFound()
+            raise exception.SubjectNotFound()
 
         def fake_get_v1_subject_metadata(request, subject_id):
             return {'status': 'active', 'properties': {}}
@@ -348,7 +348,7 @@ class TestCacheMiddlewareProcessRequest(base.IsolatedUnitTest):
         subject_id = 'test1'
         request = webob.Request.blank('/v1/subjects/test1/file')
         request.context = context.RequestContext()
-        request.environ['api.cache.subject'] = ImageStub(subject_id)
+        request.environ['api.cache.subject'] = SubjectStub(subject_id)
 
         subject_meta = {
             'id': subject_id,
@@ -387,7 +387,7 @@ class TestCacheMiddlewareProcessRequest(base.IsolatedUnitTest):
         subject_id = 'test1'
         request = webob.Request.blank('/v1/subjects/test1/file')
         request.context = context.RequestContext()
-        subject = ImageStub(subject_id)
+        subject = SubjectStub(subject_id)
         subject.checksum = None
         request.environ['api.cache.subject'] = subject
 
@@ -548,9 +548,9 @@ class TestCacheMiddlewareProcessRequest(base.IsolatedUnitTest):
         }
 
         def fake_get_v2_subject_metadata(*args, **kwargs):
-            subject = ImageStub(subject_id, extra_properties=extra_properties)
+            subject = SubjectStub(subject_id, extra_properties=extra_properties)
             request.environ['api.cache.subject'] = subject
-            return subject.api.policy.ImageTarget(subject)
+            return subject.api.policy.SubjectTarget(subject)
 
         enforcer = self._enforcer_from_rules({
             "restricted":
@@ -578,9 +578,9 @@ class TestCacheMiddlewareProcessRequest(base.IsolatedUnitTest):
         }
 
         def fake_get_v2_subject_metadata(*args, **kwargs):
-            subject = ImageStub(subject_id, extra_properties=extra_properties)
+            subject = SubjectStub(subject_id, extra_properties=extra_properties)
             request.environ['api.cache.subject'] = subject
-            return subject.api.policy.ImageTarget(subject)
+            return subject.api.policy.SubjectTarget(subject)
 
         request = webob.Request.blank('/v1/subjects/test1/file')
         request.context = context.RequestContext(roles=['member'])
@@ -805,9 +805,9 @@ class TestCacheMiddlewareProcessResponse(base.IsolatedUnitTest):
             return ('test1', 'GET', 'v1')
 
         def fake_get_v2_subject_metadata(*args, **kwargs):
-            subject = ImageStub(subject_id, extra_properties=extra_properties)
+            subject = SubjectStub(subject_id, extra_properties=extra_properties)
             request.environ['api.cache.subject'] = subject
-            return subject.api.policy.ImageTarget(subject)
+            return subject.api.policy.SubjectTarget(subject)
 
         cache_filter = ProcessRequestTestCacheFilter()
         cache_filter._fetch_request_info = fake_fetch_request_info
@@ -841,9 +841,9 @@ class TestCacheMiddlewareProcessResponse(base.IsolatedUnitTest):
             return ('test1', 'GET', 'v1')
 
         def fake_get_v2_subject_metadata(*args, **kwargs):
-            subject = ImageStub(subject_id, extra_properties=extra_properties)
+            subject = SubjectStub(subject_id, extra_properties=extra_properties)
             request.environ['api.cache.subject'] = subject
-            return subject.api.policy.ImageTarget(subject)
+            return subject.api.policy.SubjectTarget(subject)
 
         cache_filter = ProcessRequestTestCacheFilter()
         cache_filter._fetch_request_info = fake_fetch_request_info

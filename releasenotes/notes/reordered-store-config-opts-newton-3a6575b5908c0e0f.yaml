@@ -14,9 +14,9 @@ other:
       Glance release tarballs. This reordering may result
       into a incorrect "diff" of the configurations used
       downstream vs. newly introduced upstream.
-    * Latest release of ``glance_store`` library (used
+    * Latest release of ``subject_store`` library (used
       in the **Newton** release of Glance) will include fix
-      for the ``glance_store`` bug 1619487.
+      for the ``subject_store`` bug 1619487.
     * Until now every run of the oslo-config-generator
       resulted in random ordering of the store drivers
       configuration. After **Newton** release this order

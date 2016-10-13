@@ -43,10 +43,10 @@ class TestApi(base.ApiTest):
         self.assertEqual(200, response.status)
         self.assertEqual('{"subjects": []}', content)
 
-        # 2. POST /subjects with public subject named Image1
+        # 2. POST /subjects with public subject named Subject1
         # attribute and no custom properties. Verify a 200 OK is returned
         subject_data = "*" * FIVE_KB
-        headers = minimal_headers('Image1')
+        headers = minimal_headers('Subject1')
         path = "/v1/subjects"
         response, content = self.http.request(path, 'POST', headers=headers,
                                               body=subject_data)
@@ -56,7 +56,7 @@ class TestApi(base.ApiTest):
         self.assertEqual(hashlib.md5(subject_data).hexdigest(),
                          data['subject']['checksum'])
         self.assertEqual(FIVE_KB, data['subject']['size'])
-        self.assertEqual("Image1", data['subject']['name'])
+        self.assertEqual("Subject1", data['subject']['name'])
         self.assertTrue(data['subject']['is_public'])
 
         # 3. HEAD subject
@@ -64,7 +64,7 @@ class TestApi(base.ApiTest):
         path = "/v1/subjects/%s" % subject_id
         response, content = self.http.request(path, 'HEAD')
         self.assertEqual(200, response.status)
-        self.assertEqual("Image1", response['x-subject-meta-name'])
+        self.assertEqual("Subject1", response['x-subject-meta-name'])
 
         # 4. GET subject
         # Verify all information on subject we just added is correct
@@ -74,7 +74,7 @@ class TestApi(base.ApiTest):
 
         expected_subject_headers = {
             'x-subject-meta-id': subject_id,
-            'x-subject-meta-name': 'Image1',
+            'x-subject-meta-name': 'Subject1',
             'x-subject-meta-is_public': 'True',
             'x-subject-meta-status': 'active',
             'x-subject-meta-disk_format': 'raw',
@@ -113,7 +113,7 @@ class TestApi(base.ApiTest):
             {"container_format": "ovf",
              "disk_format": "raw",
              "id": subject_id,
-             "name": "Image1",
+             "name": "Subject1",
              "checksum": "c2e5db72bd7fd153f53ede5da5a06de3",
              "size": 5120}]}
         self.assertEqual(expected_result, jsonutils.loads(content))
@@ -126,7 +126,7 @@ class TestApi(base.ApiTest):
 
         expected_subject = {
             "status": "active",
-            "name": "Image1",
+            "name": "Subject1",
             "deleted": False,
             "container_format": "ovf",
             "disk_format": "raw",
@@ -164,7 +164,7 @@ class TestApi(base.ApiTest):
 
         expected_subject = {
             "status": "active",
-            "name": "Image1",
+            "name": "Subject1",
             "deleted": False,
             "container_format": "ovf",
             "disk_format": "raw",
@@ -227,7 +227,7 @@ class TestApi(base.ApiTest):
 
         0. GET /subjects
         - Verify no public subjects
-        1. POST /subjects with public subject named Image1 with no location
+        1. POST /subjects with public subject named Subject1 with no location
         attribute and no subject data.
         - Verify 201 returned
         2. GET /subjects
@@ -249,9 +249,9 @@ class TestApi(base.ApiTest):
         self.assertEqual(200, response.status)
         self.assertEqual('{"subjects": []}', content)
 
-        # 1. POST /subjects with public subject named Image1
+        # 1. POST /subjects with public subject named Subject1
         # with no location or subject data
-        headers = minimal_headers('Image1')
+        headers = minimal_headers('Subject1')
         path = "/v1/subjects"
         response, content = self.http.request(path, 'POST', headers=headers)
         self.assertEqual(201, response.status)
@@ -260,7 +260,7 @@ class TestApi(base.ApiTest):
         self.assertEqual(0, data['subject']['size'])
         self.assertEqual('ovf', data['subject']['container_format'])
         self.assertEqual('raw', data['subject']['disk_format'])
-        self.assertEqual("Image1", data['subject']['name'])
+        self.assertEqual("Subject1", data['subject']['name'])
         self.assertTrue(data['subject']['is_public'])
 
         subject_id = data['subject']['id']
@@ -276,14 +276,14 @@ class TestApi(base.ApiTest):
         self.assertEqual(0, data['subjects'][0]['size'])
         self.assertEqual('ovf', data['subjects'][0]['container_format'])
         self.assertEqual('raw', data['subjects'][0]['disk_format'])
-        self.assertEqual("Image1", data['subjects'][0]['name'])
+        self.assertEqual("Subject1", data['subjects'][0]['name'])
 
         # 3. HEAD /subjects
         # Verify status is in queued
         path = "/v1/subjects/%s" % (subject_id)
         response, content = self.http.request(path, 'HEAD')
         self.assertEqual(200, response.status)
-        self.assertEqual("Image1", response['x-subject-meta-name'])
+        self.assertEqual("Subject1", response['x-subject-meta-name'])
         self.assertEqual("queued", response['x-subject-meta-status'])
         self.assertEqual('0', response['x-subject-meta-size'])
         self.assertEqual(subject_id, response['x-subject-meta-id'])
@@ -299,7 +299,7 @@ class TestApi(base.ApiTest):
         self.assertEqual(hashlib.md5(subject_data).hexdigest(),
                          data['subject']['checksum'])
         self.assertEqual(FIVE_KB, data['subject']['size'])
-        self.assertEqual("Image1", data['subject']['name'])
+        self.assertEqual("Subject1", data['subject']['name'])
         self.assertTrue(data['subject']['is_public'])
 
         # 5. HEAD /subjects
@@ -307,7 +307,7 @@ class TestApi(base.ApiTest):
         path = "/v1/subjects/%s" % (subject_id)
         response, content = self.http.request(path, 'HEAD')
         self.assertEqual(200, response.status)
-        self.assertEqual("Image1", response['x-subject-meta-name'])
+        self.assertEqual("Subject1", response['x-subject-meta-name'])
         self.assertEqual("active", response['x-subject-meta-status'])
 
         # 6. GET /subjects
@@ -322,7 +322,7 @@ class TestApi(base.ApiTest):
         self.assertEqual(FIVE_KB, data['subjects'][0]['size'])
         self.assertEqual('ovf', data['subjects'][0]['container_format'])
         self.assertEqual('raw', data['subjects'][0]['disk_format'])
-        self.assertEqual("Image1", data['subjects'][0]['name'])
+        self.assertEqual("Subject1", data['subjects'][0]['name'])
 
         # DELETE subject
         path = "/v1/subjects/%s" % (subject_id)
@@ -346,12 +346,12 @@ class TestApi(base.ApiTest):
         A test to ensure that an subject with size explicitly set to zero
         has status that immediately transitions to active.
         """
-        # 1. POST /subjects with public subject named Image1
+        # 1. POST /subjects with public subject named Subject1
         # attribute and a size of zero.
         # Verify a 201 OK is returned
         headers = {'Content-Type': 'application/octet-stream',
                    'X-Subject-Meta-Size': '0',
-                   'X-Subject-Meta-Name': 'Image1',
+                   'X-Subject-Meta-Name': 'Subject1',
                    'X-Subject-Meta-disk_format': 'raw',
                    'X-subject-Meta-container_format': 'ovf',
                    'X-Subject-Meta-Is-Public': 'True'}
@@ -390,7 +390,7 @@ class TestApi(base.ApiTest):
             test_data_file.write("XXX")
             test_data_file.flush()
         path = "/v1/subjects"
-        headers = minimal_headers('Image1')
+        headers = minimal_headers('Subject1')
         headers['Content-Type'] = 'not octet-stream'
         response, content = self.http.request(path, 'POST',
                                               body=test_data_file.name,
@@ -417,7 +417,7 @@ class TestApi(base.ApiTest):
         # 1. POST /subjects with three public subjects, and one private subject
         # with various attributes
         headers = {'Content-Type': 'application/octet-stream',
-                   'X-Subject-Meta-Name': 'Image1',
+                   'X-Subject-Meta-Name': 'Subject1',
                    'X-Subject-Meta-Status': 'active',
                    'X-Subject-Meta-Container-Format': 'ovf',
                    'X-Subject-Meta-Disk-Format': 'vdi',
@@ -492,7 +492,7 @@ class TestApi(base.ApiTest):
 
         # 3. GET /subjects with name filter
         # Verify correct subjects returned with name
-        params = "name=My%20Image!"
+        params = "name=My%20Subject!"
         path = "/v1/subjects?%s" % (params)
         response, content = self.http.request(path, 'GET')
         self.assertEqual(200, response.status)
@@ -606,7 +606,7 @@ class TestApi(base.ApiTest):
         data = jsonutils.loads(content)
         self.assertEqual(2, len(data['subjects']))
         for subject in data['subjects']:
-            self.assertNotEqual(subject['name'], "Image1")
+            self.assertNotEqual(subject['name'], "Subject1")
 
         # 13. Get /subjects with protected=True filter
         # Verify correct subjects returned with property
@@ -617,7 +617,7 @@ class TestApi(base.ApiTest):
         data = jsonutils.loads(content)
         self.assertEqual(1, len(data['subjects']))
         for subject in data['subjects']:
-            self.assertEqual("Image1", subject['name'])
+            self.assertEqual("Subject1", subject['name'])
 
         # 14. GET /subjects with property filter
         # Verify correct subjects returned with property
@@ -633,7 +633,7 @@ class TestApi(base.ApiTest):
         # 15. GET /subjects with property filter and name filter
         # Verify correct subjects returned with property and name
         # Make sure you quote the url when using more than one param!
-        params = "name=My%20Image!&property-pants=are%20on"
+        params = "name=My%20Subject!&property-pants=are%20on"
         path = "/v1/subjects/detail?%s" % (params)
         response, content = self.http.request(path, 'GET')
         self.assertEqual(200, response.status)
@@ -742,19 +742,19 @@ class TestApi(base.ApiTest):
         subject_ids = []
 
         # 1. POST /subjects with three public subjects with various attributes
-        headers = minimal_headers('Image1')
+        headers = minimal_headers('Subject1')
         path = "/v1/subjects"
         response, content = self.http.request(path, 'POST', headers=headers)
         self.assertEqual(201, response.status)
         subject_ids.append(jsonutils.loads(content)['subject']['id'])
 
-        headers = minimal_headers('Image2')
+        headers = minimal_headers('Subject2')
         path = "/v1/subjects"
         response, content = self.http.request(path, 'POST', headers=headers)
         self.assertEqual(201, response.status)
         subject_ids.append(jsonutils.loads(content)['subject']['id'])
 
-        headers = minimal_headers('Image3')
+        headers = minimal_headers('Subject3')
         path = "/v1/subjects"
         response, content = self.http.request(path, 'POST', headers=headers)
         self.assertEqual(201, response.status)
@@ -829,7 +829,7 @@ class TestApi(base.ApiTest):
         # 1. POST /subjects with three public subjects with various attributes
         subject_ids = []
         headers = {'Content-Type': 'application/octet-stream',
-                   'X-Subject-Meta-Name': 'Image1',
+                   'X-Subject-Meta-Name': 'Subject1',
                    'X-Subject-Meta-Status': 'active',
                    'X-Subject-Meta-Container-Format': 'ovf',
                    'X-Subject-Meta-Disk-Format': 'vdi',
@@ -932,9 +932,9 @@ class TestApi(base.ApiTest):
         self.assertEqual(200, response.status)
         self.assertEqual('{"subjects": []}', content)
 
-        # 1. POST /subjects with public subject named Image1
+        # 1. POST /subjects with public subject named Subject1
         headers = {'Content-Type': 'application/octet-stream',
-                   'X-Subject-Meta-Name': 'Image1',
+                   'X-Subject-Meta-Name': 'Subject1',
                    'X-Subject-Meta-Status': 'active',
                    'X-Subject-Meta-Container-Format': 'ovf',
                    'X-Subject-Meta-Disk-Format': 'vdi',
@@ -946,9 +946,9 @@ class TestApi(base.ApiTest):
 
         subject = jsonutils.loads(content)['subject']
 
-        # 2. POST /subjects with public subject named Image1, and ID: 1
+        # 2. POST /subjects with public subject named Subject1, and ID: 1
         headers = {'Content-Type': 'application/octet-stream',
-                   'X-Subject-Meta-Name': 'Image1 Update',
+                   'X-Subject-Meta-Name': 'Subject1 Update',
                    'X-Subject-Meta-Status': 'active',
                    'X-Subject-Meta-Container-Format': 'ovf',
                    'X-Subject-Meta-Disk-Format': 'vdi',
@@ -999,7 +999,7 @@ class TestApi(base.ApiTest):
         path = "/v1/subjects"
 
         # POST /subjects without given format being specified
-        headers = minimal_headers('Image1')
+        headers = minimal_headers('Subject1')
         headers['X-Subject-Meta-' + format] = 'bad_value'
         with tempfile.NamedTemporaryFile() as test_data_file:
             test_data_file.write("XXX")
@@ -1039,7 +1039,7 @@ class TestApi(base.ApiTest):
         # POST queued subject
         path = "/v1/subjects"
         headers = {
-            'X-Subject-Meta-Name': 'Image1',
+            'X-Subject-Meta-Name': 'Subject1',
             'X-Subject-Meta-Is-Public': 'True',
         }
         response, content = self.http.request(path, 'POST', headers=headers)
@@ -1050,7 +1050,7 @@ class TestApi(base.ApiTest):
 
         # PUT subject content subjects without given format being specified
         path = "/v1/subjects/%s" % (subject_id)
-        headers = minimal_headers('Image1')
+        headers = minimal_headers('Subject1')
         del headers['X-Subject-Meta-' + format]
         with tempfile.NamedTemporaryFile() as test_data_file:
             test_data_file.write("XXX")
@@ -1076,7 +1076,7 @@ class TestApi(base.ApiTest):
         """
 
         subject_data = "*" * FIVE_KB
-        headers = minimal_headers('Image1')
+        headers = minimal_headers('Subject1')
         headers[attribute] = value
         path = "/v1/subjects"
         response, content = self.http.request(path, 'POST', headers=headers,
@@ -1117,7 +1117,7 @@ class TestApiWithFakeAuth(base.ApiTest):
         }
 
         create_headers = {
-            'X-Subject-Meta-Name': 'MyImage',
+            'X-Subject-Meta-Name': 'MySubject',
             'X-Subject-Meta-disk_format': 'raw',
             'X-Subject-Meta-container_format': 'ovf',
             'X-Subject-Meta-Is-Public': 'True',
@@ -1166,7 +1166,7 @@ class TestApiWithFakeAuth(base.ApiTest):
 
         # Make sure the non-privileged user can't update their owner either
         update_headers = {
-            'X-Subject-Meta-Name': 'MyImage2',
+            'X-Subject-Meta-Name': 'MySubject2',
             'X-Subject-Meta-Owner': 'tenant2',
             'X-Auth-Token': 'user1:tenant1:role1',
         }
@@ -1193,7 +1193,7 @@ class TestApiWithFakeAuth(base.ApiTest):
         }
 
         update_headers = {
-            'X-Subject-Meta-Name': 'MyImage2',
+            'X-Subject-Meta-Name': 'MySubject2',
             'X-Subject-Meta-Owner': 'tenant2',
         }
         update_headers.update(auth_headers)
@@ -1304,7 +1304,7 @@ class TestApiWithFakeAuth(base.ApiTest):
         self.init()
 
         CREATE_HEADERS = {
-            'X-Subject-Meta-Name': 'MyImage',
+            'X-Subject-Meta-Name': 'MySubject',
             'X-Subject-Meta-disk_format': 'raw',
             'X-Subject-Meta-container_format': 'ovf',
             'X-Subject-Meta-Is-Public': 'True',
@@ -1453,7 +1453,7 @@ class TestApiWithFakeAuth(base.ApiTest):
         self.init()
 
         CREATE_HEADERS = {
-            'X-Subject-Meta-Name': 'MyImage',
+            'X-Subject-Meta-Name': 'MySubject',
             'X-Subject-Meta-disk_format': 'raw',
             'X-Subject-Meta-container_format': 'ovf',
             'X-Subject-Meta-Is-Public': 'True',

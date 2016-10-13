@@ -123,29 +123,33 @@ class Subject(BASE, GlanceBase):
     id = Column(String(36), primary_key=True,
                 default=lambda: str(uuid.uuid4()))
     name = Column(String(255))
-    disk_format = Column(String(20))
-    container_format = Column(String(20))
     size = Column(BigInteger().with_variant(Integer, "sqlite"))
-    virtual_size = Column(BigInteger().with_variant(Integer, "sqlite"))
     status = Column(String(30), nullable=False)
-    is_public = Column(Boolean, nullable=False, default=False)
-    checksum = Column(String(32))
-    min_disk = Column(Integer, nullable=False, default=0)
-    min_ram = Column(Integer, nullable=False, default=0)
+    type = Column(String(20))
+    subject_format = Column(String(20))
+    tar_format = Column(String(20))
     owner = Column(String(255))
+    checksum = Column(String(32))
+    contributor = Column(String(32))
+    phase = Column(String(32))
+    language = Column(String(32))
+    score = Column(Integer, default=0)
+    knowledge = Column(String(255))
+    is_public = Column(Boolean, nullable=False, default=False)
     protected = Column(Boolean, nullable=False, default=False,
                        server_default=sql.expression.false())
+    description = Column(String(255))
+    subject = Column(String(1024))
 
 
-class ImageProperty(BASE, GlanceBase):
+class SubjectProperty(BASE, GlanceBase):
     """Represents an subject properties in the datastore."""
     __tablename__ = 'subject_properties'
     __table_args__ = (Index('ix_subject_properties_subject_id', 'subject_id'),
                       Index('ix_subject_properties_deleted', 'deleted'),
-                      UniqueConstraint('subject_id',
-                                       'name',
-                                       name='ix_subject_properties_'
-                                            'subject_id_name'),)
+                      UniqueConstraint('subject_id', 'key',
+                                       'deleted'),
+                      )
 
     id = Column(Integer, primary_key=True)
     subject_id = Column(String(36), ForeignKey('subjects.id'),
@@ -156,7 +160,7 @@ class ImageProperty(BASE, GlanceBase):
     value = Column(Text)
 
 
-class ImageTag(BASE, GlanceBase):
+class SubjectTag(BASE, GlanceBase):
     """Represents an subject tag in the datastore."""
     __tablename__ = 'subject_tags'
     __table_args__ = (Index('ix_subject_tags_subject_id', 'subject_id'),
@@ -170,7 +174,7 @@ class ImageTag(BASE, GlanceBase):
     value = Column(String(255), nullable=False)
 
 
-class ImageLocation(BASE, GlanceBase):
+class SubjectLocation(BASE, GlanceBase):
     """Represents an subject location in the datastore."""
     __tablename__ = 'subject_locations'
     __table_args__ = (Index('ix_subject_locations_subject_id', 'subject_id'),
@@ -184,7 +188,7 @@ class ImageLocation(BASE, GlanceBase):
     status = Column(String(30), server_default='active', nullable=False)
 
 
-class ImageMember(BASE, GlanceBase):
+class SubjectMember(BASE, GlanceBase):
     """Represents an subject members in the datastore."""
     __tablename__ = 'subject_members'
     unique_constraint_key_name = 'subject_members_subject_id_member_deleted_at_key'
@@ -247,13 +251,13 @@ class TaskInfo(BASE, models.ModelBase):
 
 def register_models(engine):
     """Create database tables for all models with the given engine."""
-    models = (Subject, ImageProperty, ImageMember)
+    models = (Subject, SubjectProperty, SubjectMember)
     for model in models:
         model.metadata.create_all(engine)
 
 
 def unregister_models(engine):
     """Drop database tables for all models with the given engine."""
-    models = (Subject, ImageProperty)
+    models = (Subject, SubjectProperty)
     for model in models:
         model.metadata.drop_all(engine)

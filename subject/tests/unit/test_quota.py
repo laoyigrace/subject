@@ -36,7 +36,7 @@ class FakeContext(object):
     is_admin = False
 
 
-class FakeImage(object):
+class FakeSubject(object):
     size = None
     subject_id = 'someid'
     locations = [{'url': 'file:///not/a/path', 'metadata': {}}]
@@ -51,19 +51,19 @@ class FakeImage(object):
         self.extra_properties = kwargs.get('extra_properties', {})
 
 
-class TestImageQuota(test_utils.BaseTestCase):
+class TestSubjectQuota(test_utils.BaseTestCase):
     def setUp(self):
-        super(TestImageQuota, self).setUp()
+        super(TestSubjectQuota, self).setUp()
 
     def tearDown(self):
-        super(TestImageQuota, self).tearDown()
+        super(TestSubjectQuota, self).tearDown()
 
     def _get_subject(self, location_count=1, subject_size=10):
         context = FakeContext()
         db_api = unit_test_utils.FakeDB()
         store_api = unit_test_utils.FakeStoreAPI()
         store = unit_test_utils.FakeStoreUtils(store_api)
-        base_subject = FakeImage()
+        base_subject = FakeSubject()
         base_subject.subject_id = 'xyz'
         base_subject.size = subject_size
         subject = subject.quota.SubjectProxy(base_subject, context, db_api, store)
@@ -84,7 +84,7 @@ class TestImageQuota(test_utils.BaseTestCase):
         db_api = unit_test_utils.FakeDB()
         store_api = unit_test_utils.FakeStoreAPI()
         store = unit_test_utils.FakeStoreUtils(store_api)
-        base_subject = FakeImage()
+        base_subject = FakeSubject()
         base_subject.subject_id = 'id'
         subject = subject.quota.SubjectProxy(base_subject, context, db_api, store)
         data = '*' * quota
@@ -98,7 +98,7 @@ class TestImageQuota(test_utils.BaseTestCase):
         db_api = unit_test_utils.FakeDB()
         store_api = unit_test_utils.FakeStoreAPI()
         store = unit_test_utils.FakeStoreUtils(store_api)
-        base_subject = FakeImage()
+        base_subject = FakeSubject()
         base_subject.subject_id = 'id'
         subject = subject.quota.SubjectProxy(base_subject, context, db_api, store)
         data = '*' * data_length
@@ -128,7 +128,7 @@ class TestImageQuota(test_utils.BaseTestCase):
         db_api = unit_test_utils.FakeDB()
         store_api = unit_test_utils.FakeStoreAPI()
         store = unit_test_utils.FakeStoreUtils(store_api)
-        base_subject = FakeImage()
+        base_subject = FakeSubject()
         base_subject.subject_id = 'id'
         subject = subject.quota.SubjectProxy(base_subject, context, db_api, store)
 
@@ -281,7 +281,7 @@ class TestImageQuota(test_utils.BaseTestCase):
         db_api = unit_test_utils.FakeDB()
         store_api = unit_test_utils.FakeStoreAPI()
         store = unit_test_utils.FakeStoreUtils(store_api)
-        base_subject = FakeImage()
+        base_subject = FakeSubject()
         base_subject.subject_id = str(uuid.uuid4())
         subject = subject.quota.SubjectProxy(base_subject, context, db_api, store)
         self.assertIsNone(subject.size)
@@ -298,7 +298,7 @@ class TestImageQuota(test_utils.BaseTestCase):
         db_api = unit_test_utils.FakeDB()
         store_api = unit_test_utils.FakeStoreAPI()
         store = unit_test_utils.FakeStoreUtils(store_api)
-        base_subject = FakeImage()
+        base_subject = FakeSubject()
         base_subject.subject_id = str(uuid.uuid4())
         subject = subject.quota.SubjectProxy(base_subject, context, db_api, store)
         self.assertIsNone(subject.size)
@@ -316,7 +316,7 @@ class TestImageQuota(test_utils.BaseTestCase):
         db_api = unit_test_utils.FakeDB()
         store_api = unit_test_utils.FakeStoreAPI()
         store = unit_test_utils.FakeStoreUtils(store_api)
-        base_subject = FakeImage()
+        base_subject = FakeSubject()
         base_subject.subject_id = str(uuid.uuid4())
         subject = subject.quota.SubjectProxy(base_subject, context, db_api, store)
         self.assertIsNone(subject.size)
@@ -332,7 +332,7 @@ class TestImageQuota(test_utils.BaseTestCase):
         db_api = unit_test_utils.FakeDB()
         store_api = unit_test_utils.FakeStoreAPI()
         store = unit_test_utils.FakeStoreUtils(store_api)
-        base_subject = FakeImage()
+        base_subject = FakeSubject()
         base_subject.subject_id = str(uuid.uuid4())
         subject = subject.quota.SubjectProxy(base_subject, context, db_api, store)
         self.assertIsNone(subject.size)
@@ -344,10 +344,10 @@ class TestImageQuota(test_utils.BaseTestCase):
                       subject.locations)
 
 
-class TestImagePropertyQuotas(test_utils.BaseTestCase):
+class TestSubjectPropertyQuotas(test_utils.BaseTestCase):
     def setUp(self):
-        super(TestImagePropertyQuotas, self).setUp()
-        self.base_subject = FakeImage()
+        super(TestSubjectPropertyQuotas, self).setUp()
+        self.base_subject = FakeSubject()
         self.subject = subject.quota.SubjectProxy(self.base_subject,
                                                 mock.Mock(),
                                                 mock.Mock(),
@@ -376,7 +376,7 @@ class TestImagePropertyQuotas(test_utils.BaseTestCase):
         self.config(subject_property_quota=1)
 
         self.subject.extra_properties = {'foo': 'bar', 'foo2': 'bar2'}
-        exc = self.assertRaises(exception.ImagePropertyLimitExceeded,
+        exc = self.assertRaises(exception.SubjectPropertyLimitExceeded,
                                 self.subject_repo_proxy.save, self.subject)
         self.assertIn("Attempted: 2, Maximum: 1",
                       encodeutils.exception_to_unicode(exc))
@@ -402,7 +402,7 @@ class TestImagePropertyQuotas(test_utils.BaseTestCase):
         self.config(subject_property_quota=1)
 
         self.subject.extra_properties = {'foo': 'bar', 'foo2': 'bar2'}
-        exc = self.assertRaises(exception.ImagePropertyLimitExceeded,
+        exc = self.assertRaises(exception.SubjectPropertyLimitExceeded,
                                 self.subject_repo_proxy.add, self.subject)
         self.assertIn("Attempted: 2, Maximum: 1",
                       encodeutils.exception_to_unicode(exc))
@@ -487,9 +487,9 @@ class TestImagePropertyQuotas(test_utils.BaseTestCase):
         self.assertEqual('baz', self.base_subject.extra_properties['frob'])
 
 
-class TestImageTagQuotas(test_utils.BaseTestCase):
+class TestSubjectTagQuotas(test_utils.BaseTestCase):
     def setUp(self):
-        super(TestImageTagQuotas, self).setUp()
+        super(TestSubjectTagQuotas, self).setUp()
         self.base_subject = mock.Mock()
         self.base_subject.tags = set([])
         self.base_subject.extra_properties = {}
@@ -513,7 +513,7 @@ class TestImageTagQuotas(test_utils.BaseTestCase):
     def test_replace_too_many_subject_tags(self):
         self.config(subject_tag_quota=0)
 
-        exc = self.assertRaises(exception.ImageTagLimitExceeded,
+        exc = self.assertRaises(exception.SubjectTagLimitExceeded,
                                 setattr, self.subject, 'tags', ['foo', 'bar'])
         self.assertIn('Attempted: 2, Maximum: 0',
                       encodeutils.exception_to_unicode(exc))
@@ -532,7 +532,7 @@ class TestImageTagQuotas(test_utils.BaseTestCase):
     def test_add_too_many_subject_tags(self):
         self.config(subject_tag_quota=1)
         self.subject.tags.add('foo')
-        exc = self.assertRaises(exception.ImageTagLimitExceeded,
+        exc = self.assertRaises(exception.SubjectTagLimitExceeded,
                                 self.subject.tags.add, 'bar')
         self.assertIn('Attempted: 2, Maximum: 1',
                       encodeutils.exception_to_unicode(exc))
@@ -551,37 +551,37 @@ class TestImageTagQuotas(test_utils.BaseTestCase):
         self.assertEqual(0, len(self.subject.tags))
 
 
-class TestQuotaImageTagsProxy(test_utils.BaseTestCase):
+class TestQuotaSubjectTagsProxy(test_utils.BaseTestCase):
     def setUp(self):
-        super(TestQuotaImageTagsProxy, self).setUp()
+        super(TestQuotaSubjectTagsProxy, self).setUp()
 
     def test_add(self):
-        proxy = subject.quota.QuotaImageTagsProxy(set([]))
+        proxy = subject.quota.QuotaSubjectTagsProxy(set([]))
         proxy.add('foo')
         self.assertIn('foo', proxy)
 
     def test_add_too_many_tags(self):
         self.config(subject_tag_quota=0)
-        proxy = subject.quota.QuotaImageTagsProxy(set([]))
-        exc = self.assertRaises(exception.ImageTagLimitExceeded,
+        proxy = subject.quota.QuotaSubjectTagsProxy(set([]))
+        exc = self.assertRaises(exception.SubjectTagLimitExceeded,
                                 proxy.add, 'bar')
         self.assertIn('Attempted: 1, Maximum: 0',
                       encodeutils.exception_to_unicode(exc))
 
     def test_equals(self):
-        proxy = subject.quota.QuotaImageTagsProxy(set([]))
+        proxy = subject.quota.QuotaSubjectTagsProxy(set([]))
         self.assertEqual(set([]), proxy)
 
     def test_not_equals(self):
-        proxy = subject.quota.QuotaImageTagsProxy(set([]))
+        proxy = subject.quota.QuotaSubjectTagsProxy(set([]))
         self.assertNotEqual('foo', proxy)
 
     def test_contains(self):
-        proxy = subject.quota.QuotaImageTagsProxy(set(['foo']))
+        proxy = subject.quota.QuotaSubjectTagsProxy(set(['foo']))
         self.assertIn('foo', proxy)
 
     def test_len(self):
-        proxy = subject.quota.QuotaImageTagsProxy(set(['foo',
+        proxy = subject.quota.QuotaSubjectTagsProxy(set(['foo',
                                                       'bar',
                                                       'baz',
                                                       'niz']))
@@ -589,23 +589,23 @@ class TestQuotaImageTagsProxy(test_utils.BaseTestCase):
 
     def test_iter(self):
         items = set(['foo', 'bar', 'baz', 'niz'])
-        proxy = subject.quota.QuotaImageTagsProxy(items.copy())
+        proxy = subject.quota.QuotaSubjectTagsProxy(items.copy())
         self.assertEqual(4, len(items))
         for item in proxy:
             items.remove(item)
         self.assertEqual(0, len(items))
 
 
-class TestImageMemberQuotas(test_utils.BaseTestCase):
+class TestSubjectMemberQuotas(test_utils.BaseTestCase):
     def setUp(self):
-        super(TestImageMemberQuotas, self).setUp()
+        super(TestSubjectMemberQuotas, self).setUp()
         db_api = unit_test_utils.FakeDB()
         store_api = unit_test_utils.FakeStoreAPI()
         store = unit_test_utils.FakeStoreUtils(store_api)
         context = FakeContext()
         self.subject = mock.Mock()
         self.base_subject_member_factory = mock.Mock()
-        self.subject_member_factory = subject.quota.ImageMemberFactoryProxy(
+        self.subject_member_factory = subject.quota.SubjectMemberFactoryProxy(
             self.base_subject_member_factory, context,
             db_api, store)
 
@@ -628,14 +628,14 @@ class TestImageMemberQuotas(test_utils.BaseTestCase):
     def test_new_subject_member_too_many_members(self):
         self.config(subject_member_quota=0)
 
-        self.assertRaises(exception.ImageMemberLimitExceeded,
+        self.assertRaises(exception.SubjectMemberLimitExceeded,
                           self.subject_member_factory.new_subject_member,
                           self.subject, 'fake_id')
 
 
-class TestImageLocationQuotas(test_utils.BaseTestCase):
+class TestSubjectLocationQuotas(test_utils.BaseTestCase):
     def setUp(self):
-        super(TestImageLocationQuotas, self).setUp()
+        super(TestSubjectLocationQuotas, self).setUp()
         self.base_subject = mock.Mock()
         self.base_subject.locations = []
         self.base_subject.size = 1
@@ -669,7 +669,7 @@ class TestImageLocationQuotas(test_utils.BaseTestCase):
             {"url": "file:///fake2.img.tar.gz", "metadata": {}},
             {"url": "file:///fake3.img.tar.gz", "metadata": {}}
         ]
-        exc = self.assertRaises(exception.ImageLocationLimitExceeded,
+        exc = self.assertRaises(exception.SubjectLocationLimitExceeded,
                                 setattr, self.subject, 'locations', locations)
         self.assertIn('Attempted: 3, Maximum: 1',
                       encodeutils.exception_to_unicode(exc))
@@ -693,7 +693,7 @@ class TestImageLocationQuotas(test_utils.BaseTestCase):
         location1 = {"url": "file:///fake1.img.tar.gz", "metadata": {}}
         self.subject.locations.append(location1)
         location2 = {"url": "file:///fake2.img.tar.gz", "metadata": {}}
-        exc = self.assertRaises(exception.ImageLocationLimitExceeded,
+        exc = self.assertRaises(exception.SubjectLocationLimitExceeded,
                                 self.subject.locations.append, location2)
         self.assertIn('Attempted: 2, Maximum: 1',
                       encodeutils.exception_to_unicode(exc))

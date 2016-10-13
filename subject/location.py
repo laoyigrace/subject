@@ -19,7 +19,7 @@ import copy
 from cryptography import exceptions as crypto_exception
 from cursive import exception as cursive_exception
 from cursive import signature_utils
-import glance_store as store
+import subject_store as store
 from oslo_config import cfg
 from oslo_log import log as logging
 from oslo_utils import encodeutils
@@ -74,9 +74,9 @@ class SubjectRepoProxy(subject.domain.proxy.Repo):
 
 
 def _get_member_repo_for_store(subject, context, db_api, store_api):
-        subject_member_repo = subject.db.ImageMemberRepo(
+        subject_member_repo = subject.db.SubjectMemberRepo(
             context, db_api, subject)
-        store_subject_repo = subject.location.ImageMemberRepoProxy(
+        store_subject_repo = subject.location.SubjectMemberRepoProxy(
             subject_member_repo, subject, context, store_api)
 
         return store_subject_repo
@@ -394,7 +394,7 @@ class SubjectProxy(subject.domain.proxy.Subject):
             'store_api': store_api,
         }
         super(SubjectProxy, self).__init__(
-            subject, member_repo_proxy_class=ImageMemberRepoProxy,
+            subject, member_repo_proxy_class=SubjectMemberRepoProxy,
             member_repo_proxy_kwargs=proxy_kwargs)
 
     def delete(self):
@@ -461,7 +461,7 @@ class SubjectProxy(subject.domain.proxy.Subject):
             # NOTE(mclaren): This is the only set of arguments
             # which work with this exception currently, see:
             # https://bugs.launchpad.net/glance-store/+bug/1501443
-            # When the above glance_store bug is fixed we can
+            # When the above subject_store bug is fixed we can
             # add a msg as usual.
             raise store.NotFound(subject=None)
         err = None
@@ -486,13 +486,13 @@ class SubjectProxy(subject.domain.proxy.Subject):
         raise err
 
 
-class ImageMemberRepoProxy(subject.domain.proxy.Repo):
+class SubjectMemberRepoProxy(subject.domain.proxy.Repo):
     def __init__(self, repo, subject, context, store_api):
         self.repo = repo
         self.subject = subject
         self.context = context
         self.store_api = store_api
-        super(ImageMemberRepoProxy, self).__init__(repo)
+        super(SubjectMemberRepoProxy, self).__init__(repo)
 
     def _set_acls(self):
         public = self.subject.visibility == 'public'
@@ -504,9 +504,9 @@ class ImageMemberRepoProxy(subject.domain.proxy.Repo):
                                         context=self.context)
 
     def add(self, member):
-        super(ImageMemberRepoProxy, self).add(member)
+        super(SubjectMemberRepoProxy, self).add(member)
         self._set_acls()
 
     def remove(self, member):
-        super(ImageMemberRepoProxy, self).remove(member)
+        super(SubjectMemberRepoProxy, self).remove(member)
         self._set_acls()

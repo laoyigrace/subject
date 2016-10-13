@@ -113,10 +113,10 @@ def _db_subject_member_fixture(subject_id, member_id, **kwargs):
     return obj
 
 
-class TestImagesController(base.IsolatedUnitTest):
+class TestSubjectsController(base.IsolatedUnitTest):
 
     def setUp(self):
-        super(TestImagesController, self).setUp()
+        super(TestSubjectsController, self).setUp()
         self.db = unit_test_utils.FakeDB(initialize=False)
         self.policy = unit_test_utils.FakePolicyEnforcer()
         self.notifier = unit_test_utils.FakeNotifier()
@@ -126,12 +126,12 @@ class TestImagesController(base.IsolatedUnitTest):
         self.store_utils = unit_test_utils.FakeStoreUtils(self.store)
         self._create_subjects()
         self._create_subject_members()
-        self.controller = subject.api.v2.subjects.ImagesController(self.db,
+        self.controller = subject.api.v2.subjects.SubjectsController(self.db,
                                                                    self.policy,
                                                                    self.notifier,
                                                                    self.store)
         self.action_controller = (subject.api.v2.subject_actions.
-                                  ImageActionsController(self.db,
+                                  SubjectActionsController(self.db,
                                                          self.policy,
                                                          self.notifier,
                                                          self.store))
@@ -1021,7 +1021,7 @@ class TestImagesController(base.IsolatedUnitTest):
 
     def test_prop_protection_with_create_and_permitted_role(self):
         enforcer = subject.api.policy.Enforcer()
-        self.controller = subject.api.v2.subjects.ImagesController(self.db,
+        self.controller = subject.api.v2.subjects.SubjectsController(self.db,
                                                                    enforcer,
                                                                    self.notifier,
                                                                    self.store)
@@ -1042,7 +1042,7 @@ class TestImagesController(base.IsolatedUnitTest):
     def test_prop_protection_with_update_and_permitted_policy(self):
         self.set_property_protections(use_policies=True)
         enforcer = subject.api.policy.Enforcer()
-        self.controller = subject.api.v2.subjects.ImagesController(self.db,
+        self.controller = subject.api.v2.subjects.SubjectsController(self.db,
                                                                    enforcer,
                                                                    self.notifier,
                                                                    self.store)
@@ -1070,7 +1070,7 @@ class TestImagesController(base.IsolatedUnitTest):
     def test_prop_protection_with_create_with_patch_and_policy(self):
         self.set_property_protections(use_policies=True)
         enforcer = subject.api.policy.Enforcer()
-        self.controller = subject.api.v2.subjects.ImagesController(self.db,
+        self.controller = subject.api.v2.subjects.SubjectsController(self.db,
                                                                    enforcer,
                                                                    self.notifier,
                                                                    self.store)
@@ -1095,7 +1095,7 @@ class TestImagesController(base.IsolatedUnitTest):
 
     def test_prop_protection_with_create_and_unpermitted_role(self):
         enforcer = subject.api.policy.Enforcer()
-        self.controller = subject.api.v2.subjects.ImagesController(self.db,
+        self.controller = subject.api.v2.subjects.SubjectsController(self.db,
                                                                    enforcer,
                                                                    self.notifier,
                                                                    self.store)
@@ -1116,7 +1116,7 @@ class TestImagesController(base.IsolatedUnitTest):
 
     def test_prop_protection_with_show_and_permitted_role(self):
         enforcer = subject.api.policy.Enforcer()
-        self.controller = subject.api.v2.subjects.ImagesController(self.db,
+        self.controller = subject.api.v2.subjects.SubjectsController(self.db,
                                                                    enforcer,
                                                                    self.notifier,
                                                                    self.store)
@@ -1133,7 +1133,7 @@ class TestImagesController(base.IsolatedUnitTest):
 
     def test_prop_protection_with_show_and_unpermitted_role(self):
         enforcer = subject.api.policy.Enforcer()
-        self.controller = subject.api.v2.subjects.ImagesController(self.db,
+        self.controller = subject.api.v2.subjects.SubjectsController(self.db,
                                                                    enforcer,
                                                                    self.notifier,
                                                                    self.store)
@@ -1151,7 +1151,7 @@ class TestImagesController(base.IsolatedUnitTest):
 
     def test_prop_protection_with_update_and_permitted_role(self):
         enforcer = subject.api.policy.Enforcer()
-        self.controller = subject.api.v2.subjects.ImagesController(self.db,
+        self.controller = subject.api.v2.subjects.SubjectsController(self.db,
                                                                    enforcer,
                                                                    self.notifier,
                                                                    self.store)
@@ -1172,7 +1172,7 @@ class TestImagesController(base.IsolatedUnitTest):
 
     def test_prop_protection_with_update_and_unpermitted_role(self):
         enforcer = subject.api.policy.Enforcer()
-        self.controller = subject.api.v2.subjects.ImagesController(self.db,
+        self.controller = subject.api.v2.subjects.SubjectsController(self.db,
                                                                    enforcer,
                                                                    self.notifier,
                                                                    self.store)
@@ -1192,7 +1192,7 @@ class TestImagesController(base.IsolatedUnitTest):
 
     def test_prop_protection_with_delete_and_permitted_role(self):
         enforcer = subject.api.policy.Enforcer()
-        self.controller = subject.api.v2.subjects.ImagesController(self.db,
+        self.controller = subject.api.v2.subjects.SubjectsController(self.db,
                                                                    enforcer,
                                                                    self.notifier,
                                                                    self.store)
@@ -1214,7 +1214,7 @@ class TestImagesController(base.IsolatedUnitTest):
 
     def test_prop_protection_with_delete_and_unpermitted_role(self):
         enforcer = subject.api.policy.Enforcer()
-        self.controller = subject.api.v2.subjects.ImagesController(self.db,
+        self.controller = subject.api.v2.subjects.SubjectsController(self.db,
                                                                    enforcer,
                                                                    self.notifier,
                                                                    self.store)
@@ -1234,7 +1234,7 @@ class TestImagesController(base.IsolatedUnitTest):
 
     def test_create_protected_prop_case_insensitive(self):
         enforcer = subject.api.policy.Enforcer()
-        self.controller = subject.api.v2.subjects.ImagesController(self.db,
+        self.controller = subject.api.v2.subjects.SubjectsController(self.db,
                                                                    enforcer,
                                                                    self.notifier,
                                                                    self.store)
@@ -1254,7 +1254,7 @@ class TestImagesController(base.IsolatedUnitTest):
 
     def test_read_protected_prop_case_insensitive(self):
         enforcer = subject.api.policy.Enforcer()
-        self.controller = subject.api.v2.subjects.ImagesController(self.db,
+        self.controller = subject.api.v2.subjects.SubjectsController(self.db,
                                                                    enforcer,
                                                                    self.notifier,
                                                                    self.store)
@@ -1271,7 +1271,7 @@ class TestImagesController(base.IsolatedUnitTest):
 
     def test_update_protected_prop_case_insensitive(self):
         enforcer = subject.api.policy.Enforcer()
-        self.controller = subject.api.v2.subjects.ImagesController(self.db,
+        self.controller = subject.api.v2.subjects.SubjectsController(self.db,
                                                                    enforcer,
                                                                    self.notifier,
                                                                    self.store)
@@ -1292,7 +1292,7 @@ class TestImagesController(base.IsolatedUnitTest):
 
     def test_delete_protected_prop_case_insensitive(self):
         enforcer = subject.api.policy.Enforcer()
-        self.controller = subject.api.v2.subjects.ImagesController(self.db,
+        self.controller = subject.api.v2.subjects.SubjectsController(self.db,
                                                                    enforcer,
                                                                    self.notifier,
                                                                    self.store)
@@ -2149,13 +2149,13 @@ class TestImagesController(base.IsolatedUnitTest):
         self.assertIsNone(pos)
 
 
-class TestImagesControllerPolicies(base.IsolatedUnitTest):
+class TestSubjectsControllerPolicies(base.IsolatedUnitTest):
 
     def setUp(self):
-        super(TestImagesControllerPolicies, self).setUp()
+        super(TestSubjectsControllerPolicies, self).setUp()
         self.db = unit_test_utils.FakeDB()
         self.policy = unit_test_utils.FakePolicyEnforcer()
-        self.controller = subject.api.v2.subjects.ImagesController(self.db,
+        self.controller = subject.api.v2.subjects.SubjectsController(self.db,
                                                                    self.policy)
         store = unit_test_utils.FakeStoreAPI()
         self.store_utils = unit_test_utils.FakeStoreUtils(store)
@@ -2257,10 +2257,10 @@ class TestImagesControllerPolicies(base.IsolatedUnitTest):
                           request, UUID1)
 
 
-class TestImagesDeserializer(test_utils.BaseTestCase):
+class TestSubjectsDeserializer(test_utils.BaseTestCase):
 
     def setUp(self):
-        super(TestImagesDeserializer, self).setUp()
+        super(TestSubjectsDeserializer, self).setUp()
         self.deserializer = subject.api.v2.subjects.RequestDeserializer()
 
     def test_create_minimal(self):
@@ -3000,10 +3000,10 @@ class TestImagesDeserializer(test_utils.BaseTestCase):
                          sorted(output['filters']['tags']))
 
 
-class TestImagesDeserializerWithExtendedSchema(test_utils.BaseTestCase):
+class TestSubjectsDeserializerWithExtendedSchema(test_utils.BaseTestCase):
 
     def setUp(self):
-        super(TestImagesDeserializerWithExtendedSchema, self).setUp()
+        super(TestSubjectsDeserializerWithExtendedSchema, self).setUp()
         self.config(allow_additional_subject_properties=False)
         custom_subject_properties = {
             'pants': {
@@ -3059,10 +3059,10 @@ class TestImagesDeserializerWithExtendedSchema(test_utils.BaseTestCase):
                           request)
 
 
-class TestImagesDeserializerWithAdditionalProperties(test_utils.BaseTestCase):
+class TestSubjectsDeserializerWithAdditionalProperties(test_utils.BaseTestCase):
 
     def setUp(self):
-        super(TestImagesDeserializerWithAdditionalProperties, self).setUp()
+        super(TestSubjectsDeserializerWithAdditionalProperties, self).setUp()
         self.config(allow_additional_subject_properties=True)
         self.deserializer = subject.api.v2.subjects.RequestDeserializer()
 
@@ -3116,10 +3116,10 @@ class TestImagesDeserializerWithAdditionalProperties(test_utils.BaseTestCase):
         self.assertEqual({'changes': [change]}, output)
 
 
-class TestImagesDeserializerNoAdditionalProperties(test_utils.BaseTestCase):
+class TestSubjectsDeserializerNoAdditionalProperties(test_utils.BaseTestCase):
 
     def setUp(self):
-        super(TestImagesDeserializerNoAdditionalProperties, self).setUp()
+        super(TestSubjectsDeserializerNoAdditionalProperties, self).setUp()
         self.config(allow_additional_subject_properties=False)
         self.deserializer = subject.api.v2.subjects.RequestDeserializer()
 
@@ -3139,10 +3139,10 @@ class TestImagesDeserializerNoAdditionalProperties(test_utils.BaseTestCase):
                           self.deserializer.update, request)
 
 
-class TestImagesSerializer(test_utils.BaseTestCase):
+class TestSubjectsSerializer(test_utils.BaseTestCase):
 
     def setUp(self):
-        super(TestImagesSerializer, self).setUp()
+        super(TestSubjectsSerializer, self).setUp()
         self.serializer = subject.api.v2.subjects.ResponseSerializer()
         self.fixtures = [
             # NOTE(bcwaldon): This first fixture has every property defined
@@ -3250,7 +3250,7 @@ class TestImagesSerializer(test_utils.BaseTestCase):
         show_multiple_locations is False.
 
         """
-        class ImageLocations(object):
+        class SubjectLocations(object):
             def __len__(self):
                 raise exception.Forbidden()
 
@@ -3263,7 +3263,7 @@ class TestImagesSerializer(test_utils.BaseTestCase):
         self.assertEqual(200, response.status_int)
 
         # The subject index should work though the user is forbidden
-        result['subjects'][0].locations = ImageLocations()
+        result['subjects'][0].locations = SubjectLocations()
         self.serializer.index(response, result)
         self.assertEqual(200, response.status_int)
 
@@ -3383,10 +3383,10 @@ class TestImagesSerializer(test_utils.BaseTestCase):
         self.assertEqual('application/json', response.content_type)
 
 
-class TestImagesSerializerWithUnicode(test_utils.BaseTestCase):
+class TestSubjectsSerializerWithUnicode(test_utils.BaseTestCase):
 
     def setUp(self):
-        super(TestImagesSerializerWithUnicode, self).setUp()
+        super(TestSubjectsSerializerWithUnicode, self).setUp()
         self.serializer = subject.api.v2.subjects.ResponseSerializer()
         self.fixtures = [
             # NOTE(bcwaldon): This first fixture has every property defined
@@ -3544,10 +3544,10 @@ class TestImagesSerializerWithUnicode(test_utils.BaseTestCase):
         self.assertEqual('application/json', response.content_type)
 
 
-class TestImagesSerializerWithExtendedSchema(test_utils.BaseTestCase):
+class TestSubjectsSerializerWithExtendedSchema(test_utils.BaseTestCase):
 
     def setUp(self):
-        super(TestImagesSerializerWithExtendedSchema, self).setUp()
+        super(TestSubjectsSerializerWithExtendedSchema, self).setUp()
         self.config(allow_additional_subject_properties=False)
         custom_subject_properties = {
             'color': {
@@ -3621,10 +3621,10 @@ class TestImagesSerializerWithExtendedSchema(test_utils.BaseTestCase):
         self.assertEqual(expected, jsonutils.loads(response.body))
 
 
-class TestImagesSerializerWithAdditionalProperties(test_utils.BaseTestCase):
+class TestSubjectsSerializerWithAdditionalProperties(test_utils.BaseTestCase):
 
     def setUp(self):
-        super(TestImagesSerializerWithAdditionalProperties, self).setUp()
+        super(TestSubjectsSerializerWithAdditionalProperties, self).setUp()
         self.config(allow_additional_subject_properties=True)
         self.fixture = _domain_fixture(
             UUID2, name='subject-2', owner=TENANT2,
@@ -3723,9 +3723,9 @@ class TestImagesSerializerWithAdditionalProperties(test_utils.BaseTestCase):
         self.assertEqual(expected, jsonutils.loads(response.body))
 
 
-class TestImagesSerializerDirectUrl(test_utils.BaseTestCase):
+class TestSubjectsSerializerDirectUrl(test_utils.BaseTestCase):
     def setUp(self):
-        super(TestImagesSerializerDirectUrl, self).setUp()
+        super(TestSubjectsSerializerDirectUrl, self).setUp()
         self.serializer = subject.api.v2.subjects.ResponseSerializer()
 
         self.active_subject = _domain_fixture(
@@ -3808,7 +3808,7 @@ class TestImagesSerializerDirectUrl(test_utils.BaseTestCase):
         self.assertNotIn('direct_url', subject)
 
 
-class TestImageSchemaFormatConfiguration(test_utils.BaseTestCase):
+class TestSubjectSchemaFormatConfiguration(test_utils.BaseTestCase):
     def test_default_disk_formats(self):
         schema = subject.api.v2.subjects.get_schema()
         expected = [None, 'ami', 'ari', 'aki', 'vhd', 'vhdx', 'vmdk',
@@ -3837,7 +3837,7 @@ class TestImageSchemaFormatConfiguration(test_utils.BaseTestCase):
         self.assertEqual(expected, actual)
 
 
-class TestImageSchemaDeterminePropertyBasis(test_utils.BaseTestCase):
+class TestSubjectSchemaDeterminePropertyBasis(test_utils.BaseTestCase):
     def test_custom_property_marked_as_non_base(self):
         self.config(allow_additional_subject_properties=False)
         custom_subject_properties = {

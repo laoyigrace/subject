@@ -25,9 +25,9 @@ TENANT1 = '6838eb7b-6ded-434a-882c-b344c77fe8df'
 TENANT2 = '2c014f32-55eb-467d-8fcb-4bd706012f81'
 
 
-class TestProtectedImageRepoProxy(utils.BaseTestCase):
+class TestProtectedSubjectRepoProxy(utils.BaseTestCase):
 
-    class ImageRepoStub(object):
+    class SubjectRepoStub(object):
         def __init__(self, fixtures):
             self.fixtures = fixtures
 
@@ -45,7 +45,7 @@ class TestProtectedImageRepoProxy(utils.BaseTestCase):
             self.fixtures.append(subject)
 
     def setUp(self):
-        super(TestProtectedImageRepoProxy, self).setUp()
+        super(TestProtectedSubjectRepoProxy, self).setUp()
         self.set_property_protections()
         self.policy = policy.Enforcer()
         self.property_rules = property_utils.PropertyRules(self.policy)
@@ -64,7 +64,7 @@ class TestProtectedImageRepoProxy(utils.BaseTestCase):
                                            extra_properties=extra_props_2),
         ]
         self.context = subject.context.RequestContext(roles=['spl_role'])
-        subject_repo = self.ImageRepoStub(self.fixtures)
+        subject_repo = self.SubjectRepoStub(self.fixtures)
         self.subject_repo = property_protections.ProtectedSubjectRepoProxy(
             subject_repo, self.context, self.property_rules)
 
@@ -96,23 +96,23 @@ class TestProtectedImageRepoProxy(utils.BaseTestCase):
         self.assertNotIn('forbidden', result_extra_props.keys())
 
 
-class TestProtectedImageProxy(utils.BaseTestCase):
+class TestProtectedSubjectProxy(utils.BaseTestCase):
 
     def setUp(self):
-        super(TestProtectedImageProxy, self).setUp()
+        super(TestProtectedSubjectProxy, self).setUp()
         self.set_property_protections()
         self.policy = policy.Enforcer()
         self.property_rules = property_utils.PropertyRules(self.policy)
 
-    class ImageStub(object):
+    class SubjectStub(object):
         def __init__(self, extra_prop):
             self.extra_properties = extra_prop
 
     def test_read_subject_with_extra_prop(self):
         context = subject.context.RequestContext(roles=['spl_role'])
         extra_prop = {'spl_read_prop': 'read', 'spl_fake_prop': 'prop'}
-        subject = self.ImageStub(extra_prop)
-        result_subject = property_protections.ProtectedImageProxy(
+        subject = self.SubjectStub(extra_prop)
+        result_subject = property_protections.ProtectedSubjectProxy(
             subject, context, self.property_rules)
         result_extra_props = result_subject.extra_properties
         self.assertEqual('read', result_extra_props['spl_read_prop'])
@@ -235,9 +235,9 @@ class TestExtraPropertiesProxy(utils.BaseTestCase):
         self.assertNotIn('foo', extra_prop_proxy)
 
 
-class TestProtectedImageFactoryProxy(utils.BaseTestCase):
+class TestProtectedSubjectFactoryProxy(utils.BaseTestCase):
     def setUp(self):
-        super(TestProtectedImageFactoryProxy, self).setUp()
+        super(TestProtectedSubjectFactoryProxy, self).setUp()
         self.set_property_protections()
         self.policy = policy.Enforcer()
         self.property_rules = property_utils.PropertyRules(self.policy)

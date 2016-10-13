@@ -90,7 +90,7 @@ def _load_strategies():
 _available_strategies = _load_strategies()
 
 
-# TODO(kadachi): Not used but don't remove this until glance_store
+# TODO(kadachi): Not used but don't remove this until subject_store
 #                development/migration stage.
 def verify_location_strategy(conf=None, strategies=_available_strategies):
     """Validate user configured 'location_strategy' option value."""

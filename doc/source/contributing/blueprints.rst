@@ -57,8 +57,8 @@ and lite specs are hosted in the glance-specs repository in git.
 Dedicated lite-specs.rst is provided for each deliverable under the
 release.
 
-For example Newton glance_store spec lite file can be found from:
-glance-specs/specs/newton/approved/glance_store/lite-specs.rst
+For example Newton subject_store spec lite file can be found from:
+glance-specs/specs/newton/approved/subject_store/lite-specs.rst
 
 This file includes template section and new lite-specs should be
 included to the same file under the template. So do not copy the lite-

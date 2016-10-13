@@ -118,7 +118,7 @@ class TestRegistryV2Client(base.IsolatedUnitTest,
         subjects = self.client.subject_get_all(sort_key=['name'],
                                            sort_dir=['asc'])
 
-        self.assertEqualImages(subjects, (UUID3, UUID1, UUID2, UUID4),
+        self.assertEqualSubjects(subjects, (UUID3, UUID1, UUID2, UUID4),
                                unjsonify=False)
 
     def test_get_index_sort_status_desc(self):
@@ -143,7 +143,7 @@ class TestRegistryV2Client(base.IsolatedUnitTest,
         subjects = self.client.subject_get_all(sort_key=['status'],
                                            sort_dir=['desc'])
 
-        self.assertEqualImages(subjects, (UUID3, UUID4, UUID2, UUID1),
+        self.assertEqualSubjects(subjects, (UUID3, UUID4, UUID2, UUID1),
                                unjsonify=False)
 
     def test_get_index_sort_disk_format_asc(self):
@@ -167,7 +167,7 @@ class TestRegistryV2Client(base.IsolatedUnitTest,
         subjects = self.client.subject_get_all(sort_key=['disk_format'],
                                            sort_dir=['asc'])
 
-        self.assertEqualImages(subjects, (UUID1, UUID3, UUID4, UUID2),
+        self.assertEqualSubjects(subjects, (UUID1, UUID3, UUID4, UUID2),
                                unjsonify=False)
 
     def test_get_index_sort_container_format_desc(self):
@@ -192,7 +192,7 @@ class TestRegistryV2Client(base.IsolatedUnitTest,
         subjects = self.client.subject_get_all(sort_key=['container_format'],
                                            sort_dir=['desc'])
 
-        self.assertEqualImages(subjects, (UUID2, UUID4, UUID3, UUID1),
+        self.assertEqualSubjects(subjects, (UUID2, UUID4, UUID3, UUID1),
                                unjsonify=False)
 
     def test_get_index_sort_size_asc(self):
@@ -218,7 +218,7 @@ class TestRegistryV2Client(base.IsolatedUnitTest,
 
         subjects = self.client.subject_get_all(sort_key=['size'], sort_dir=['asc'])
 
-        self.assertEqualImages(subjects, (UUID4, UUID1, UUID2, UUID3),
+        self.assertEqualSubjects(subjects, (UUID4, UUID1, UUID2, UUID3),
                                unjsonify=False)
 
     def test_get_index_sort_created_at_asc(self):
@@ -242,7 +242,7 @@ class TestRegistryV2Client(base.IsolatedUnitTest,
         subjects = self.client.subject_get_all(sort_key=['created_at'],
                                            sort_dir=['asc'])
 
-        self.assertEqualImages(subjects, (UUID1, UUID2, UUID4, UUID3),
+        self.assertEqualSubjects(subjects, (UUID1, UUID2, UUID4, UUID3),
                                unjsonify=False)
 
     def test_get_index_sort_updated_at_desc(self):
@@ -268,7 +268,7 @@ class TestRegistryV2Client(base.IsolatedUnitTest,
         subjects = self.client.subject_get_all(sort_key=['updated_at'],
                                            sort_dir=['desc'])
 
-        self.assertEqualImages(subjects, (UUID3, UUID4, UUID2, UUID1),
+        self.assertEqualSubjects(subjects, (UUID3, UUID4, UUID2, UUID1),
                                unjsonify=False)
 
     def test_get_subject_details_sort_multiple_keys(self):
@@ -298,13 +298,13 @@ class TestRegistryV2Client(base.IsolatedUnitTest,
         subjects = self.client.subject_get_all(sort_key=['name', 'size'],
                                            sort_dir=['asc'])
 
-        self.assertEqualImages(subjects, (UUID3, UUID5, UUID1, UUID2, UUID4),
+        self.assertEqualSubjects(subjects, (UUID3, UUID5, UUID1, UUID2, UUID4),
                                unjsonify=False)
 
         subjects = self.client.subject_get_all(sort_key=['size', 'name'],
                                            sort_dir=['asc'])
 
-        self.assertEqualImages(subjects, (UUID1, UUID3, UUID2, UUID5, UUID4),
+        self.assertEqualSubjects(subjects, (UUID1, UUID3, UUID2, UUID5, UUID4),
                                unjsonify=False)
 
     def test_get_subject_details_sort_multiple_dirs(self):
@@ -334,25 +334,25 @@ class TestRegistryV2Client(base.IsolatedUnitTest,
         subjects = self.client.subject_get_all(sort_key=['name', 'size'],
                                            sort_dir=['asc', 'desc'])
 
-        self.assertEqualImages(subjects, (UUID5, UUID3, UUID1, UUID2, UUID4),
+        self.assertEqualSubjects(subjects, (UUID5, UUID3, UUID1, UUID2, UUID4),
                                unjsonify=False)
 
         subjects = self.client.subject_get_all(sort_key=['name', 'size'],
                                            sort_dir=['desc', 'asc'])
 
-        self.assertEqualImages(subjects, (UUID4, UUID2, UUID1, UUID3, UUID5),
+        self.assertEqualSubjects(subjects, (UUID4, UUID2, UUID1, UUID3, UUID5),
                                unjsonify=False)
 
         subjects = self.client.subject_get_all(sort_key=['size', 'name'],
                                            sort_dir=['asc', 'desc'])
 
-        self.assertEqualImages(subjects, (UUID1, UUID2, UUID3, UUID4, UUID5),
+        self.assertEqualSubjects(subjects, (UUID1, UUID2, UUID3, UUID4, UUID5),
                                unjsonify=False)
 
         subjects = self.client.subject_get_all(sort_key=['size', 'name'],
                                            sort_dir=['desc', 'asc'])
 
-        self.assertEqualImages(subjects, (UUID5, UUID4, UUID3, UUID2, UUID1),
+        self.assertEqualSubjects(subjects, (UUID5, UUID4, UUID3, UUID2, UUID1),
                                unjsonify=False)
 
     def test_subject_get_index_marker(self):
@@ -376,7 +376,7 @@ class TestRegistryV2Client(base.IsolatedUnitTest,
 
         subjects = self.client.subject_get_all(marker=UUID3)
 
-        self.assertEqualImages(subjects, (UUID4, UUID2, UUID1), unjsonify=False)
+        self.assertEqualSubjects(subjects, (UUID4, UUID2, UUID1), unjsonify=False)
 
     def test_subject_get_index_limit(self):
         """Test correct number of subjects returned with limit param."""
@@ -416,7 +416,7 @@ class TestRegistryV2Client(base.IsolatedUnitTest,
 
         subjects = self.client.subject_get_all(marker=UUID4, limit=1)
 
-        self.assertEqualImages(subjects, (UUID2,), unjsonify=False)
+        self.assertEqualSubjects(subjects, (UUID2,), unjsonify=False)
 
     def test_subject_get_index_limit_None(self):
         """Test correct set of subjects returned with limit param == None."""

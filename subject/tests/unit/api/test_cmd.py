@@ -83,8 +83,8 @@ class TestGlanceApiCmd(test_utils.BaseTestCase):
 
     @mock.patch.object(subject.common.config, 'parse_cache_args')
     @mock.patch.object(logging, 'setup')
-    @mock.patch.object(subject.subject_cache.ImageCache, 'init_driver')
-    @mock.patch.object(subject.subject_cache.ImageCache, 'clean')
+    @mock.patch.object(subject.subject_cache.SubjectCache, 'init_driver')
+    @mock.patch.object(subject.subject_cache.SubjectCache, 'clean')
     def test_cache_cleaner_main(self, mock_cache_clean,
                                 mock_cache_init_driver, mock_log_setup,
                                 mock_parse_config):
@@ -112,8 +112,8 @@ class TestGlanceApiCmd(test_utils.BaseTestCase):
 
     @mock.patch.object(subject.common.config, 'parse_cache_args')
     @mock.patch.object(logging, 'setup')
-    @mock.patch.object(subject.subject_cache.ImageCache, 'init_driver')
-    @mock.patch.object(subject.subject_cache.ImageCache, 'prune')
+    @mock.patch.object(subject.subject_cache.SubjectCache, 'init_driver')
+    @mock.patch.object(subject.subject_cache.SubjectCache, 'prune')
     def test_cache_pruner_main(self, mock_cache_prune,
                                mock_cache_init_driver, mock_log_setup,
                                mock_parse_config):

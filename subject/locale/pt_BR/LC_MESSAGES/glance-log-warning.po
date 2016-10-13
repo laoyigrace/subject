@@ -144,7 +144,7 @@ msgstr ""
 
 #, python-format
 msgid "Invalid marker. Subject %(id)s could not be found."
-msgstr "Marcador Inválido. Imagem %(id)s não pôde ser encontrada."
+msgstr "Marcador Inválido. Subjectm %(id)s não pôde ser encontrada."
 
 #, python-format
 msgid "Invalid membership association specified for subject %(id)s"

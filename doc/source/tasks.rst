@@ -56,7 +56,7 @@ instantiates.  It is necessary to the proper functioning of an OpenStack cloud
 that these synchronous operations not be compromised by excess load caused by
 non-essential functionality such as subject import.
 
-By separating the tasks resource from the subjects resource in the Images API,
+By separating the tasks resource from the subjects resource in the Subjects API,
 it's easier for deployers to allocate resources and route requests for tasks
 separately from the resources required to support Glance's service role.  At
 the same time this separation avoids confusion for users of an OpenStack cloud.

@@ -145,7 +145,7 @@ class TestUtils(test_utils.BaseTestCase):
             for chunk in utils.LimitingReader(data, BYTES - 1):
                 bytes_read += len(chunk)
 
-        self.assertRaises(exception.ImageSizeLimitExceeded, _consume_all_iter)
+        self.assertRaises(exception.SubjectSizeLimitExceeded, _consume_all_iter)
 
         def _consume_all_read():
             bytes_read = 0
@@ -156,7 +156,7 @@ class TestUtils(test_utils.BaseTestCase):
                 bytes_read += 1
                 byte = reader.read(1)
 
-        self.assertRaises(exception.ImageSizeLimitExceeded, _consume_all_read)
+        self.assertRaises(exception.SubjectSizeLimitExceeded, _consume_all_read)
 
     def test_get_meta_from_headers(self):
         resp = webob.Response()

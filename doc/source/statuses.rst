@@ -17,7 +17,7 @@
 Subject Statuses
 ==============
 
-Images in Glance can be in one the following statuses:
+Subjects in Glance can be in one the following statuses:
 
 * ``queued``
 

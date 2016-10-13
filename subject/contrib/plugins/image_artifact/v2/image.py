@@ -17,7 +17,7 @@ from subject.common.glare import definitions
 import subject.contrib.plugins.subject_artifact.v1_1.subject as v1_1
 
 # Since this is not in the test-requirements.txt and the class below,
-# ImageAsAnArtifact, is pending removal a try except is added to prevent
+# SubjectAsAnArtifact, is pending removal a try except is added to prevent
 # an ImportError when module docs are generated
 try:
     import subjectclient
@@ -28,7 +28,7 @@ except ImportError:
 from subject.i18n import _
 
 
-class ImageAsAnArtifact(v1_1.ImageAsAnArtifact):
+class SubjectAsAnArtifact(v1_1.SubjectAsAnArtifact):
     __type_version__ = '2.0'
 
     file = definitions.BinaryObject(required=False)
@@ -38,7 +38,7 @@ class ImageAsAnArtifact(v1_1.ImageAsAnArtifact):
                                                  R'[0-9a-f]{3}-[0-9a-f]{12}')
 
     def __pre_publish__(self, context, *args, **kwargs):
-        super(ImageAsAnArtifact, self).__pre_publish__(*args, **kwargs)
+        super(SubjectAsAnArtifact, self).__pre_publish__(*args, **kwargs)
         if self.file is None and self.legacy_subject_id is None:
             raise exception.InvalidArtifactPropertyValue(
                 message=_("Either a file or a legacy_subject_id has to be "

@@ -64,7 +64,7 @@ def subject_update(client, subject_id, values, purge_props=False, from_state=Non
     """
     Set the given properties on an subject and update it.
 
-    :raises: ImageNotFound if subject does not exist.
+    :raises: SubjectNotFound if subject does not exist.
     """
     return client.subject_update(values=values,
                                subject_id=subject_id,
@@ -152,7 +152,7 @@ def subject_get_all(client, filters=None, marker=None, limit=None,
 
 @_get_client
 def subject_property_create(client, values, session=None):
-    """Create an ImageProperty object"""
+    """Create an SubjectProperty object"""
     return client.subject_property_create(values=values)
 
 
@@ -166,19 +166,19 @@ def subject_property_delete(client, prop_ref, subject_ref, session=None):
 
 @_get_client
 def subject_member_create(client, values, session=None):
-    """Create an ImageMember object"""
+    """Create an SubjectMember object"""
     return client.subject_member_create(values=values)
 
 
 @_get_client
 def subject_member_update(client, memb_id, values):
-    """Update an ImageMember object"""
+    """Update an SubjectMember object"""
     return client.subject_member_update(memb_id=memb_id, values=values)
 
 
 @_get_client
 def subject_member_delete(client, memb_id, session=None):
-    """Delete an ImageMember object"""
+    """Delete an SubjectMember object"""
     client.subject_member_delete(memb_id=memb_id)
 
 

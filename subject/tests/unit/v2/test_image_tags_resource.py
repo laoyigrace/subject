@@ -23,10 +23,10 @@ import subject.tests.unit.v2.test_subject_data_resource as subject_data_tests
 import subject.tests.utils as test_utils
 
 
-class TestImageTagsController(base.IsolatedUnitTest):
+class TestSubjectTagsController(base.IsolatedUnitTest):
 
     def setUp(self):
-        super(TestImageTagsController, self).setUp()
+        super(TestSubjectTagsController, self).setUp()
         self.db = unit_test_utils.FakeDB()
         self.controller = subject.api.v2.subject_tags.Controller(self.db)
 
@@ -61,7 +61,7 @@ class TestImageTagsController(base.IsolatedUnitTest):
         def fake_get(self):
             raise exception.Forbidden()
 
-        subject_repo = subject_data_tests.FakeImageRepo()
+        subject_repo = subject_data_tests.FakeSubjectRepo()
         subject_repo.get = fake_get
 
         def get_fake_repo(self):
@@ -87,10 +87,10 @@ class TestImageTagsController(base.IsolatedUnitTest):
                           request, "abcd", "dink")
 
 
-class TestImagesSerializer(test_utils.BaseTestCase):
+class TestSubjectsSerializer(test_utils.BaseTestCase):
 
     def setUp(self):
-        super(TestImagesSerializer, self).setUp()
+        super(TestSubjectsSerializer, self).setUp()
         self.serializer = subject.api.v2.subject_tags.ResponseSerializer()
 
     def test_create_tag(self):

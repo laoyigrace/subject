@@ -3708,17 +3708,17 @@ class TestGlanceAPI(base.IsolatedUnitTest):
         self.assertEqual(webob.exc.HTTPForbidden.code, res.status_int)
 
 
-class TestImageSerializer(base.IsolatedUnitTest):
+class TestSubjectSerializer(base.IsolatedUnitTest):
     def setUp(self):
         """Establish a clean test environment"""
-        super(TestImageSerializer, self).setUp()
+        super(TestSubjectSerializer, self).setUp()
         self.receiving_user = 'fake_user'
         self.receiving_tenant = 2
         self.context = subject.context.RequestContext(
             is_admin=True,
             user=self.receiving_user,
             tenant=self.receiving_tenant)
-        self.serializer = subject.api.v1.subjects.ImageSerializer()
+        self.serializer = subject.api.v1.subjects.SubjectSerializer()
 
         def subject_iter():
             for x in [b'chunk', b'678911234', b'56789']:

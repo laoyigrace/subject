@@ -40,7 +40,7 @@ possible_topdir = os.path.normpath(os.path.join(os.path.abspath(sys.argv[0]),
 if os.path.exists(os.path.join(possible_topdir, 'subject', '__init__.py')):
     sys.path.insert(0, possible_topdir)
 
-import glance_store
+import subject_store
 from oslo_config import cfg
 from oslo_log import log as logging
 import oslo_messaging
@@ -58,7 +58,7 @@ logging.register_options(CONF)
 
 KNOWN_EXCEPTIONS = (RuntimeError,
                     exception.WorkerCreationFailure,
-                    glance_store.exceptions.BadStoreConfiguration)
+                    subject_store.exceptions.BadStoreConfiguration)
 
 
 def fail(e):
@@ -87,7 +87,7 @@ def main():
         else:
             osprofiler.web.disable()
 
-        server = wsgi.Server(initialize_glance_store=True)
+        server = wsgi.Server(initialize_subject_store=True)
         server.start(config.load_paste_app('subject-api'), default_port=9292)
         server.wait()
     except KNOWN_EXCEPTIONS as e:

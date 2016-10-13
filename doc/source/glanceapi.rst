@@ -17,23 +17,23 @@
 Using Glance's Subject Public APIs
 ================================
 
-Glance is the reference implementation of the OpenStack Images API.  As such,
-Glance fully implements versions 1 and 2 of the Images API.
+Glance is the reference implementation of the OpenStack Subjects API.  As such,
+Glance fully implements versions 1 and 2 of the Subjects API.
 
 .. include:: deprecation-note.inc
 
-There used to be a sentence here saying, "The Images API specification is
+There used to be a sentence here saying, "The Subjects API specification is
 developed alongside Glance, but is not considered part of the Glance project."
 That's only partially true (or completely false, depending upon how strict you
-are about these things).  Conceptually, the OpenStack Images API is an
+are about these things).  Conceptually, the OpenStack Subjects API is an
 independent definition of a REST API.  In practice, however, the only way
-to participate in the evolution of the Images API is to work with the Glance
+to participate in the evolution of the Subjects API is to work with the Glance
 community to define the new functionality and provide its reference
 implementation. Further, Glance falls under the "designated sections" provision
 of the OpenStack DefCore Guidelines, which basically means that in order to
-qualify as "OpenStack", a cloud exposing an OpenStack Images API must include
-the Glance Images API implementation code.  Thus, although conceptually
-independent, the OpenStack Images APIs are intimately associated with Glance.
+qualify as "OpenStack", a cloud exposing an OpenStack Subjects API must include
+the Glance Subjects API implementation code.  Thus, although conceptually
+independent, the OpenStack Subjects APIs are intimately associated with Glance.
 
 **References**
 
@@ -45,15 +45,15 @@ independent, the OpenStack Images APIs are intimately associated with Glance.
 
 * `DefCore Guidelines Repository <https://github.com/openstack/defcore>`_
 
-Glance and the Images APIs: Past, Present, and Future
+Glance and the Subjects APIs: Past, Present, and Future
 -----------------------------------------------------
 
-Here's a quick summary of the Images APIs that have been implemented by Glance.
+Here's a quick summary of the Subjects APIs that have been implemented by Glance.
 If you're interested in more details, you can consult the Release Notes for all
 the OpenStack releases (beginning with "Bexar") to follow the evolution of
-features in Glance and the Images APIs.
+features in Glance and the Subjects APIs.
 
-Images v1 API
+Subjects v1 API
 *************
 
 The v1 API was originally designed as a service API for use by Nova and other
@@ -61,36 +61,36 @@ OpenStack services. In the Kilo release, the v1.1 API was downgraded from
 CURRENT to SUPPORTED. In the Newton release, the version 1 API is officially
 declared DEPRECATED.
 
-During the deprecation period, the Images v1 API is closed to further
+During the deprecation period, the Subjects v1 API is closed to further
 development.  The Glance code implementing the v1 API accepts only serious
 bugfixes.
 
 Since Folsom, it has been possible to deploy OpenStack without exposing the
-Images v1 API to end users.  The Compute v2 API contains subject-related API
+Subjects v1 API to end users.  The Compute v2 API contains subject-related API
 calls allowing users to list subjects, list subjects details, show subject details
 for a specific subject, delete subjects, and manipulate subject metadata.  Nova acts
 as a proxy to Glance for these subject-related calls.  It's important to note
 that the subject-related calls in the Compute v2 API are a proper subset of the
-calls available in the Images APIs.
+calls available in the Subjects APIs.
 
 In the Newton release, Nova (and other OpenStack services that consume subjects)
-have been modified to use the Images v2 API by default.
+have been modified to use the Subjects v2 API by default.
 
 **Reference**
 
 * `OpenStack Standard Deprecation Requirements <https://governance.openstack.org/reference/tags/assert_follows-standard-deprecation.html#requirements>`_
 
-Images v2 API
+Subjects v2 API
 *************
 
-The v2 API is the CURRENT OpenStack Images API.  It provides a more friendly
+The v2 API is the CURRENT OpenStack Subjects API.  It provides a more friendly
 interface to consumers than did the v1 API, as it was specifically designed to
 expose subjects-related functionality as a public-facing endpoint.  It's the
 version that's currently open to development.
 
 A common strategy is to deploy multiple Glance nodes: internal-facing nodes
-providing the Images APIs for internal consumers like Nova, and external-facing
-nodes providing the Images v2 API for public use.
+providing the Subjects APIs for internal consumers like Nova, and external-facing
+nodes providing the Subjects v2 API for public use.
 
 The Future
 **********
@@ -99,14 +99,14 @@ During the long and tumultuous design phase of what has since become an
 independent service named "Glare" (the Glance Artifacts Repository), the Glance
 community loosely spoke about the Artifacts API being "Glance v3".  This,
 however, was only a shorthand way of speaking of the Artifacts effort.  The
-Artifacts API can't be the Images v3 API since Artifacts are not the same as
-Images.  Conceptually, a virtual machine subject could be an Artifact, and the
-Glare code has been designed to be compatible with the Images v2 API.  But at
-this time, there are no plans to implement an Images v3 API.
+Artifacts API can't be the Subjects v3 API since Artifacts are not the same as
+Subjects.  Conceptually, a virtual machine subject could be an Artifact, and the
+Glare code has been designed to be compatible with the Subjects v2 API.  But at
+this time, there are no plans to implement an Subjects v3 API.
 
 During the Newton development cycle, Glare became an independent OpenStack
 project.  While it's evident that there's a need for an Artifact Repository in
-OpenStack, whether it will be as ubiquitous as the need for an Images
+OpenStack, whether it will be as ubiquitous as the need for an Subjects
 Repository isn't clear.  On the other hand, industry trends could go in the
 opposite direction where everyone needs Artifacts and deployers view subjects as
 simply another type of digital artifact.  As Yogi Berra, an experienced
@@ -132,7 +132,7 @@ Using v1.X
 For the purpose of examples, assume there is a Glance API server running
 at the URL ``http://glance.openstack.example.org`` on the default port 80.
 
-List Available Images
+List Available Subjects
 *********************
 
 We want to see a list of available subjects that the authenticated user has
@@ -152,7 +152,7 @@ mapping in the following format::
     ...]}
 
 
-List Available Images in More Detail
+List Available Subjects in More Detail
 ************************************
 
 We want to see a more detailed list of available subjects that the authenticated
@@ -206,7 +206,7 @@ JSON-encoded mapping in the following format::
   The `owner` field is a string which may either be null or which will
   indicate the owner of the subject.
 
-Filtering Images Lists
+Filtering Subjects Lists
 **********************
 
 Both the ``GET /v1/subjects`` and ``GET /v1/subjects/detail`` requests take query
@@ -278,11 +278,11 @@ These two resources also accept additional query parameters:
   returned.
 
   When the `is_public` parameter is absent or set to `True` the following subjects
-  will be listed: Images whose `is_public` field is `True`, owned subjects and
+  will be listed: Subjects whose `is_public` field is `True`, owned subjects and
   shared subjects.
 
   When the `is_public` parameter is set to `False` the following subjects will be
-  listed: Images (owned, shared, or non-owned) whose `is_public` field is `False`.
+  listed: Subjects (owned, shared, or non-owned) whose `is_public` field is `False`.
 
   When the `is_public` parameter is set to `None` all subjects will be listed
   irrespective of owner, shared status or the `is_public` field.
@@ -646,7 +646,7 @@ that tenant is authorized to further share the subject, the `can_share` field is
 `true`.
 
 
-List Shared Images
+List Shared Subjects
 ******************
 
 We want to see a list of subjects which are shared with a given tenant. We issue
@@ -714,7 +714,7 @@ otherwise.
 Subject Membership Changes in Version 2.0
 ---------------------------------------
 
-Version 2.0 of the Images API eliminates the ``can_share`` attribute of subject
+Version 2.0 of the Subjects API eliminates the ``can_share`` attribute of subject
 membership. In the version 2.0 model, subject sharing is not transitive.
 
 In version 2.0, subject members have a ``status`` attribute that reflects
@@ -768,10 +768,10 @@ New API Calls
   where <STATUS_VALUE> is ``pending``, ``accepted``, or ``rejected``.
   The {memberId} is the tenant ID of the subject member.
 
-Images v2 Tasks API
+Subjects v2 Tasks API
 -------------------
 
-Version 2 of the OpenStack Images API introduces a Task resource that is used
+Version 2 of the OpenStack Subjects API introduces a Task resource that is used
 to create and monitor long-running asynchronous subject-related processes.  See
 the :doc:`Tasks <tasks>` section of the Glance documentation for more
 information.

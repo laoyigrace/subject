@@ -52,16 +52,16 @@ class mock_rados(object):
 
 class mock_rbd(object):
 
-    class ImageExists(Exception):
+    class SubjectExists(Exception):
         pass
 
-    class ImageBusy(Exception):
+    class SubjectBusy(Exception):
         pass
 
-    class ImageNotFound(Exception):
+    class SubjectNotFound(Exception):
         pass
 
-    class Image(object):
+    class Subject(object):
 
         def __init__(self, *args, **kwargs):
             pass

@@ -53,9 +53,9 @@ def _db_fixture(id, **kwargs):
     return obj
 
 
-class TestImageActionsController(base.IsolatedUnitTest):
+class TestSubjectActionsController(base.IsolatedUnitTest):
     def setUp(self):
-        super(TestImageActionsController, self).setUp()
+        super(TestSubjectActionsController, self).setUp()
         self.db = unit_test_utils.FakeDB(initialize=False)
         self.policy = unit_test_utils.FakePolicyEnforcer()
         self.notifier = unit_test_utils.FakeNotifier()
@@ -63,7 +63,7 @@ class TestImageActionsController(base.IsolatedUnitTest):
         for i in range(1, 4):
             self.store.data['%s/fake_location_%i' % (BASE_URI, i)] = ('Z', 1)
         self.store_utils = unit_test_utils.FakeStoreUtils(self.store)
-        self.controller = subject_actions.ImageActionsController(
+        self.controller = subject_actions.SubjectActionsController(
             self.db,
             self.policy,
             self.notifier,

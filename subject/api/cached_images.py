@@ -35,7 +35,7 @@ class Controller(controller.BaseController):
     """
 
     def __init__(self):
-        self.cache = subject_cache.ImageCache()
+        self.cache = subject_cache.SubjectCache()
         self.policy = policy.Enforcer()
 
     def _enforce(self, req):
@@ -114,16 +114,16 @@ class Controller(controller.BaseController):
         return dict(num_deleted=self.cache.delete_all_queued_subjects())
 
 
-class CachedImageDeserializer(wsgi.JSONRequestDeserializer):
+class CachedSubjectDeserializer(wsgi.JSONRequestDeserializer):
     pass
 
 
-class CachedImageSerializer(wsgi.JSONResponseSerializer):
+class CachedSubjectSerializer(wsgi.JSONResponseSerializer):
     pass
 
 
 def create_resource():
-    """Cached Images resource factory method"""
-    deserializer = CachedImageDeserializer()
-    serializer = CachedImageSerializer()
+    """Cached Subjects resource factory method"""
+    deserializer = CachedSubjectDeserializer()
+    serializer = CachedSubjectSerializer()
     return wsgi.Resource(Controller(), deserializer, serializer)
