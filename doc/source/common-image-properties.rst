@@ -29,7 +29,7 @@ etc/schema-subject.json in the Glance source code.
 ----------------
 
 Operating system architecture as specified in
-http://docs.openstack.org/cli-reference/glance-property-keys.html
+http://docs.openstack.org/cli-reference/subject-property-keys.html
 
 
 **instance_uuid**
@@ -54,7 +54,7 @@ booting an AMI-style subject.
 -------------
 
 The common name of the operating system distribution as specified in
-http://docs.openstack.org/cli-reference/glance-property-keys.html
+http://docs.openstack.org/cli-reference/subject-property-keys.html
 
 **os_version**
 --------------

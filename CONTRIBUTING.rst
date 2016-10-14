@@ -13,15 +13,15 @@ Pull requests submitted through GitHub will be ignored.
 
 Bugs should be filed on Launchpad, not GitHub:
 
-   https://bugs.launchpad.net/glance
+   https://bugs.launchpad.net/subject
 
 Additionally, specific guidelines for contributing to Glance may be found in
 Glance's Documentation:
 
-   http://docs.openstack.org/developer/glance/contributing
+   http://docs.openstack.org/developer/subject/contributing
 
 Please read and follow these Glance-specific guidelines, particularly the
 section on `Disallowed Minor Code Changes
-<http://docs.openstack.org/developer/glance/contributing/minor-code-changes.html>`_.
+<http://docs.openstack.org/developer/subject/contributing/minor-code-changes.html>`_.
 You will thereby prevent your friendly review team from pulling out whatever
 hair they have left. Thank you for your cooperation.

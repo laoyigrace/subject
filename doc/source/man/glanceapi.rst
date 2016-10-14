@@ -1,12 +1,12 @@
 ==========
-glance-api
+subject-api
 ==========
 
 ---------------------------------------
 Server for the Glance Subject Service API
 ---------------------------------------
 
-:Author: glance@lists.launchpad.net
+:Author: subject@lists.launchpad.net
 :Date:   2016-10-6
 :Copyright: OpenStack Foundation
 :Version: 13.0.0
@@ -16,12 +16,12 @@ Server for the Glance Subject Service API
 SYNOPSIS
 ========
 
-glance-api [options]
+subject-api [options]
 
 DESCRIPTION
 ===========
 
-glance-api is a server daemon that serves the Glance API
+subject-api is a server daemon that serves the Glance API
 
 OPTIONS
 =======
@@ -33,7 +33,7 @@ OPTIONS
 FILES
 =====
 
-  **/etc/glance/glance-api.conf**
+  **/etc/subject/subject-api.conf**
         Default configuration file for Glance API
 
 .. include:: footer.rst

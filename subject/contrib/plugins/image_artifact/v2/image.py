@@ -22,7 +22,7 @@ import subject.contrib.plugins.subject_artifact.v1_1.subject as v1_1
 try:
     import subjectclient
 except ImportError:
-    glanceclient = None
+    subjectclient = None
 
 
 from subject.i18n import _
@@ -50,7 +50,7 @@ class SubjectAsAnArtifact(v1_1.SubjectAsAnArtifact):
                           "specified at the same time"))
 
         if self.legacy_subject_id:
-            glance_endpoint = next(service['endpoints'][0]['publicURL']
+            subject_endpoint = next(service['endpoints'][0]['publicURL']
                                    for service in context.service_catalog
                                    if service['name'] == 'subject')
             # Ensure subjectclient is imported correctly since we are catching
@@ -60,7 +60,7 @@ class SubjectAsAnArtifact(v1_1.SubjectAsAnArtifact):
 
             try:
                 client = subjectclient.Client(version=2,
-                                              endpoint=glance_endpoint,
+                                              endpoint=subject_endpoint,
                                               token=context.auth_token)
                 legacy_subject = client.subjects.get(self.legacy_subject_id)
             except Exception:

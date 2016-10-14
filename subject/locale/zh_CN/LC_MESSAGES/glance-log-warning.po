@@ -1,13 +1,13 @@
-# Translations template for glance.
+# Translations template for subject.
 # Copyright (C) 2015 ORGANIZATION
-# This file is distributed under the same license as the glance project.
+# This file is distributed under the same license as the subject project.
 #
 # Translators:
 # Andreas Jaeger <jaegerandi@gmail.com>, 2016. #zanata
 # howard lee <howard@mail.ustc.edu.cn>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: glance 13.0.0.0rc2.dev45\n"
+"Project-Id-Version: subject 13.0.0.0rc2.dev45\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
 "POT-Creation-Date: 2016-10-07 17:40+0000\n"
 "MIME-Version: 1.0\n"
@@ -22,11 +22,11 @@ msgstr ""
 "Language-Team: Chinese (China)\n"
 
 msgid ""
-"/v3 controller is deprecated and will be removed from glance-api soon. "
-"Remove the reference to it from glance-api-paste.ini configuration file and "
+"/v3 controller is deprecated and will be removed from subject-api soon. "
+"Remove the reference to it from subject-api-paste.ini configuration file and "
 "use Glance Artifact Service API instead"
 msgstr ""
-"/v3控制器已被弃用，并将很快从glance-api中移除。从glance-api-paste.ini配置文件"
+"/v3控制器已被弃用，并将很快从subject-api中移除。从subject-api-paste.ini配置文件"
 "中移除/v3控制器的参考，并使用Glance Artifact Service API代替"
 
 #, python-format
@@ -241,12 +241,12 @@ msgid ""
 "The Subjects (Glance) v1 API is deprecated and will be removed on or after the "
 "Pike release, following the standard OpenStack deprecation policy. "
 "Currently, the solution is to set enable_v1_api=False and enable_v2_api=True "
-"in your glance-api.conf file. Once those options are removed from the code, "
+"in your subject-api.conf file. Once those options are removed from the code, "
 "Subjects (Glance) v2 API will be switched on by default and will be the only "
 "option to deploy and use."
 msgstr ""
 "镜像系统（Glance）v1版本的API已被弃用，按照标准的OpenStack弃用政策，v1版本的"
-"API将在Pike版本中或Pike版本后被移除。目前的解决方案是在glance-api.conf配置文"
+"API将在Pike版本中或Pike版本后被移除。目前的解决方案是在subject-api.conf配置文"
 "件中，将enable_v1_api设置为False，并将enable_v2_api设置为True。一旦这些选项从"
 "代码中被移除，镜像系统v2版本的API将被默认使用，并成为唯一的选项用以部署和使"
 "用。"

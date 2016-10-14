@@ -1,8 +1,8 @@
-.. _glance-scrubber.conf:
+.. _subject-scrubber.conf:
 
 --------------------
-glance-scrubber.conf
+subject-scrubber.conf
 --------------------
 
 .. show-options::
-   :config-file: etc/oslo-config-generator/glance-scrubber.conf
+   :config-file: etc/oslo-config-generator/subject-scrubber.conf

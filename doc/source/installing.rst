@@ -28,12 +28,12 @@ Debian, Ubuntu
 
 1. Add the Glance PPA to your sources.lst::
 
-   $> sudo add-apt-repository ppa:glance-core/trunk
+   $> sudo add-apt-repository ppa:subject-core/trunk
    $> sudo apt-get update
 
 2. Install Glance::
 
-   $> sudo apt-get install glance
+   $> sudo apt-get install subject
 
 Red Hat, Fedora
 ###############
@@ -45,7 +45,7 @@ On RHEL 6, enable the EPEL repository.
 Install Glance::
 
    $ su -
-   # yum install openstack-glance
+   # yum install openstack-subject
 
 openSUSE, SLE
 #############
@@ -62,7 +62,7 @@ Search the proper repository in the `Cloud:OpenStack:Master <https://build.opens
 
 2. Install Glance::
 
-   $ sudo zypper in openstack-glance
+   $ sudo zypper in openstack-subject
 
 Installing from source tarballs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -70,7 +70,7 @@ Installing from source tarballs
 To install the latest version of Glance from the Launchpad Bazaar repositories,
 follow the following instructions.
 
-1. Grab the source tarball from `Launchpad <http://launchpad.net/glance/+download>`_
+1. Grab the source tarball from `Launchpad <http://launchpad.net/subject/+download>`_
 
 2. Untar the source tarball::
 
@@ -78,7 +78,7 @@ follow the following instructions.
 
 3. Change into the package directory and build/install::
 
-   $> cd glance-<RELEASE>
+   $> cd subject-<RELEASE>
    $> sudo python setup.py install
 
 Installing from Git
@@ -93,7 +93,7 @@ Debian, Ubuntu
 1. Install Git and build dependencies::
 
    $> sudo apt-get install git
-   $> sudo apt-get build-dep glance
+   $> sudo apt-get build-dep subject
 
 .. note::
 
@@ -102,8 +102,8 @@ Debian, Ubuntu
 
 2. Clone Glance's trunk branch from GitHub::
 
-   $> git clone git://github.com/openstack/glance
-   $> cd glance
+   $> git clone git://github.com/openstack/subject
+   $> cd subject
 
 3. Install Glance::
 
@@ -119,7 +119,7 @@ throw-away VM.
 Since normal build dependencies are resolved by mechanisms of RPM,
 there is no one-line command to install everything needed by
 the source repository in git. One common way to discover the dependencies
-is to search for *BuildRequires:* in the specfile of openstack-glance
+is to search for *BuildRequires:* in the specfile of openstack-subject
 for the appropriate distro.
 
 In case of Fedora 16, for example, do this::
@@ -162,7 +162,7 @@ all the build dependencies using Zypper.
 1. Install Git and build dependencies::
 
    $ sudo zypper install git
-   $ sudo zypper source-install -d openstack-glance
+   $ sudo zypper source-install -d openstack-subject
 
 .. note::
 
@@ -171,8 +171,8 @@ all the build dependencies using Zypper.
 
 2. Clone Glance's trunk branch from GitHub::
 
-   $ git clone git://github.com/openstack/glance
-   $ cd glance
+   $ git clone git://github.com/openstack/subject
+   $ cd subject
 
 3. Install Glance::
 

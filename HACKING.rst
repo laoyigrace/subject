@@ -1,11 +1,11 @@
-glance Style Commandments
+subject Style Commandments
 =========================
 
 - Step 1: Read the OpenStack Style Commandments
   http://docs.openstack.org/developer/hacking/
 - Step 2: Read on
 
-glance Specific Commandments
+subject Specific Commandments
 ----------------------------
 
 - [G316] Change assertTrue(isinstance(A, B)) by optimal assert like

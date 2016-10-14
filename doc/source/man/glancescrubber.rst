@@ -1,12 +1,12 @@
 ===============
-glance-scrubber
+subject-scrubber
 ===============
 
 --------------------
 Glance scrub service
 --------------------
 
-:Author: glance@lists.launchpad.net
+:Author: subject@lists.launchpad.net
 :Date:   2016-10-6
 :Copyright: OpenStack Foundation
 :Version: 13.0.0
@@ -16,26 +16,26 @@ Glance scrub service
 SYNOPSIS
 ========
 
-glance-scrubber [options]
+subject-scrubber [options]
 
 DESCRIPTION
 ===========
 
-glance-scrubber is a utility that cleans up subjects that have been deleted. The
+subject-scrubber is a utility that cleans up subjects that have been deleted. The
 mechanics of this differ depending on the backend store and pending_deletion
 options chosen.
 
-Multiple glance-scrubbers can be run in a single deployment, but only one of
-them may be designated as the 'cleanup_scrubber' in the glance-scrubber.conf
-file. The 'cleanup_scrubber' coordinates other glance-scrubbers by maintaining
+Multiple subject-scrubbers can be run in a single deployment, but only one of
+them may be designated as the 'cleanup_scrubber' in the subject-scrubber.conf
+file. The 'cleanup_scrubber' coordinates other subject-scrubbers by maintaining
 the master queue of subjects that need to be removed.
 
-The glance-scubber.conf file also specifies important configuration items such
+The subject-scubber.conf file also specifies important configuration items such
 as the time between runs ('wakeup_time' in seconds), length of time subjects
 can be pending before their deletion ('cleanup_scrubber_time' in seconds) as
 well as registry connectivity options.
 
-glance-scrubber can run as a periodic job or long-running daemon.
+subject-scrubber can run as a periodic job or long-running daemon.
 
 OPTIONS
 =======
@@ -57,7 +57,7 @@ OPTIONS
 FILES
 =====
 
-  **/etc/glance/glance-scrubber.conf**
+  **/etc/subject/subject-scrubber.conf**
       Default configuration file for the Glance Scrubber
 
 .. include:: footer.rst

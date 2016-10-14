@@ -1,6 +1,6 @@
-# Translations template for glance.
+# Translations template for subject.
 # Copyright (C) 2015 ORGANIZATION
-# This file is distributed under the same license as the glance project.
+# This file is distributed under the same license as the subject project.
 #
 # Translators:
 # Adriana Chisco Landazábal <achisco94@gmail.com>, 2015
@@ -10,7 +10,7 @@
 # Andreas Jaeger <jaegerandi@gmail.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: glance 13.0.0.0rc2.dev36\n"
+"Project-Id-Version: subject 13.0.0.0rc2.dev36\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
 "POT-Creation-Date: 2016-10-06 15:52+0000\n"
 "MIME-Version: 1.0\n"
@@ -956,8 +956,8 @@ msgstr "Puntero JSON no válido para este recurso: '/%s'"
 msgid "Invalid checksum '%s': can't exceed 32 characters"
 msgstr "Suma de verificación  '%s': no puede exceder los 32 caracteres"
 
-msgid "Invalid configuration in glance-swift conf file."
-msgstr "Configuración en fichero en glance-swift no válida."
+msgid "Invalid configuration in subject-swift conf file."
+msgstr "Configuración en fichero en subject-swift no válida."
 
 msgid "Invalid configuration in property protection file."
 msgstr "Configuración en fichero de protección de propiedad no válida."

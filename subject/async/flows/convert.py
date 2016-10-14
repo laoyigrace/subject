@@ -111,7 +111,7 @@ class _Convert(task.Task):
         # NOTE(hemanthm): We add '-f' parameter to the convert command here so
         # that the subject format need not be inferred by qemu utils. This
         # shields us from being vulnerable to an attack vector described here
-        # https://bugs.launchpad.net/glance/+bug/1449062
+        # https://bugs.launchpad.net/subject/+bug/1449062
 
         dest_path = os.path.join(CONF.task.work_dir, "%s.converted" % subject_id)
         stdout, stderr = putils.trycmd('qemu-img', 'convert',

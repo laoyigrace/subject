@@ -1,12 +1,12 @@
 ===================
-glance-cache-pruner
+subject-cache-pruner
 ===================
 
 -------------------
 Glance cache pruner
 -------------------
 
-:Author: glance@lists.launchpad.net
+:Author: subject@lists.launchpad.net
 :Date:   2016-10-6
 :Copyright: OpenStack Foundation
 :Version: 13.0.0
@@ -16,7 +16,7 @@ Glance cache pruner
 SYNOPSIS
 ========
 
-  glance-cache-pruner [options]
+  subject-cache-pruner [options]
 
 DESCRIPTION
 ===========
@@ -35,7 +35,7 @@ OPTIONS
 FILES
 =====
 
-  **/etc/glance/glance-cache.conf**
+  **/etc/subject/subject-cache.conf**
         Default configuration file for the Glance Cache
 
 .. include:: footer.rst

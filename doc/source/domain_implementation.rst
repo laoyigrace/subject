@@ -34,7 +34,7 @@ The domain model contains the following layers:
 The schema below shows a stack that contains the Subject domain layers and
 their locations:
 
-.. figure:: /subjects/glance_layers.png
+.. figure:: /subjects/subject_layers.png
    :figwidth: 100%
    :align: center
    :alt: From top to bottom, the stack consists of the Router and REST API,

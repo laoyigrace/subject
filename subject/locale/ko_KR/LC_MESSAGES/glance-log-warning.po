@@ -1,13 +1,13 @@
-# Translations template for glance.
+# Translations template for subject.
 # Copyright (C) 2015 ORGANIZATION
-# This file is distributed under the same license as the glance project.
+# This file is distributed under the same license as the subject project.
 #
 # Translators:
 # Mario Cho <hephaex@gmail.com>, 2014
 # Andreas Jaeger <jaegerandi@gmail.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: glance 13.0.0.0rc2.dev36\n"
+"Project-Id-Version: subject 13.0.0.0rc2.dev36\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
 "POT-Creation-Date: 2016-10-06 15:52+0000\n"
 "MIME-Version: 1.0\n"
@@ -30,12 +30,12 @@ msgstr ""
 "%(slave_value)s)"
 
 msgid ""
-"/v3 controller is deprecated and will be removed from glance-api soon. "
-"Remove the reference to it from glance-api-paste.ini configuration file and "
+"/v3 controller is deprecated and will be removed from subject-api soon. "
+"Remove the reference to it from subject-api-paste.ini configuration file and "
 "use Glance Artifact Service API instead"
 msgstr ""
-"/v3 컨트롤러는 더 이상 사용되지 않으므로 glance-api에서 곧 제거됩니다. "
-"glance-api-paste.ini 구성 파일에서 참조를 제거하고 대신 Glance Artifact "
+"/v3 컨트롤러는 더 이상 사용되지 않으므로 subject-api에서 곧 제거됩니다. "
+"subject-api-paste.ini 구성 파일에서 참조를 제거하고 대신 Glance Artifact "
 "Service API를 사용하십시오."
 
 #, python-format

@@ -1,12 +1,12 @@
 ==============
-glance-control
+subject-control
 ==============
 
 --------------------------------------
 Glance daemon start/stop/reload helper
 --------------------------------------
 
-:Author: glance@lists.launchpad.net
+:Author: subject@lists.launchpad.net
 :Date:   2016-10-6
 :Copyright: OpenStack Foundation
 :Version: 13.0.0
@@ -16,11 +16,11 @@ Glance daemon start/stop/reload helper
 SYNOPSIS
 ========
 
-  glance-control [options] <SERVER> <COMMAND> [CONFPATH]
+  subject-control [options] <SERVER> <COMMAND> [CONFPATH]
 
 Where <SERVER> is one of:
 
-    all, api, glance-api, registry, glance-registry, scrubber, glance-scrubber
+    all, api, subject-api, registry, subject-registry, scrubber, subject-scrubber
 
 And command is one of:
 
@@ -37,7 +37,7 @@ OPTIONS
 
   **--pid-file=PATH**
         File to use as pid file. Default:
-        /var/run/glance/$server.pid
+        /var/run/subject/$server.pid
 
   **--await-child DELAY**
         Period to wait for service death in order to report

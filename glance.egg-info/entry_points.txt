@@ -1,0 +1,45 @@
+[console_scripts]
+subject-api = subject.cmd.api:main
+subject-cache-cleaner = subject.cmd.cache_cleaner:main
+subject-cache-manage = subject.cmd.cache_manage:main
+subject-cache-prefetcher = subject.cmd.cache_prefetcher:main
+subject-cache-pruner = subject.cmd.cache_pruner:main
+subject-control = subject.cmd.control:main
+subject-glare = subject.cmd.glare:main
+subject-manage = subject.cmd.manage:main
+subject-registry = subject.cmd.registry:main
+subject-replicator = subject.cmd.replicator:main
+subject-scrubber = subject.cmd.scrubber:main
+
+[subject.artifacts.types]
+MyArtifact = subject.contrib.plugins.artifacts_sample:MY_ARTIFACT
+
+[subject.common.subject_location_strategy.modules]
+location_order_strategy = subject.common.location_strategy.location_order
+store_type_strategy = subject.common.location_strategy.store_type
+
+[subject.database.metadata_backend]
+sqlalchemy = subject.db.sqlalchemy.metadata
+
+[subject.database.migration_backend]
+sqlalchemy = oslo_db.sqlalchemy.migration
+
+[subject.flows]
+import = subject.async.flows.base_import:get_flow
+
+[subject.flows.import]
+convert = subject.async.flows.convert:get_flow
+introspect = subject.async.flows.introspect:get_flow
+ovf_process = subject.async.flows.ovf_process:get_flow
+
+[oslo.config.opts]
+subject.api = subject.opts:list_api_opts
+subject.cache = subject.opts:list_cache_opts
+subject.glare = subject.opts:list_artifacts_opts
+subject.manage = subject.opts:list_manage_opts
+subject.registry = subject.opts:list_registry_opts
+subject.scrubber = subject.opts:list_scrubber_opts
+
+[oslo.config.opts.defaults]
+subject.api = subject.common.config:set_cors_middleware_defaults
+

@@ -29,18 +29,18 @@ use (see :doc:`the documentation on controller Glance servers <controllingserver
 If you do **not** specify a configuration file, Glance will look in the following
 directories for a configuration file, in order:
 
-* ``~/.glance``
+* ``~/.subject``
 * ``~/``
-* ``/etc/glance``
+* ``/etc/subject``
 * ``/etc``
 
-The Glance API server configuration file should be named ``glance-api.conf``.
+The Glance API server configuration file should be named ``subject-api.conf``.
 Similarly, the Glance Registry server configuration file should be named
-``glance-registry.conf``. There are many other configuration files also
+``subject-registry.conf``. There are many other configuration files also
 since Glance maintains a configuration file for each of its services. If you
 installed Glance via your operating system's package management system, it
 is likely that you will have sample configuration files installed in
-``/etc/glance``.
+``/etc/subject``.
 
 In addition, sample configuration files for each server application with
 detailed comments are available in the :doc:`Glance Sample Configuration
@@ -49,7 +49,7 @@ detailed comments are available in the :doc:`Glance Sample Configuration
 The PasteDeploy configuration (controlling the deployment of the WSGI
 application for each component) may be found by default in
 <component>-paste.ini alongside the main configuration file, <component>.conf.
-For example, ``glance-api-paste.ini`` corresponds to ``glance-api.conf``.
+For example, ``subject-api-paste.ini`` corresponds to ``subject-api.conf``.
 This pathname for the paste config is configurable, as follows::
 
   [paste_deploy]
@@ -90,14 +90,14 @@ file. If it is, then we try to use that as the configuration file. If there is
 no file or there were no arguments, we search for a configuration file in the
 following order:
 
-* ``~/.glance``
+* ``~/.subject``
 * ``~/``
-* ``/etc/glance``
+* ``/etc/subject``
 * ``/etc``
 
 The filename that is searched for depends on the server application name. So,
-if you are starting up the API server, ``glance-api.conf`` is searched for,
-otherwise ``glance-registry.conf``.
+if you are starting up the API server, ``subject-api.conf`` is searched for,
+otherwise ``subject-registry.conf``.
 
 * ``--config-dir=DIR``
 
@@ -115,9 +115,9 @@ If --config-dir is set, then --config-file is ignored.
 
 An example usage would be:
 
-  $ glance-api --config-dir=/etc/glance/glance-api.d
+  $ subject-api --config-dir=/etc/subject/subject-api.d
 
-  $ ls /etc/glance/glance-api.d
+  $ ls /etc/subject/subject-api.d
    00-core.conf
    01-swift.conf
    02-ssl.conf
@@ -127,25 +127,25 @@ The numeric prefixes in the example above are only necessary if a specific
 parse ordering is required (i.e. if an individual config option set in an
 earlier fragment is overridden in a later fragment).
 
-Note that ``glance-manage`` currently loads configuration from three files:
+Note that ``subject-manage`` currently loads configuration from three files:
 
-* ``glance-registry.conf``
-* ``glance-api.conf``
-* ``glance-manage.conf``
+* ``subject-registry.conf``
+* ``subject-api.conf``
+* ``subject-manage.conf``
 
-By default ``glance-manage.conf`` only specifies a custom logging file but
-other configuration options for ``glance-manage`` should be migrated in there.
-**Warning**: Options set in ``glance-manage.conf`` will override options of
+By default ``subject-manage.conf`` only specifies a custom logging file but
+other configuration options for ``subject-manage`` should be migrated in there.
+**Warning**: Options set in ``subject-manage.conf`` will override options of
 the same section and name set in the other two. Similarly, options in
-``glance-api.conf`` will override options set in ``glance-registry.conf``.
-This tool is planning to stop loading ``glance-registry.conf`` and
-``glance-api.conf`` in a future cycle.
+``subject-api.conf`` will override options set in ``subject-registry.conf``.
+This tool is planning to stop loading ``subject-registry.conf`` and
+``subject-api.conf`` in a future cycle.
 
 Configuring Server Startup Options
 ----------------------------------
 
-You can put the following options in the ``glance-api.conf`` and
-``glance-registry.conf`` files, under the ``[DEFAULT]`` section. They enable
+You can put the following options in the ``subject-api.conf`` and
+``subject-registry.conf`` files, under the ``[DEFAULT]`` section. They enable
 startup and binding behaviour for the API and registry servers, respectively.
 
 * ``bind_host=ADDRESS``
@@ -268,7 +268,7 @@ Optional. Default: False.
 
 When using SSL in connections to the registry server, do not require
 validation via a certifying authority. This is the registry's equivalent of
-specifying --insecure on the command line using glanceclient for the API
+specifying --insecure on the command line using subjectclient for the API
 
 * ``registry_client_timeout=SECONDS``
 
@@ -373,16 +373,16 @@ Logging Options Available Only in Configuration Files
 
 You will want to place the different logging options in the **[DEFAULT]** section
 in your application configuration file. As an example, you might do the following
-for the API server, in a configuration file called ``etc/glance-api.conf``::
+for the API server, in a configuration file called ``etc/subject-api.conf``::
 
   [DEFAULT]
-  log_file = /var/log/glance/api.log
+  log_file = /var/log/subject/api.log
 
 * ``log_file``
 
 The filepath of the file to use for logging messages from Glance's servers. If
 missing, the default is to output messages to ``stdout``, so if you are running
-Glance servers in a daemon mode (using ``glance-control``) you should make
+Glance servers in a daemon mode (using ``subject-control``) you should make
 sure that the ``log_file`` option is set appropriately.
 
 * ``log_dir``
@@ -409,7 +409,7 @@ Configuring Glance Storage Backends
 
 There are a number of configuration options in Glance that control how Glance
 stores disk subjects. These configuration options are specified in the
-``glance-api.conf`` configuration file in the section ``[subject_store]``.
+``subject-api.conf`` configuration file in the section ``[subject_store]``.
 
 * ``default_store=STORE``
 
@@ -426,7 +426,7 @@ it must also be listed in the ``stores`` list described below.
 
 Optional. Default: ``file, http``
 
-A comma separated list of enabled glance stores. Some available options for
+A comma separated list of enabled subject stores. Some available options for
 this option are (``filesystem``, ``http``, ``rbd``, ``swift``,
 ``sheepdog``, ``cinder``, ``vmware_datastore``)
 
@@ -435,7 +435,7 @@ Configuring the Filesystem Storage Backend
 
 * ``filesystem_store_datadir=PATH``
 
-Optional. Default: ``/var/lib/glance/subjects/``
+Optional. Default: ``/var/lib/subject/subjects/``
 
 Can only be specified in configuration files.
 
@@ -443,7 +443,7 @@ Can only be specified in configuration files.
 
 Sets the path where the filesystem storage backend write disk subjects. Note that
 the filesystem storage backend will attempt to create this directory if it does
-not exist. Ensure that the user that ``glance-api`` runs under has write
+not exist. Ensure that the user that ``subject-api`` runs under has write
 permissions to this directory.
 
 * ``filesystem_store_file_perm=PERM_MODE``
@@ -468,26 +468,26 @@ Configuring the Filesystem Storage Backend with multiple stores
 
 * ``filesystem_store_datadirs=PATH:PRIORITY``
 
-Optional. Default: ``/var/lib/glance/subjects/:1``
+Optional. Default: ``/var/lib/subject/subjects/:1``
 
 Example::
 
-  filesystem_store_datadirs = /var/glance/store
-  filesystem_store_datadirs = /var/glance/store1:100
-  filesystem_store_datadirs = /var/glance/store2:200
+  filesystem_store_datadirs = /var/subject/store
+  filesystem_store_datadirs = /var/subject/store1:100
+  filesystem_store_datadirs = /var/subject/store2:200
 
 This option can only be specified in configuration file and is specific
 to the filesystem storage backend only.
 
 filesystem_store_datadirs option allows administrators to configure
-multiple store directories to save glance subject in filesystem storage backend.
+multiple store directories to save subject subject in filesystem storage backend.
 Each directory can be coupled with its priority.
 
 **NOTE**:
 
 * This option can be specified multiple times to specify multiple stores.
 * Either filesystem_store_datadir or filesystem_store_datadirs option must be
-  specified in glance-api.conf
+  specified in subject-api.conf
 * Store with priority 200 has precedence over store with priority 100.
 * If no priority is specified, default priority '0' is associated with it.
 * If two filesystem stores have same priority store with maximum free space
@@ -545,7 +545,7 @@ Sets the authentication key to authenticate against the
 
 * ``swift_store_container=CONTAINER``
 
-Optional. Default: ``glance``
+Optional. Default: ``subject``
 
 Can only be specified in configuration files.
 
@@ -616,11 +616,11 @@ created is approximately equal to 16^N. This setting is used only when
 swift_store_multi_tenant is disabled.
 
 Example: if this config option is set to 3 and
-swift_store_container = 'glance', then an subject with UUID
+swift_store_container = 'subject', then an subject with UUID
 'fdae39a1-bac5-4238-aba4-69bcc726e848' would be placed in the container
-'glance_fda'. All dashes in the UUID are included when creating the container
+'subject_fda'. All dashes in the UUID are included when creating the container
 name but do not count toward the character limit, so in this example with N=10
-the container name would be 'glance_fdae39a1-ba'.
+the container name would be 'subject_fdae39a1-ba'.
 
 When choosing the value for swift_store_multiple_containers_seed, deployers
 should discuss a suitable value with their swift operations team. The authors
@@ -653,7 +653,7 @@ formats are allowed, including:
 \*:<username>
 
 Multiple ACLs can be combined using a comma separated list, for
-example: swift_store_admin_tenants = service:glance,*:admin
+example: swift_store_admin_tenants = service:subject,*:admin
 
 * ``swift_store_auth_version``
 
@@ -803,7 +803,7 @@ The file contains a set of references like:
 A default reference must be configured. Its parameters will be used when
 creating new subjects. For example, to specify ``ref2`` as the default
 reference, add the following value to the [subject_store] section of
-:file:`glance-api.conf` file:
+:file:`subject-api.conf` file:
 
 .. code-block:: ini
 
@@ -905,8 +905,8 @@ Can only be specified in configuration files.
 
 `This option is specific to the RBD storage backend.`
 
-Prevents glance-api hangups during the connection to RBD. Sets the time
-to wait (in seconds) for glance-api before closing the connection.
+Prevents subject-api hangups during the connection to RBD. Sets the time
+to wait (in seconds) for subject-api before closing the connection.
 Setting ``rados_connect_timeout<=0`` means no timeout.
 
 * ``rbd_store_ceph_conf=PATH``
@@ -933,18 +933,18 @@ when `RADOS authentication <http://ceph.newdream.net/wiki/Cephx>`_
 is `enabled. <http://ceph.newdream.net/wiki/Cluster_configuration#Cephx_auth>`_
 
 A keyring must be set for this user in the Ceph
-configuration file, e.g. with a user ``glance``::
+configuration file, e.g. with a user ``subject``::
 
-  [client.glance]
-  keyring=/etc/glance/rbd.keyring
+  [client.subject]
+  keyring=/etc/subject/rbd.keyring
 
-To set up a user named ``glance`` with minimal permissions, using a pool called
+To set up a user named ``subject`` with minimal permissions, using a pool called
 ``subjects``, run::
 
   rados mkpool subjects
-  ceph-authtool --create-keyring /etc/glance/rbd.keyring
-  ceph-authtool --gen-key --name client.glance --cap mon 'allow r' --cap osd 'allow rwx pool=subjects' /etc/glance/rbd.keyring
-  ceph auth add client.glance -i /etc/glance/rbd.keyring
+  ceph-authtool --create-keyring /etc/subject/rbd.keyring
+  ceph-authtool --gen-key --name client.subject --cap mon 'allow r' --cap osd 'allow rwx pool=subjects' /etc/subject/rbd.keyring
+  ceph auth add client.subject -i /etc/subject/rbd.keyring
 
 Configuring the Sheepdog Storage Backend
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1132,7 +1132,7 @@ the cinder endpoint in the service catalog is used.
 
 * ``rootwrap_config=NAME``
 
-Optional. Default: ``/etc/glance/rootwrap.conf``
+Optional. Default: ``/etc/subject/rootwrap.conf``
 
 Can only be specified in configuration files.
 
@@ -1197,7 +1197,7 @@ This option can only be specified in configuration file and is specific
 to the VMware storage backend.
 
 vmware_datastores allows administrators to configure multiple datastores to
-save glance subject in the VMware store backend. The required format for the
+save subject subject in the VMware store backend. The required format for the
 option is: <datacenter_path>:<datastore_name>:<optional_weight>.
 
 where datacenter_path is the inventory path to the datacenter where the
@@ -1213,7 +1213,7 @@ Example::
 
   - This option can be specified multiple times to specify multiple datastores.
   - Either vmware_datastore_name or vmware_datastores option must be specified
-    in glance-api.conf
+    in subject-api.conf
   - Datastore with weight 200 has precedence over datastore with weight 100.
   - If no weight is specified, default weight '0' is associated with it.
   - If two datastores have same weight, the datastore with maximum free space
@@ -1240,7 +1240,7 @@ The interval used for polling remote tasks invoked on VMware ESX/VC server.
 
 * ``vmware_store_subject_dir``
 
-Optional. Default: ``/openstack_glance``
+Optional. Default: ``/openstack_subject``
 
 Can only be specified in configuration files.
 
@@ -1272,7 +1272,7 @@ Configuring Glance Subject Size Limit
 -----------------------------------
 
 The following configuration option is specified in the
-``glance-api.conf`` configuration file in the section ``[DEFAULT]``.
+``subject-api.conf`` configuration file in the section ``[DEFAULT]``.
 
 * ``subject_size_cap=SIZE``
 
@@ -1287,7 +1287,7 @@ Configuring Glance User Storage Quota
 -------------------------------------
 
 The following configuration option is specified in the
-``glance-api.conf`` configuration file in the section ``[DEFAULT]``.
+``subject-api.conf`` configuration file in the section ``[DEFAULT]``.
 
 * ``user_storage_quota``
 
@@ -1319,19 +1319,19 @@ Enabling the Subject Cache Middleware
 To enable the subject cache middleware, the cache middleware must occur in
 the application pipeline **after** the appropriate context middleware.
 
-The cache middleware should be in your ``glance-api-paste.ini`` in a section
+The cache middleware should be in your ``subject-api-paste.ini`` in a section
 titled ``[filter:cache]``. It should look like this::
 
   [filter:cache]
-  paste.filter_factory = glance.api.middleware.cache:CacheFilter.factory
+  paste.filter_factory = subject.api.middleware.cache:CacheFilter.factory
 
 A ready-made application pipeline including this filter is defined in
-the ``glance-api-paste.ini`` file, looking like so::
+the ``subject-api-paste.ini`` file, looking like so::
 
-  [pipeline:glance-api-caching]
+  [pipeline:subject-api-caching]
   pipeline = versionnegotiation context cache apiv1app
 
-To enable the above application pipeline, in your main ``glance-api.conf``
+To enable the above application pipeline, in your main ``subject-api.conf``
 configuration file, select the appropriate deployment flavor like so::
 
   [paste_deploy]
@@ -1354,8 +1354,8 @@ Configuration Options Affecting the Subject Cache
 
 .. note::
 
-  These configuration options must be set in both the glance-cache
-  and glance-api configuration files.
+  These configuration options must be set in both the subject-cache
+  and subject-api configuration files.
 
 
 One main configuration file option affects the subject cache.
@@ -1364,11 +1364,11 @@ One main configuration file option affects the subject cache.
 
 Required when subject cache middleware is enabled.
 
-Default: ``/var/lib/glance/subject-cache``
+Default: ``/var/lib/subject/subject-cache``
 
 This is the base directory the subject cache can write files to.
 Make sure the directory is writable by the user running the
-``glance-api`` server
+``subject-api`` server
 
  * ``subject_cache_driver=DRIVER``
 
@@ -1407,22 +1407,22 @@ Default: ``10737418240`` (10 GB)
 Size, in bytes, that the subject cache should be constrained to. Subjects files
 are cached automatically in the local subject cache, even if the writing of that
 subject file would put the total cache size over this size. The
-``glance-cache-pruner`` executable is what prunes the subject cache to be equal
-to or less than this value. The ``glance-cache-pruner`` executable is designed
+``subject-cache-pruner`` executable is what prunes the subject cache to be equal
+to or less than this value. The ``subject-cache-pruner`` executable is designed
 to be run via cron on a regular basis. See more about this executable in
 :doc:`Controlling the Growth of the Subject Cache <cache>`
 
-.. _configuring-the-glance-registry:
+.. _configuring-the-subject-registry:
 
 Configuring the Glance Registry
 -------------------------------
 
 There are a number of configuration options in Glance that control how
 this registry server operates. These configuration options are specified in the
-``glance-registry.conf`` configuration file in the section ``[DEFAULT]``.
+``subject-registry.conf`` configuration file in the section ``[DEFAULT]``.
 
-**IMPORTANT NOTE**: The glance-registry service is only used in conjunction
-with the glance-api service when clients are using the v1 REST API. See
+**IMPORTANT NOTE**: The subject-registry service is only used in conjunction
+with the subject-api service when clients are using the v1 REST API. See
 `Configuring Glance APIs`_ for more info.
 
 * ``sql_connection=CONNECTION_STRING`` (``--sql-connection`` when specified
@@ -1431,7 +1431,7 @@ with the glance-api service when clients are using the v1 REST API. See
 Optional. Default: ``None``
 
 Can be specified in configuration files. Can also be specified on the
-command-line for the ``glance-manage`` program.
+command-line for the ``subject-manage`` program.
 
 Sets the SQLAlchemy connection string to use when connecting to the registry
 database. Please see the documentation for
@@ -1461,14 +1461,14 @@ If the Glance API server parameter ``enable_v1_api`` has been set to ``True`` th
 ``enable_v1_registry`` has to be ``True`` as well.
 If the Glance API server parameter ``enable_v2_api`` has been
 set to ``True`` and the parameter ``data_api`` has been set to
-``glance.db.registry.api`` the ``enable_v2_registry`` has to be set to ``True``
+``subject.db.registry.api`` the ``enable_v2_registry`` has to be set to ``True``
 
 
 Configuring Notifications
 -------------------------
 
 Glance can optionally generate notifications to be logged or sent to a message
-queue. The configuration options are specified in the ``glance-api.conf``
+queue. The configuration options are specified in the ``subject-api.conf``
 configuration file.
 
 * ``[oslo_messaging_notifications]/driver``
@@ -1502,9 +1502,9 @@ Configuring Glance Property Protections
 
 Access to subject meta properties may be configured using a
 :doc:`Property Protections Configuration file <property-protections>`.  The
-location for this file can be specified in the ``glance-api.conf``
+location for this file can be specified in the ``subject-api.conf``
 configuration file in the section ``[DEFAULT]``. **If an incorrect value is
-specified, glance API service will not start.**
+specified, subject API service will not start.**
 
 * ``property_protection_file=PATH``
 
@@ -1520,7 +1520,7 @@ Optional. Default: ``roles``.
 Configuring Glance APIs
 -----------------------
 
-The glance-api service implements versions 1 and 2 of
+The subject-api service implements versions 1 and 2 of
 the OpenStack Subjects API. Disable any version of
 the Subjects API using the following options:
 
@@ -1533,7 +1533,7 @@ Optional. Default: ``True``
 Optional. Default: ``True``
 
 **IMPORTANT NOTE**: To use v2 registry in v2 API, you must set
-``data_api`` to glance.db.registry.api in glance-api.conf.
+``data_api`` to subject.db.registry.api in subject-api.conf.
 
 Configuring Glance Tasks
 ------------------------
@@ -1580,7 +1580,7 @@ execution profiling at wsgi main entry and SQL execution profiling at DB
 module, the more fine-grained trace point is being worked on.
 
 The config value ``enabled`` is used to determine whether fully enable
-profiling feature for glance-api and glance-registry service.
+profiling feature for subject-api and subject-registry service.
 
 * ``enabled=<True|False>``
 
@@ -1600,15 +1600,15 @@ deployment. Without HMAC key the profiling will not be triggered even profiling
 feature is enabled.
 
 **IMPORTANT NOTE**: previously HMAC keys (as well as enabled parameter) were
-placed at `/etc/glance/api-paste.ini` and `/etc/glance/registry-paste.ini` files
+placed at `/etc/subject/api-paste.ini` and `/etc/subject/registry-paste.ini` files
 for Glance API and Glance Registry services respectively. Starting with
 osprofiler 0.3.1 release there is no need to set these arguments in the
 `*-paste.ini` files. This functionality is still supported, although the
 config values are having larger priority.
 
 The config value ``trace_sqlalchemy`` is used to determine whether fully enable
-sqlalchemy engine based SQL execution profiling feature for glance-api and
-glance-registry services.
+sqlalchemy engine based SQL execution profiling feature for subject-api and
+subject-registry services.
 
 * ``trace_sqlalchemy=<True|False>``
 
@@ -1670,18 +1670,18 @@ To enable the health check middleware, it must occur in the beginning of the
 application pipeline.
 
 The health check middleware should be placed in your
-``glance-api-paste.ini`` / ``glance-registry-paste.ini`` in a section
+``subject-api-paste.ini`` / ``subject-registry-paste.ini`` in a section
 titled ``[filter:healthcheck]``. It should look like this::
 
   [filter:healthcheck]
   paste.filter_factory = oslo_middleware:Healthcheck.factory
   backends = disable_by_file
-  disable_by_file_path = /etc/glance/healthcheck_disable
+  disable_by_file_path = /etc/subject/healthcheck_disable
 
 A ready-made application pipeline including this filter is defined e.g. in
-the ``glance-api-paste.ini`` file, looking like so::
+the ``subject-api-paste.ini`` file, looking like so::
 
-  [pipeline:glance-api]
+  [pipeline:subject-api]
   pipeline = healthcheck versionnegotiation osprofiler unauthenticated-context rootapp
 
 For more information see
@@ -1696,7 +1696,7 @@ select a format from the set that the Glance service supports. This
 supported set can be seen by querying the ``/v2/schemas/subjects`` resource.
 An operator can add or remove disk formats to the supported set.  This is
 done by setting the ``disk_formats`` parameter which is found in the
-``[subject_formats]`` section of ``glance-api.conf``.
+``[subject_formats]`` section of ``subject-api.conf``.
 
 * ``disk_formats=<Comma separated list of disk formats>``
 

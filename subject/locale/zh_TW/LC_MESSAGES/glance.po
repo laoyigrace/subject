@@ -1,12 +1,12 @@
-# Translations template for glance.
+# Translations template for subject.
 # Copyright (C) 2015 ORGANIZATION
-# This file is distributed under the same license as the glance project.
+# This file is distributed under the same license as the subject project.
 #
 # Translators:
 # Andreas Jaeger <jaegerandi@gmail.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: glance 13.0.0.0rc2.dev36\n"
+"Project-Id-Version: subject 13.0.0.0rc2.dev36\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
 "POT-Creation-Date: 2016-10-06 15:52+0000\n"
 "MIME-Version: 1.0\n"
@@ -879,8 +879,8 @@ msgstr "此資源的 JSON 指標無效：'/%s'"
 msgid "Invalid checksum '%s': can't exceed 32 characters"
 msgstr "無效的總和檢查 '%s'：不能超過 32 個字元"
 
-msgid "Invalid configuration in glance-swift conf file."
-msgstr "glance-swift 配置檔中的配置無效。"
+msgid "Invalid configuration in subject-swift conf file."
+msgstr "subject-swift 配置檔中的配置無效。"
 
 msgid "Invalid configuration in property protection file."
 msgstr "內容保護檔案中的配置無效。"

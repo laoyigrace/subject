@@ -29,7 +29,7 @@ Common parameters for subject methods
 -----------------------------------
 
 The following parameters can be applied to all of the subject methods below:
- - ``context`` — corresponds to a glance.context.RequestContext
+ - ``context`` — corresponds to a subject.context.RequestContext
    object, which stores the information on how a user accesses
    the system, as well as additional request information.
  - ``subject_id`` — a string corresponding to the subject identifier.
@@ -44,7 +44,7 @@ Subject basic methods
 #. ``subject_create(context, values)`` — creates a new subject record
    with parameters listed in the *values* dictionary. Returns a
    dictionary representation of a newly created
-   *glance.db.sqlalchemy.models.Subject* object.
+   *subject.db.sqlalchemy.models.Subject* object.
 #. ``subject_update(context, subject_id, values, purge_props=False,
    from_state=None)`` — updates the existing subject with the identifier
    *subject_id* with the values listed in the *values* dictionary. Returns a
@@ -181,10 +181,10 @@ of an *Subject* object.
 
 **Glance database schema**
 
-.. figure:: /subjects/glance_db.png
+.. figure:: /subjects/subject_db.png
    :figwidth: 100%
    :align: center
-   :alt: The glance database schema is depicted by 5 tables.
+   :alt: The subject database schema is depicted by 5 tables.
          The table named Subjects has the following columns:
          id: varchar(36);
          name: varchar(255), nullable;
@@ -251,11 +251,11 @@ Glance Database Backends
 Migration Backends
 ------------------
 
-.. list-plugins:: glance.database.migration_backend
+.. list-plugins:: subject.database.migration_backend
    :detailed:
 
 Metadata Backends
 -----------------
 
-.. list-plugins:: glance.database.metadata_backend
+.. list-plugins:: subject.database.metadata_backend
    :detailed:

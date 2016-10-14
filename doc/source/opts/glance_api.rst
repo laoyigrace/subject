@@ -1,8 +1,8 @@
-.. _glance-api.conf:
+.. _subject-api.conf:
 
 ---------------
-glance-api.conf
+subject-api.conf
 ---------------
 
 .. show-options::
-   :config-file: etc/oslo-config-generator/glance-api.conf
+   :config-file: etc/oslo-config-generator/subject-api.conf

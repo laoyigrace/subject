@@ -14,7 +14,7 @@ Structure
   are able to use absolute paths in rally tasks.
   Files will be located in ~/.rally/extra/*
 
-* glance.yaml is a task that is run in gates against OpenStack (nova network)
+* subject.yaml is a task that is run in gates against OpenStack (nova network)
   deployed by DevStack
 
 

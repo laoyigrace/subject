@@ -3,7 +3,7 @@ prelude: >
   - Improved configuration option descriptions and handling.
 other:
   - |
-    The glance configuration options have been improved with
+    The subject configuration options have been improved with
     detailed help texts, defaults for sample configuration
     files, explicit choices of values for operators to
     choose from, and a strict range defined with ``min`` and

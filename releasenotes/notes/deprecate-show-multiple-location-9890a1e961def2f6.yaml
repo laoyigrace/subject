@@ -16,7 +16,7 @@ upgrade:
       release.
     * For the Newton release, this option will still be
       honored. However, it is important to update
-      ``policy.json`` file for glance-api nodes. In
+      ``policy.json`` file for subject-api nodes. In
       particular, please consider updating the policies
       ``delete_subject_location``, ``get_subject_location`` and
       ``set_subject_location`` as per your requirements. As

@@ -460,7 +460,7 @@ class SubjectProxy(subject.domain.proxy.Subject):
         if not self.subject.locations:
             # NOTE(mclaren): This is the only set of arguments
             # which work with this exception currently, see:
-            # https://bugs.launchpad.net/glance-store/+bug/1501443
+            # https://bugs.launchpad.net/subject-store/+bug/1501443
             # When the above subject_store bug is fixed we can
             # add a msg as usual.
             raise store.NotFound(subject=None)

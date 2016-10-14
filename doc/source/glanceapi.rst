@@ -130,7 +130,7 @@ Using v1.X
 .. include:: deprecation-note.inc
 
 For the purpose of examples, assume there is a Glance API server running
-at the URL ``http://glance.openstack.example.org`` on the default port 80.
+at the URL ``http://subject.openstack.example.org`` on the default port 80.
 
 List Available Subjects
 *********************
@@ -139,12 +139,12 @@ We want to see a list of available subjects that the authenticated user has
 access to. This includes subjects owned by the user, subjects shared with the user
 and public subjects.
 
-We issue a ``GET`` request to ``http://glance.openstack.example.org/v1/subjects`` to
+We issue a ``GET`` request to ``http://subject.openstack.example.org/v1/subjects`` to
 retrieve this list of available subjects. The data is returned as a JSON-encoded
 mapping in the following format::
 
   {'subjects': [
-    {'uri': 'http://glance.openstack.example.org/v1/subjects/71c675ab-d94f-49cd-a114-e12490b328d9',
+    {'uri': 'http://subject.openstack.example.org/v1/subjects/71c675ab-d94f-49cd-a114-e12490b328d9',
      'name': 'Ubuntu 10.04 Plain',
      'disk_format': 'vhd',
      'container_format': 'ovf',
@@ -159,12 +159,12 @@ We want to see a more detailed list of available subjects that the authenticated
 user has access to. This includes subjects owned by the user, subjects shared with
 the user and public subjects.
 
-We issue a ``GET`` request to ``http://glance.openstack.example.org/v1/subjects/detail`` to
+We issue a ``GET`` request to ``http://subject.openstack.example.org/v1/subjects/detail`` to
 retrieve this list of available subjects. The data is returned as a
 JSON-encoded mapping in the following format::
 
   {'subjects': [
-    {'uri': 'http://glance.openstack.example.org/v1/subjects/71c675ab-d94f-49cd-a114-e12490b328d9',
+    {'uri': 'http://subject.openstack.example.org/v1/subjects/71c675ab-d94f-49cd-a114-e12490b328d9',
      'name': 'Ubuntu 10.04 Plain 5GB',
      'disk_format': 'vhd',
      'container_format': 'ovf',
@@ -308,13 +308,13 @@ first subject returned, we can issue a ``HEAD`` request to the Glance
 server for the subject's URI.
 
 We issue a ``HEAD`` request to
-``http://glance.openstack.example.org/v1/subjects/71c675ab-d94f-49cd-a114-e12490b328d9`` to
+``http://subject.openstack.example.org/v1/subjects/71c675ab-d94f-49cd-a114-e12490b328d9`` to
 retrieve complete metadata for that subject. The metadata is returned as a
 set of HTTP headers that begin with the prefix ``x-subject-meta-``. The
 following shows an example of the HTTP headers returned from the above
 ``HEAD`` request::
 
-  x-subject-meta-uri              http://glance.openstack.example.org/v1/subjects/71c675ab-d94f-49cd-a114-e12490b328d9
+  x-subject-meta-uri              http://subject.openstack.example.org/v1/subjects/71c675ab-d94f-49cd-a114-e12490b328d9
   x-subject-meta-name             Ubuntu 10.04 Plain 5GB
   x-subject-meta-disk_format      vhd
   x-subject-meta-container_format ovf
@@ -369,7 +369,7 @@ first subject returned, we can issue a ``HEAD`` request to the Glance
 server for the subject's URI.
 
 We issue a ``GET`` request to
-``http://glance.openstack.example.org/v1/subjects/71c675ab-d94f-49cd-a114-e12490b328d9`` to
+``http://subject.openstack.example.org/v1/subjects/71c675ab-d94f-49cd-a114-e12490b328d9`` to
 retrieve metadata for that subject as well as the subject itself encoded
 into the response body.
 
@@ -377,7 +377,7 @@ The metadata is returned as a set of HTTP headers that begin with the
 prefix ``x-subject-meta-``. The following shows an example of the HTTP headers
 returned from the above ``GET`` request::
 
-  x-subject-meta-uri              http://glance.openstack.example.org/v1/subjects/71c675ab-d94f-49cd-a114-e12490b328d9
+  x-subject-meta-uri              http://subject.openstack.example.org/v1/subjects/71c675ab-d94f-49cd-a114-e12490b328d9
   x-subject-meta-name             Ubuntu 10.04 Plain 5GB
   x-subject-meta-disk_format      vhd
   x-subject-meta-container_format ovf
@@ -435,10 +435,10 @@ wish to do two things:
 
 We can do the above two activities in a single call to the Glance API.
 Assuming, like in the examples above, that a Glance API server is running
-at ``http://glance.openstack.example.org``, we issue a ``POST`` request to add an subject to
+at ``http://subject.openstack.example.org``, we issue a ``POST`` request to add an subject to
 Glance::
 
-  POST http://glance.openstack.example.org/v1/subjects
+  POST http://subject.openstack.example.org/v1/subjects
 
 The metadata about the subject is sent to Glance in HTTP headers. The body
 of the HTTP request to the Glance API will be the MIME-encoded disk
@@ -452,7 +452,7 @@ We can also perform the activities described in `Add a New Subject`_ using two
 separate calls to the Subject API; the first to register the subject metadata, and
 the second to add the subject disk data. This is known as "reserving" an subject.
 
-The first call should be a ``POST`` to ``http://glance.openstack.example.org/v1/subjects``,
+The first call should be a ``POST`` to ``http://subject.openstack.example.org/v1/subjects``,
 which will result in a new subject id being registered with a status of
 ``queued``::
 
@@ -463,7 +463,7 @@ which will result in a new subject id being registered with a status of
    ...}
 
 The subject data can then be added using a ``PUT`` to
-``http://glance.openstack.example.org/v1/subjects/71c675ab-d94f-49cd-a114-e12490b328d9``.
+``http://subject.openstack.example.org/v1/subjects/71c675ab-d94f-49cd-a114-e12490b328d9``.
 The subject status will then be set to ``active`` by Glance.
 
 
@@ -633,7 +633,7 @@ append ``/members`` to it, and issue a ``GET`` request on the resulting URL.
 Continuing from the example above, in order to get the memberships for the
 first subject returned, we can issue a ``GET`` request to the Glance
 server for
-``http://glance.openstack.example.org/v1/subjects/71c675ab-d94f-49cd-a114-e12490b328d9/members``.
+``http://subject.openstack.example.org/v1/subjects/71c675ab-d94f-49cd-a114-e12490b328d9/members``.
 And we will get back JSON data such as the following::
 
   {'members': [
@@ -650,7 +650,7 @@ List Shared Subjects
 ******************
 
 We want to see a list of subjects which are shared with a given tenant. We issue
-a ``GET`` request to ``http://glance.openstack.example.org/v1/shared-subjects/tenant1``. We
+a ``GET`` request to ``http://subject.openstack.example.org/v1/shared-subjects/tenant1``. We
 will get back JSON data such as the following::
 
   {'shared_subjects': [
@@ -668,7 +668,7 @@ Add a Member to an Subject
 
 We want to authorize a tenant to access a private subject. We issue a ``PUT``
 request to
-``http://glance.openstack.example.org/v1/subjects/71c675ab-d94f-49cd-a114-e12490b328d9/members/tenant1``.
+``http://subject.openstack.example.org/v1/subjects/71c675ab-d94f-49cd-a114-e12490b328d9/members/tenant1``.
 With no body, this will add the membership to the subject, leaving existing
 memberships unmodified and defaulting new memberships to have `can_share`
 set to `false`. We may also optionally attach a body of the following form::
@@ -686,7 +686,7 @@ Remove a Member from an Subject
 *****************************
 
 We want to revoke a tenant's right to access a private subject. We issue a
-``DELETE`` request to ``http://glance.openstack.example.org/v1/subjects/1/members/tenant1``.
+``DELETE`` request to ``http://subject.openstack.example.org/v1/subjects/1/members/tenant1``.
 This query will return a 204 ("No Content") status code.
 
 
@@ -695,7 +695,7 @@ Replace a Membership List for an Subject
 
 The full membership list for a given subject may be replaced. We issue a ``PUT``
 request to
-``http://glance.openstack.example.org/v1/subjects/71c675ab-d94f-49cd-a114-e12490b328d9/members``
+``http://subject.openstack.example.org/v1/subjects/71c675ab-d94f-49cd-a114-e12490b328d9/members``
 with a body of the following form::
 
   {'memberships': [
@@ -866,7 +866,7 @@ message. For more information about Accept-Language, please refer to http://www.
 A typical curl API request will be like below::
 
    curl -i -X GET -H 'Accept-Language: zh' -H 'Content-Type: application/json'
-   http://glance.openstack.example.org/v2/subjects/aaa
+   http://subject.openstack.example.org/v2/subjects/aaa
 
 Then the response will be like the following::
 

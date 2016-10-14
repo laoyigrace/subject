@@ -1,12 +1,12 @@
 ====================
-glance-cache-cleaner
+subject-cache-cleaner
 ====================
 
 ----------------------------------------------------------------
 Glance Subject Cache Invalid Cache Entry and Stalled Subject cleaner
 ----------------------------------------------------------------
 
-:Author: glance@lists.launchpad.net
+:Author: subject@lists.launchpad.net
 :Date:   2016-10-6
 :Copyright: OpenStack Foundation
 :Version: 13.0.0
@@ -16,7 +16,7 @@ Glance Subject Cache Invalid Cache Entry and Stalled Subject cleaner
 SYNOPSIS
 ========
 
-glance-cache-cleaner [options]
+subject-cache-cleaner [options]
 
 DESCRIPTION
 ===========
@@ -41,7 +41,7 @@ OPTIONS
 FILES
 =====
 
-  **/etc/glance/glance-cache.conf**
+  **/etc/subject/subject-cache.conf**
     Default configuration file for the Glance Cache
 
 .. include:: footer.rst

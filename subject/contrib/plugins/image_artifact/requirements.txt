@@ -1,1 +1,1 @@
-python-glanceclient
+python-subjectclient

@@ -1,8 +1,8 @@
-.. _glance-manage.conf:
+.. _subject-manage.conf:
 
 ------------------
-glance-manage.conf
+subject-manage.conf
 ------------------
 
 .. show-options::
-   :config-file: etc/oslo-config-generator/glance-manage.conf
+   :config-file: etc/oslo-config-generator/subject-manage.conf

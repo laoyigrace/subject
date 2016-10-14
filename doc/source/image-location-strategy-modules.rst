@@ -17,5 +17,5 @@
 Subject Location Strategy Modules
 ===============================
 
-.. list-plugins:: glance.common.subject_location_strategy.modules
+.. list-plugins:: subject.common.subject_location_strategy.modules
    :detailed:

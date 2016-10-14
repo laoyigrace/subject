@@ -17,5 +17,5 @@
 Glance Artifact Types
 =====================
 
-.. list-plugins:: glance.artifacts.types
+.. list-plugins:: subject.artifacts.types
    :detailed:

@@ -1,8 +1,8 @@
-.. _glance-cache.conf:
+.. _subject-cache.conf:
 
 -----------------
-glance-cache.conf
+subject-cache.conf
 -----------------
 
 .. show-options::
-   :config-file: etc/oslo-config-generator/glance-cache.conf
+   :config-file: etc/oslo-config-generator/subject-cache.conf

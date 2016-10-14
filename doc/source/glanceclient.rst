@@ -18,9 +18,9 @@ Using Glance's Client Tools
 ===========================
 
 The command-line tool and python library for Glance are both installed
-through the python-glanceclient project. Explore the following resources
+through the python-subjectclient project. Explore the following resources
 for more information:
 
-* `Official Docs <http://docs.openstack.org/developer/python-glanceclient/>`_
-* `Pypi Page <http://pypi.python.org/pypi/python-glanceclient>`_
-* `GitHub Project <http://github.com/openstack/python-glanceclient>`_
+* `Official Docs <http://docs.openstack.org/developer/python-subjectclient/>`_
+* `Pypi Page <http://pypi.python.org/pypi/python-subjectclient>`_
+* `GitHub Project <http://github.com/openstack/python-subjectclient>`_

@@ -38,8 +38,8 @@ Configuration options for the Subject Cache
 -----------------------------------------
 
 The Glance cache uses two files: one for configuring the server and
-another for the utilities. The ``glance-api.conf`` is for the server
-and the ``glance-cache.conf`` is for the utilities.
+another for the utilities. The ``subject-api.conf`` is for the server
+and the ``subject-cache.conf`` is for the utilities.
 
 The following options are in both configuration files. These need the
 same values otherwise the cache will potentially run into problems.
@@ -51,7 +51,7 @@ same values otherwise the cache will potentially run into problems.
   ``subject_cache_dir`` directory (Default:``cache.db``).
 - ``subject_cache_driver`` The driver used for cache management.
   (Default:``sqlite``)
-- ``subject_cache_max_size`` The size when the glance-cache-pruner will
+- ``subject_cache_max_size`` The size when the subject-cache-pruner will
   remove the oldest subjects, to reduce the bytes until under this value.
   (Default:``10 GB``)
 - ``subject_cache_stall_time`` The amount of time an incomplete subject will
@@ -59,7 +59,7 @@ same values otherwise the cache will potentially run into problems.
   (Default:``1 day``)
 
 The following values are the ones that are specific to the
-``glance-cache.conf`` and are only required for the prefetcher to run
+``subject-cache.conf`` and are only required for the prefetcher to run
 correctly.
 
 - ``admin_user`` The username for an admin account, this is so it can
@@ -85,9 +85,9 @@ However, when subjects are successfully returned from a call to
 file to its cache, regardless of whether the resulting write would make the
 subject cache's size exceed the value of ``subject_cache_max_size``.
 In order to keep the subject cache at or below this maximum cache size,
-you need to run the ``glance-cache-pruner`` executable.
+you need to run the ``subject-cache-pruner`` executable.
 
-The recommended practice is to use ``cron`` to fire ``glance-cache-pruner``
+The recommended practice is to use ``cron`` to fire ``subject-cache-pruner``
 at a regular interval.
 
 Cleaning the Subject Cache
@@ -98,10 +98,10 @@ a stalled or invalid state. Stalled subject files are the result of an subject
 cache write failing to complete. Invalid subject files are the result of an
 subject file not being written properly to disk.
 
-To remove these types of files, you run the ``glance-cache-cleaner``
+To remove these types of files, you run the ``subject-cache-cleaner``
 executable.
 
-The recommended practice is to use ``cron`` to fire ``glance-cache-cleaner``
+The recommended practice is to use ``cron`` to fire ``subject-cache-cleaner``
 at a semi-regular interval.
 
 Prefetching Subjects into the Subject Cache
@@ -119,16 +119,16 @@ To queue an subject for prefetching, you can use one of the following methods:
    you may call ``PUT /queued-subjects/<IMAGE_ID>`` to queue the subject with
    identifier ``<IMAGE_ID>``
 
-   Alternately, you can use the ``glance-cache-manage`` program to queue the
+   Alternately, you can use the ``subject-cache-manage`` program to queue the
    subject. This program may be run from a different host than the host
    containing the subject cache. Example usage::
 
-     $> glance-cache-manage --host=<HOST> queue-subject <IMAGE_ID>
+     $> subject-cache-manage --host=<HOST> queue-subject <IMAGE_ID>
 
    This will queue the subject with identifier ``<IMAGE_ID>`` for prefetching
 
 Once you have queued the subjects you wish to prefetch, call the
-``glance-cache-prefetcher`` executable, which will prefetch all queued subjects
+``subject-cache-prefetcher`` executable, which will prefetch all queued subjects
 concurrently, logging the results of the fetch for each subject.
 
 Finding Which Subjects are in the Subject Cache
@@ -142,11 +142,11 @@ following methods:
     mappings that show cached subjects, the number of cache hits on each subject,
     the size of the subject, and the times they were last accessed.
 
-    Alternately, you can use the ``glance-cache-manage`` program. This program
+    Alternately, you can use the ``subject-cache-manage`` program. This program
     may be run from a different host than the host containing the subject cache.
     Example usage::
 
-    $> glance-cache-manage --host=<HOST> list-cached
+    $> subject-cache-manage --host=<HOST> list-cached
 
   * You can issue the following call on \*nix systems (on the host that contains
     the subject cache)::
@@ -165,6 +165,6 @@ If the ``cachemanage`` middleware is enabled, you may call
 ``DELETE /cached-subjects/<IMAGE_ID>`` to remove the subject file for subject
 with identifier ``<IMAGE_ID>`` from the cache.
 
-Alternately, you can use the ``glance-cache-manage`` program. Example usage::
+Alternately, you can use the ``subject-cache-manage`` program. Example usage::
 
-  $> glance-cache-manage --host=<HOST> delete-cached-subject <IMAGE_ID>
+  $> subject-cache-manage --host=<HOST> delete-cached-subject <IMAGE_ID>

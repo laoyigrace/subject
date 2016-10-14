@@ -41,7 +41,7 @@ def run(t_id, context, task_repo, subject_repo, subject_factory):
 # NOTE(nikhil): This lock prevents more than N number of threads to be spawn
 # simultaneously. The number N represents the number of threads in the
 # executor pool. The value is set to 10 in the eventlet executor.
-@lockutils.synchronized("glance_import")
+@lockutils.synchronized("subject_import")
 def _execute(t_id, task_repo, subject_repo, subject_factory):
     task = script_utils.get_task(task_repo, t_id)
 

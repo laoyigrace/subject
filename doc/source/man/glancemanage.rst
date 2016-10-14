@@ -1,12 +1,12 @@
 =============
-glance-manage
+subject-manage
 =============
 
 -------------------------
 Glance Management Utility
 -------------------------
 
-:Author: glance@lists.launchpad.net
+:Author: subject@lists.launchpad.net
 :Date:   2016-10-6
 :Copyright: OpenStack Foundation
 :Version: 13.0.0
@@ -16,23 +16,23 @@ Glance Management Utility
 SYNOPSIS
 ========
 
-  glance-manage [options]
+  subject-manage [options]
 
 DESCRIPTION
 ===========
 
-glance-manage is a utility for managing and configuring a Glance installation.
-One important use of glance-manage is to setup the database. To do this run::
+subject-manage is a utility for managing and configuring a Glance installation.
+One important use of subject-manage is to setup the database. To do this run::
 
-    glance-manage db_sync
+    subject-manage db_sync
 
-Note: glance-manage commands can be run either like this::
+Note: subject-manage commands can be run either like this::
 
-    glance-manage db sync
+    subject-manage db sync
 
 or with the db commands concatenated, like this::
 
-    glance-manage db_sync
+    subject-manage db_sync
 
 
 
@@ -44,7 +44,7 @@ COMMANDS
         rather than a _. For example "db version".
 
   **db_version**
-        This will print the current migration level of a glance database.
+        This will print the current migration level of a subject database.
 
   **db_upgrade <VERSION>**
         This will take an existing database and upgrade it to the
@@ -59,14 +59,14 @@ COMMANDS
 
   **db_export_metadefs**
         Export the metadata definitions into json format. By default the
-        definitions are exported to /etc/glance/metadefs directory.
+        definitions are exported to /etc/subject/metadefs directory.
 
   **db_load_metadefs**
-        Load the metadata definitions into glance database. By default the
-        definitions are imported from /etc/glance/metadefs directory.
+        Load the metadata definitions into subject database. By default the
+        definitions are imported from /etc/subject/metadefs directory.
 
   **db_unload_metadefs**
-        Unload the metadata definitions. Clears the contents of all the glance
+        Unload the metadata definitions. Clears the contents of all the subject
         db tables including metadef_namespace_resource_types, metadef_tags,
         metadef_objects, metadef_resource_types, metadef_namespaces and
         metadef_properties.
@@ -87,13 +87,13 @@ OPTIONS
 CONFIGURATION
 =============
 
-The following paths are searched for a ``glance-manage.conf`` file in the
+The following paths are searched for a ``subject-manage.conf`` file in the
 following order:
 
-* ``~/.glance``
+* ``~/.subject``
 * ``~/``
-* ``/etc/glance``
+* ``/etc/subject``
 * ``/etc``
 
-All options set in ``glance-manage.conf`` override those set in
-``glance-registry.conf`` and ``glance-api.conf``.
+All options set in ``subject-manage.conf`` override those set in
+``subject-registry.conf`` and ``subject-api.conf``.

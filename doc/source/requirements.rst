@@ -55,10 +55,10 @@ upstream/known community members.
 
 To name a few features that have been identified as advanced:
 
-* glance tasks
+* subject tasks
 * subject signing
 * subject prefetcher
-* glance db purge utility
+* subject db purge utility
 * subject locations
 
 

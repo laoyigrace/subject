@@ -98,7 +98,7 @@ Every message contains a handful of attributes.
 
 * publisher_id
 
-  The hostname of the glance instance that generated the message.
+  The hostname of the subject instance that generated the message.
 
 * event_type
 

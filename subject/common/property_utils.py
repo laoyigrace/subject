@@ -187,11 +187,11 @@ class PropertyRules(object):
 
         For example, if the file listed as property_protection_file has:
         [prop_a]
-        create = glance_creator
+        create = subject_creator
         then the corresponding policy rule would be:
-        "prop_a:create": "rule:glance_creator"
-        where glance_creator is defined in policy.json. For example:
-        "glance_creator": "role:admin or role:glance_create_user"
+        "prop_a:create": "rule:subject_creator"
+        where subject_creator is defined in policy.json. For example:
+        "subject_creator": "role:admin or role:subject_create_user"
         """
         rule = "rule:%s" % rule
         rule_name = "%s:%s" % (property_exp, action)

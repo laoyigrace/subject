@@ -10,10 +10,10 @@
 #
 # WARNING:
 # * If the reg ex specified below does not compile, then
-# glance-api service will not start. (Guide for reg ex python compiler used:
+# subject-api service will not start. (Guide for reg ex python compiler used:
 # http://docs.python.org/2/library/re.html#regular-expression-syntax)
 # * If an operation(create, read, update, delete) is not specified or misspelt
-# then the glance-api service will not start.
+# then the subject-api service will not start.
 # So, remember, with GREAT POWER comes GREAT RESPONSIBILITY!
 #
 # NOTE: Multiple roles can be specified for a given operation. These roles must

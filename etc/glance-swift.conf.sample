@@ -1,4 +1,4 @@
-# glance-swift.conf.sample
+# subject-swift.conf.sample
 #
 # This file is an example config file when
 # multiple swift accounts/backing stores are enabled.
@@ -8,7 +8,7 @@
 #
 # WARNING:
 # * If any of auth_address, user or key is not specified,
-# the glance-api's swift store will fail to configure
+# the subject-api's swift store will fail to configure
 
 [ref1]
 user = tenant:user1

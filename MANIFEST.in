@@ -7,12 +7,12 @@ include HACKING.rst
 include LICENSE
 include ChangeLog
 include babel.cfg tox.ini
-include glance/db/sqlalchemy/migrate_repo/README
-include glance/db/sqlalchemy/migrate_repo/migrate.cfg
-include glance/db/sqlalchemy/migrate_repo/versions/*.sql
+include subject/db/sqlalchemy/migrate_repo/README
+include subject/db/sqlalchemy/migrate_repo/migrate.cfg
+include subject/db/sqlalchemy/migrate_repo/versions/*.sql
 graft doc
 graft etc
-graft glance/locale
-graft glance/tests
+graft subject/locale
+graft subject/tests
 graft tools
 global-exclude *.pyc

@@ -28,7 +28,7 @@ registry server):
 
 * Manually calling the server program
 
-* Using the ``glance-control`` server daemon wrapper program
+* Using the ``subject-control`` server daemon wrapper program
 
 We recommend using the second method.
 
@@ -50,39 +50,39 @@ do its best to locate a configuration file in one of the
 following directories, stopping at the first config file it finds:
 
 * ``$CWD``
-* ``~/.glance``
+* ``~/.subject``
 * ``~/``
-* ``/etc/glance``
+* ``/etc/subject``
 * ``/etc``
 
 The filename that is searched for depends on the server application name. So,
-if you are starting up the API server, ``glance-api.conf`` is searched for,
-otherwise ``glance-registry.conf``.
+if you are starting up the API server, ``subject-api.conf`` is searched for,
+otherwise ``subject-registry.conf``.
 
 If no configuration file is found, you will see an error, like::
 
-  $> glance-api
-  ERROR: Unable to locate any configuration file. Cannot load application glance-api
+  $> subject-api
+  ERROR: Unable to locate any configuration file. Cannot load application subject-api
 
-Here is an example showing how you can manually start the ``glance-api`` server and ``glance-registry`` in a shell.::
+Here is an example showing how you can manually start the ``subject-api`` server and ``subject-registry`` in a shell.::
 
-  $ sudo glance-api --config-file glance-api.conf --debug &
-  jsuh@mc-ats1:~$ 2011-04-13 14:50:12    DEBUG [glance-api] ********************************************************************************
-  2011-04-13 14:50:12    DEBUG [glance-api] Configuration options gathered from config file:
-  2011-04-13 14:50:12    DEBUG [glance-api] /home/jsuh/glance-api.conf
-  2011-04-13 14:50:12    DEBUG [glance-api] ================================================
-  2011-04-13 14:50:12    DEBUG [glance-api] bind_host                      65.114.169.29
-  2011-04-13 14:50:12    DEBUG [glance-api] bind_port                      9292
-  2011-04-13 14:50:12    DEBUG [glance-api] debug                          True
-  2011-04-13 14:50:12    DEBUG [glance-api] default_store                  file
-  2011-04-13 14:50:12    DEBUG [glance-api] filesystem_store_datadir       /home/jsuh/subjects/
-  2011-04-13 14:50:12    DEBUG [glance-api] registry_host                  65.114.169.29
-  2011-04-13 14:50:12    DEBUG [glance-api] registry_port                  9191
-  2011-04-13 14:50:12    DEBUG [glance-api] ********************************************************************************
+  $ sudo subject-api --config-file subject-api.conf --debug &
+  jsuh@mc-ats1:~$ 2011-04-13 14:50:12    DEBUG [subject-api] ********************************************************************************
+  2011-04-13 14:50:12    DEBUG [subject-api] Configuration options gathered from config file:
+  2011-04-13 14:50:12    DEBUG [subject-api] /home/jsuh/subject-api.conf
+  2011-04-13 14:50:12    DEBUG [subject-api] ================================================
+  2011-04-13 14:50:12    DEBUG [subject-api] bind_host                      65.114.169.29
+  2011-04-13 14:50:12    DEBUG [subject-api] bind_port                      9292
+  2011-04-13 14:50:12    DEBUG [subject-api] debug                          True
+  2011-04-13 14:50:12    DEBUG [subject-api] default_store                  file
+  2011-04-13 14:50:12    DEBUG [subject-api] filesystem_store_datadir       /home/jsuh/subjects/
+  2011-04-13 14:50:12    DEBUG [subject-api] registry_host                  65.114.169.29
+  2011-04-13 14:50:12    DEBUG [subject-api] registry_port                  9191
+  2011-04-13 14:50:12    DEBUG [subject-api] ********************************************************************************
   2011-04-13 14:50:12    DEBUG [routes.middleware] Initialized with method overriding = True, and path info altering = True
   2011-04-13 14:50:12    DEBUG [eventlet.wsgi.server] (21354) wsgi starting up on http://65.114.169.29:9292/
 
-  $ sudo glance-registry --config-file glance-registry.conf &
+  $ sudo subject-registry --config-file subject-registry.conf &
   jsuh@mc-ats1:~$ 2011-04-13 14:51:16     INFO [sqlalchemy.engine.base.Engine.0x...feac] PRAGMA table_info("subjects")
   2011-04-13 14:51:16     INFO [sqlalchemy.engine.base.Engine.0x...feac] ()
   2011-04-13 14:51:16    DEBUG [sqlalchemy.engine.base.Engine.0x...feac] Col ('cid', 'name', 'type', 'notnull', 'dflt_value', 'pk')
@@ -110,13 +110,13 @@ Here is an example showing how you can manually start the ``glance-api`` server 
   2011-04-13 14:51:16    DEBUG [sqlalchemy.engine.base.Engine.0x...feac] Row (6, u'key', u'VARCHAR(255)', 1, None, 0)
   2011-04-13 14:51:16    DEBUG [sqlalchemy.engine.base.Engine.0x...feac] Row (7, u'value', u'TEXT', 0, None, 0)
 
-  $ ps aux | grep glance
-  root     20009  0.7  0.1  12744  9148 pts/1    S    12:47   0:00 /usr/bin/python /usr/bin/glance-api glance-api.conf --debug
-  root     20012  2.0  0.1  25188 13356 pts/1    S    12:47   0:00 /usr/bin/python /usr/bin/glance-registry glance-registry.conf
-  jsuh     20017  0.0  0.0   3368   744 pts/1    S+   12:47   0:00 grep glance
+  $ ps aux | grep subject
+  root     20009  0.7  0.1  12744  9148 pts/1    S    12:47   0:00 /usr/bin/python /usr/bin/subject-api subject-api.conf --debug
+  root     20012  2.0  0.1  25188 13356 pts/1    S    12:47   0:00 /usr/bin/python /usr/bin/subject-registry subject-registry.conf
+  jsuh     20017  0.0  0.0   3368   744 pts/1    S+   12:47   0:00 grep subject
 
 Simply supply the configuration file as the parameter to the ``--config-file`` option
-(the ``etc/glance-api.conf`` and  ``etc/glance-registry.conf`` sample configuration
+(the ``etc/subject-api.conf`` and  ``etc/subject-registry.conf`` sample configuration
 files were used in the above example) and then any other options
 you want to use. (``--debug`` was used above to show some of the debugging
 output that the server shows when starting up. Call the server program
@@ -129,70 +129,70 @@ configuration files, see the section entitled
 
 Note that the server `daemonizes` itself by using the standard
 shell backgrounding indicator, ``&``, in the previous example. For most use cases, we recommend
-using the ``glance-control`` server daemon wrapper for daemonizing. See below
-for more details on daemonization with ``glance-control``.
+using the ``subject-control`` server daemon wrapper for daemonizing. See below
+for more details on daemonization with ``subject-control``.
 
-Using the ``glance-control`` program to start the server
+Using the ``subject-control`` program to start the server
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The second way to start up a Glance server is to use the ``glance-control``
-program. ``glance-control`` is a wrapper script that allows the user to
+The second way to start up a Glance server is to use the ``subject-control``
+program. ``subject-control`` is a wrapper script that allows the user to
 start, stop, restart, and reload the other Glance server programs in
 a fashion that is more conducive to automation and scripting.
 
-Servers started via the ``glance-control`` program are always `daemonized`,
+Servers started via the ``subject-control`` program are always `daemonized`,
 meaning that the server program process runs in the background.
 
-To start a Glance server with ``glance-control``, simply call
-``glance-control`` with a server and the word "start", followed by
-any command-line options you wish to provide. Start the server with ``glance-control``
+To start a Glance server with ``subject-control``, simply call
+``subject-control`` with a server and the word "start", followed by
+any command-line options you wish to provide. Start the server with ``subject-control``
 in the following way::
 
-  $> sudo glance-control [OPTIONS] <SERVER> start [CONFPATH]
+  $> sudo subject-control [OPTIONS] <SERVER> start [CONFPATH]
 
 .. note::
 
-  You must use the ``sudo`` program to run ``glance-control`` currently, as the
-  pid files for the server programs are written to /var/run/glance/
+  You must use the ``sudo`` program to run ``subject-control`` currently, as the
+  pid files for the server programs are written to /var/run/subject/
 
-Here is an example that shows how to start the ``glance-registry`` server
-with the ``glance-control`` wrapper script. ::
-
-
-  $ sudo glance-control api start glance-api.conf
-  Starting glance-api with /home/jsuh/glance.conf
-
-  $ sudo glance-control registry start glance-registry.conf
-  Starting glance-registry with /home/jsuh/glance.conf
-
-  $ ps aux | grep glance
-  root     20038  4.0  0.1  12728  9116 ?        Ss   12:51   0:00 /usr/bin/python /usr/bin/glance-api /home/jsuh/glance-api.conf
-  root     20039  6.0  0.1  25188 13356 ?        Ss   12:51   0:00 /usr/bin/python /usr/bin/glance-registry /home/jsuh/glance-registry.conf
-  jsuh     20042  0.0  0.0   3368   744 pts/1    S+   12:51   0:00 grep glance
+Here is an example that shows how to start the ``subject-registry`` server
+with the ``subject-control`` wrapper script. ::
 
 
-The same configuration files are used by ``glance-control`` to start the
+  $ sudo subject-control api start subject-api.conf
+  Starting subject-api with /home/jsuh/subject.conf
+
+  $ sudo subject-control registry start subject-registry.conf
+  Starting subject-registry with /home/jsuh/subject.conf
+
+  $ ps aux | grep subject
+  root     20038  4.0  0.1  12728  9116 ?        Ss   12:51   0:00 /usr/bin/python /usr/bin/subject-api /home/jsuh/subject-api.conf
+  root     20039  6.0  0.1  25188 13356 ?        Ss   12:51   0:00 /usr/bin/python /usr/bin/subject-registry /home/jsuh/subject-registry.conf
+  jsuh     20042  0.0  0.0   3368   744 pts/1    S+   12:51   0:00 grep subject
+
+
+The same configuration files are used by ``subject-control`` to start the
 Glance server programs, and you can specify (as the example above shows)
 a configuration file when starting the server.
 
 
-In order for your launched glance service to be monitored for unexpected death
+In order for your launched subject service to be monitored for unexpected death
 and respawned if necessary, use the following option:
 
 
-  $ sudo glance-control [service] start --respawn ...
+  $ sudo subject-control [service] start --respawn ...
 
 
-Note that this will cause ``glance-control`` itself to remain running. Also note
+Note that this will cause ``subject-control`` itself to remain running. Also note
 that deliberately stopped services are not respawned, neither are rapidly bouncing
 services (where process death occurred within one second of the last launch).
 
 
-By default, output from glance services is discarded when launched with ``glance-control``.
+By default, output from subject services is discarded when launched with ``subject-control``.
 In order to capture such output via syslog, use the following option:
 
 
-  $ sudo glance-control --capture-output ...
+  $ sudo subject-control --capture-output ...
 
 
 Stopping a server
@@ -202,34 +202,34 @@ If you started a Glance server manually and did not use the ``&`` backgrounding
 function, simply send a terminate signal to the server process by typing
 ``Ctrl-C``
 
-If you started the Glance server using the ``glance-control`` program, you can
-use the ``glance-control`` program to stop it. Simply do the following::
+If you started the Glance server using the ``subject-control`` program, you can
+use the ``subject-control`` program to stop it. Simply do the following::
 
-  $> sudo glance-control <SERVER> stop
+  $> sudo subject-control <SERVER> stop
 
 as this example shows::
 
-  $> sudo glance-control registry stop
-  Stopping glance-registry  pid: 17602  signal: 15
+  $> sudo subject-control registry stop
+  Stopping subject-registry  pid: 17602  signal: 15
 
 Restarting a server
 -------------------
 
-You can restart a server with the ``glance-control`` program, as demonstrated
+You can restart a server with the ``subject-control`` program, as demonstrated
 here::
 
-  $> sudo glance-control registry restart etc/glance-registry.conf
-  Stopping glance-registry  pid: 17611  signal: 15
-  Starting glance-registry with /home/jpipes/repos/glance/trunk/etc/glance-registry.conf
+  $> sudo subject-control registry restart etc/subject-registry.conf
+  Stopping subject-registry  pid: 17611  signal: 15
+  Starting subject-registry with /home/jpipes/repos/subject/trunk/etc/subject-registry.conf
 
 Reloading a server
 -------------------
 
-You can reload a server with the ``glance-control`` program, as demonstrated
+You can reload a server with the ``subject-control`` program, as demonstrated
 here::
 
-  $> sudo glance-control api reload
-  Reloading glance-api (pid 18506) with signal(1)
+  $> sudo subject-control api reload
+  Reloading subject-api (pid 18506) with signal(1)
 
 A reload sends a SIGHUP signal to the master process and causes new configuration
 settings to be picked up without any interruption to the running service (provided

@@ -1,12 +1,12 @@
 ===============
-glance-registry
+subject-registry
 ===============
 
 --------------------------------------
 Server for the Glance Registry Service
 --------------------------------------
 
-:Author: glance@lists.launchpad.net
+:Author: subject@lists.launchpad.net
 :Date:   2016-10-6
 :Copyright: OpenStack Foundation
 :Version: 13.0.0
@@ -16,12 +16,12 @@ Server for the Glance Registry Service
 SYNOPSIS
 ========
 
-glance-registry [options]
+subject-registry [options]
 
 DESCRIPTION
 ===========
 
-glance-registry is a server daemon that serves subject metadata through a
+subject-registry is a server daemon that serves subject metadata through a
 REST-like API.
 
 OPTIONS
@@ -34,7 +34,7 @@ OPTIONS
 FILES
 =====
 
-  **/etc/glance/glance-registry.conf**
+  **/etc/subject/subject-registry.conf**
         Default configuration file for Glance Registry
 
 .. include:: footer.rst

@@ -87,7 +87,7 @@ Property img_signature_certificate_uuid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This is the UUID of the certificate that you upload to Barbican.
 
-Therefore the type passed to glance is:
+Therefore the type passed to subject is:
 
 * UUID
 
@@ -144,12 +144,12 @@ Get an subject and create the signature::
 
 Create the subject::
 
-  $ glance subject-create --name mySignedSubject --container-format bare --disk-format qcow2 --property img_signature="$subject_signature" --property img_signature_certificate_uuid="$cert_uuid" --property img_signature_hash_method='SHA-256' --property img_signature_key_type='RSA-PSS' < mysubject
+  $ subject subject-create --name mySignedSubject --container-format bare --disk-format qcow2 --property img_signature="$subject_signature" --property img_signature_certificate_uuid="$cert_uuid" --property img_signature_hash_method='SHA-256' --property img_signature_key_type='RSA-PSS' < mysubject
 
 .. note:: Creating the subject can fail if validation does not succeed.
           This will cause the subject to be deleted.
 
 Other Links
 -----------
-* https://etherpad.openstack.org/p/mitaka-glance-subject-signing-instructions
+* https://etherpad.openstack.org/p/mitaka-subject-subject-signing-instructions
 * http://docs.openstack.org/ops-guide/ops_user_facing_operations.html

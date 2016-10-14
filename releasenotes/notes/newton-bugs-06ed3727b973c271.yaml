@@ -12,14 +12,14 @@ fixes:
       NOT up to date to include v2.3
     * bug 1602081: Glance needs to use oslo.context's
       policy dict
-    * bug 1599169: glance-replicator size raises object of
+    * bug 1599169: subject-replicator size raises object of
       type 'NoneType' has no len() exception when no args
       provided
-    * bug 1599192: glance-replicator needs to display
+    * bug 1599192: subject-replicator needs to display
       human-readable size
     * bug 1585917: member-create will raise 500 error if
       member-id is greater than 255 characters
-    * bug 1598985: glance-replicator compare output should
+    * bug 1598985: subject-replicator compare output should
       show subject name in addition to subject id for missing
       subjects
     * bug 1533949: Glance tasks missing configuration item
@@ -35,7 +35,7 @@ fixes:
       specified
     * bug 1590608: Services should use http_proxy_to_wsgi
       middleware from oslo.middleware library
-    * bug 1584350: etc/glance-registry.conf sample file has
+    * bug 1584350: etc/subject-registry.conf sample file has
       redundant store section
     * bug 1543937: db-purge fails for very large number
     * bug 1580848: There's no exception when import task is
@@ -45,10 +45,10 @@ fixes:
     * bug 1582304: Allow tests to run when http proxy is set
     * bug 1570789: Metadefs API returns 500 error when 4
       byte unicode character is passed
-    * bug 1532243: glance fails silently if a task flow
+    * bug 1532243: subject fails silently if a task flow
       can not be loaded
     * bug 1568894: subject_store options missing in
-      glance-scrubber.conf and glance-cache.conf sample
+      subject-scrubber.conf and subject-cache.conf sample
       files
     * bug 1568723: secure_proxy_ssl_header not in sample
       configuration files

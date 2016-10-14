@@ -1,12 +1,12 @@
 =======================
-glance-cache-prefetcher
+subject-cache-prefetcher
 =======================
 
 ------------------------------
 Glance Subject Cache Pre-fetcher
 ------------------------------
 
-:Author: glance@lists.launchpad.net
+:Author: subject@lists.launchpad.net
 :Date:   2016-10-6
 :Copyright: OpenStack Foundation
 :Version: 13.0.0
@@ -16,7 +16,7 @@ Glance Subject Cache Pre-fetcher
 SYNOPSIS
 ========
 
-  glance-cache-prefetcher [options]
+  subject-cache-prefetcher [options]
 
 DESCRIPTION
 ===========
@@ -34,7 +34,7 @@ OPTIONS
 FILES
 =====
 
-    **/etc/glance/glance-cache.conf**
+    **/etc/subject/subject-cache.conf**
         Default configuration file for the Glance Cache
 
 .. include:: footer.rst

@@ -1,12 +1,12 @@
 ===================
-glance-cache-manage
+subject-cache-manage
 ===================
 
 ------------------------
 Cache management utility
 ------------------------
 
-:Author: glance@lists.launchpad.net
+:Author: subject@lists.launchpad.net
 :Date:   2016-10-6
 :Copyright: OpenStack Foundation
 :Version: 13.0.0
@@ -16,7 +16,7 @@ Cache management utility
 SYNOPSIS
 ========
 
-  glance-cache-manage <command> [options] [args]
+  subject-cache-manage <command> [options] [args]
 
 COMMANDS
 ========
@@ -69,13 +69,13 @@ OPTIONS
         Default: 9292
 
   **-k, --insecure**
-        Explicitly allow glance to perform "insecure" SSL
+        Explicitly allow subject to perform "insecure" SSL
         (https) requests. The server's certificate will not be
         verified against any certificate authorities. This
         option should be used with caution.
 
   **-A TOKEN, --auth_token=TOKEN**
-        Authentication token to use to identify the client to the glance server
+        Authentication token to use to identify the client to the subject server
 
   **-f, --force**
         Prevent select actions from requesting user confirmation

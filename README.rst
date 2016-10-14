@@ -7,5 +7,5 @@ retrieving and storing virtual machine subjects.
 
 Use the following resources to learn more:
 
-* `Official Glance documentation <http://docs.openstack.org/developer/glance/>`_
-* `Official Client documentation <http://docs.openstack.org/developer/python-glanceclient/>`_
+* `Official Glance documentation <http://docs.openstack.org/developer/subject/>`_
+* `Official Client documentation <http://docs.openstack.org/developer/python-subjectclient/>`_

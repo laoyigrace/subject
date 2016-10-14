@@ -98,9 +98,9 @@ Using Glance
 .. toctree::
    :maxdepth: 1
 
-   glanceapi
-   glanceclient
-   glancemetadefcatalogapi
+   subjectapi
+   subjectclient
+   subjectmetadefcatalogapi
    signature
 
 Glance Manual Pages

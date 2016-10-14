@@ -1,12 +1,12 @@
 =================
-glance-replicator
+subject-replicator
 =================
 
 ---------------------------------------------
 Replicate subjects across multiple data centers
 ---------------------------------------------
 
-:Author: glance@lists.launchpad.net
+:Author: subject@lists.launchpad.net
 :Date:   2016-10-6
 :Copyright: OpenStack Foundation
 :Version: 13.0.0
@@ -16,14 +16,14 @@ Replicate subjects across multiple data centers
 SYNOPSIS
 ========
 
-glance-replicator <command> [options] [args]
+subject-replicator <command> [options] [args]
 
 DESCRIPTION
 ===========
 
-glance-replicator is a utility can be used to populate a new glance
-server using the subjects stored in an existing glance server. The subjects
-in the replicated glance server preserve the uuids, metadata, and subject
+subject-replicator is a utility can be used to populate a new subject
+server using the subjects stored in an existing subject server. The subjects
+in the replicated subject server preserve the uuids, metadata, and subject
 data from the original.
 
 COMMANDS
@@ -33,19 +33,19 @@ COMMANDS
         Output help for one of the commands below
 
   **compare**
-        What is missing from the slave glance?
+        What is missing from the slave subject?
 
   **dump**
-        Dump the contents of a glance instance to local disk.
+        Dump the contents of a subject instance to local disk.
 
   **livecopy**
-       Load the contents of one glance instance into another.
+       Load the contents of one subject instance into another.
 
   **load**
-        Load the contents of a local directory into glance.
+        Load the contents of a local directory into subject.
 
   **size**
-        Determine the size of a glance instance if dumped to disk.
+        Determine the size of a subject instance if dumped to disk.
 
 OPTIONS
 =======

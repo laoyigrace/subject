@@ -46,7 +46,7 @@ Configuring Glance API to use Keystone
 
 Configuring Glance API to use Keystone is relatively straight
 forward.  The first step is to ensure that declarations for the two
-pieces of middleware exist in the ``glance-api-paste.ini``.  Here is
+pieces of middleware exist in the ``subject-api-paste.ini``.  Here is
 an example for ``authtoken``::
 
   [filter:authtoken]
@@ -55,7 +55,7 @@ an example for ``authtoken``::
   project_domain_id = default
   project_name = service_admins
   user_domain_id = default
-  username = glance_admin
+  username = subject_admin
   password = password1234
 
 The actual values for these variables will need to be set depending on
@@ -77,14 +77,14 @@ In short:
 Finally, to actually enable using Keystone authentication, the
 application pipeline must be modified.  By default, it looks like::
 
-  [pipeline:glance-api]
+  [pipeline:subject-api]
   pipeline = versionnegotiation unauthenticated-context apiv1app
 
 Your particular pipeline may vary depending on other options, such as
 the subject cache. This must be changed by replacing ``unauthenticated-context``
 with ``authtoken`` and ``context``::
 
-  [pipeline:glance-api]
+  [pipeline:subject-api]
   pipeline = versionnegotiation authtoken context apiv1app
 
 
@@ -93,16 +93,16 @@ Configuring Glance Registry to use Keystone
 
 Configuring Glance Registry to use Keystone is also relatively
 straight forward.  The same middleware needs to be added
-to ``glance-registry-paste.ini`` as was needed by Glance API;
+to ``subject-registry-paste.ini`` as was needed by Glance API;
 see above for an example of the ``authtoken`` configuration.
 
 Again, to enable using Keystone authentication, the appropriate
 application pipeline must be selected.  By default, it looks like::
 
-  [pipeline:glance-registry-keystone]
+  [pipeline:subject-registry-keystone]
   pipeline = authtoken context registryapp
 
-To enable the above application pipeline, in your main ``glance-registry.conf``
+To enable the above application pipeline, in your main ``subject-registry.conf``
 configuration file, select the appropriate deployment flavor by adding a
 ``flavor`` attribute in the ``paste_deploy`` group::
 
@@ -112,5 +112,5 @@ configuration file, select the appropriate deployment flavor by adding a
 .. note::
   If your authentication service uses a role other than ``admin`` to identify
   which users should be granted admin-level privileges, you must define it
-  in the ``admin_role`` config attribute in both ``glance-registry.conf`` and
-  ``glance-api.conf``.
+  in the ``admin_role`` config attribute in both ``subject-registry.conf`` and
+  ``subject-api.conf``.

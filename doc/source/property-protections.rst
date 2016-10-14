@@ -43,37 +43,37 @@ expression matching a set of properties to be protected.
 .. note::
 
   Section headers must compile to a valid regular expression, otherwise 
-  glance api service will not start. Regular expressions
+  subject api service will not start. Regular expressions
   will be handled by python's re module which is PERL like.
 
 Each section describes four key-value pairs, where the key is one of
 ``create/read/update/delete``, and the value is a comma separated list of user
 roles that are permitted to perform that operation in the Glance API. **If any of
-the keys are not specified, then the glance api service will not start
+the keys are not specified, then the subject api service will not start
 successfully.**
 
 In the list of user roles, ``@`` means all roles and ``!`` means no role.
-**If both @ and ! are specified for the same rule then the glance api service
+**If both @ and ! are specified for the same rule then the subject api service
 will not start**
 
 .. note::
 
   Only one policy rule is allowed per property operation. **If multiple are
-  specified, then the glance api service will not start.**
+  specified, then the subject api service will not start.**
 
 The path to the file should be specified in the ``[DEFAULT]`` section of
-``glance-api.conf`` as follows.
+``subject-api.conf`` as follows.
 
  ::
 
   property_protection_file=/path/to/file
 
 If this config value is not specified, property protections are not enforced.
-**If the path is invalid, glance api service will not start successfully.**
+**If the path is invalid, subject api service will not start successfully.**
 
 The file may use either roles or policies to describe the property protections.
 The config value should be specified in the ``[DEFAULT]`` section of
-``glance-api.conf`` as follows.
+``subject-api.conf`` as follows.
 
  ::
 
@@ -96,11 +96,11 @@ Disallowing ``read`` operations will also disallow ``update/delete`` operations.
 A successful HTTP request will return status ``200 OK``. If the user is not
 permitted to perform the requested action, ``403 Forbidden`` will be returned.
 
-V1 API X-glance-registry-Purge-props
+V1 API X-subject-registry-Purge-props
 ------------------------------------
 
 Property protections will still be honoured if
-``X-glance-registry-Purge-props`` is set to ``True``. That is, if you request
+``X-subject-registry-Purge-props`` is set to ``True``. That is, if you request
 to modify properties with this header set to ``True``, you will not be able to
 delete or update properties for which you do not have the relevant permissions.
 Properties which are not included in the request and for which you do have

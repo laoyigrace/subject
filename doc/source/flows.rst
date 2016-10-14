@@ -20,11 +20,11 @@ Glance Flow Plugins
 Flows
 -----
 
-.. list-plugins:: glance.flows
+.. list-plugins:: subject.flows
    :detailed:
 
 Import Flows
 ------------
 
-.. list-plugins:: glance.flows.import
+.. list-plugins:: subject.flows.import
    :detailed:

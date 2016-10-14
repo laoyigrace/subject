@@ -1,6 +1,6 @@
 *.pyc
 *.log
-.glance-venv
+.subject-venv
 .venv
 .testrepository/
 .tox
@@ -9,14 +9,14 @@ cover/*
 covhtml
 nosetests.xml
 coverage.xml
-glance.sqlite
+subject.sqlite
 AUTHORS
 ChangeLog
 build
 dist
 *.egg
 .eggs/*
-glance.egg-info
+subject.egg-info
 tests.sqlite
 subject/versioninfo
 subunit.log
