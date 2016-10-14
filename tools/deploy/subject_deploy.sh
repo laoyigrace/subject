@@ -197,6 +197,25 @@ EOF
 
 }
 
+mysql_install()
+{
+    yum install -y mysql-server mysql mysql-devel
+    service mariadb restart
+
+    /usr/bin/mysqladmin -u root password '${mysqldbpassword}'
+    cat << EOF >/root/.my.cnf
+[mysql]
+user=root
+host=localhost
+password='${mysqldbpassword}'
+socket=/var/lib/mysql/mysql.sock
+EOF
+}
+soft_install()
+{
+    echo "show database;" | mysql || mysql_install
+}
+
 main()
 {
     script_dir=`dirname $0`
@@ -211,6 +230,7 @@ main()
     fi
 
     attrs_init
+    soft_install
     mkdir -p "${state_path}"
     mkdir -p "${state_path}/subjects"
     mkdir -p "${log_dir}"
