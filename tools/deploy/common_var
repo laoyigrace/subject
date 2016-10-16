@@ -1,0 +1,27 @@
+
+
+ATTRS="mysqldbadm mysqldbpassword mysqldbport dbbackendhost \
+subjectdbname subjectdbuser subjectdbpass bind_host \
+bind_port backlog registry_host registry_port \
+log_dir connection stores default_store filesystem_store_datadir \
+auth_uri identity_uri admin_password admin_tenant_name admin_user \
+amqp_durable_queues rabbit_host rabbit_port rabbit_hosts \
+rabbit_use_ssl rabbit_password rabbit_virtual_host rabbit_ha_queues \
+heartbeat_rate flavor state_path endpointsregion publicurl adminurl internalurl \
+subject_service"
+
+attrs_init()
+{
+    for attr in ${ATTRS}; do
+        crudini --get "${CONF_FILE}" CONF $attr 2>/dev/null
+        if [ $? -ne 0 ]; then
+            die 1 "get attr($attr) from $CONF_FILE failed!"
+        fi
+        attr_value=`crudini --get "${CONF_FILE}" CONF $attr`
+        eval "export $attr=$attr_value"
+
+        echo "$attr=$attr_value"
+    done
+}
+
+attrs_init
