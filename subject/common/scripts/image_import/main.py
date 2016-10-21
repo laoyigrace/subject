@@ -23,7 +23,7 @@ from oslo_utils import encodeutils
 from oslo_utils import excutils
 import six
 
-from subject.api.v2 import subjects as v2_api
+from subject.api.v1 import subjects as v2_api
 from subject.common import exception
 from subject.common.scripts import utils as script_utils
 from subject.common import store_utils

@@ -13,18 +13,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from subject.api.v2 import subject_actions
-from subject.api.v2 import subject_data
-from subject.api.v2 import subject_members
-from subject.api.v2 import subject_tags
-from subject.api.v2 import subjects
-from subject.api.v2 import metadef_namespaces
-from subject.api.v2 import metadef_objects
-from subject.api.v2 import metadef_properties
-from subject.api.v2 import metadef_resource_types
-from subject.api.v2 import metadef_tags
-from subject.api.v2 import schemas
-from subject.api.v2 import tasks
+from subject.api.v1 import subject_data
+from subject.api.v1 import subjects
 from subject.common import wsgi
 
 

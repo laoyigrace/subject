@@ -43,22 +43,12 @@ import sqlalchemy.sql as sa_sql
 from subject.common import exception
 from subject.common import timeutils
 from subject.common import utils
-from subject.db.sqlalchemy import glare
-from subject.db.sqlalchemy.metadef_api import (resource_type
-                                              as metadef_resource_type_api)
-from subject.db.sqlalchemy.metadef_api import (resource_type_association
-                                              as metadef_association_api)
-from subject.db.sqlalchemy.metadef_api import namespace as metadef_namespace_api
-from subject.db.sqlalchemy.metadef_api import object as metadef_object_api
-from subject.db.sqlalchemy.metadef_api import property as metadef_property_api
-from subject.db.sqlalchemy.metadef_api import tag as metadef_tag_api
 from subject.db.sqlalchemy import models
 from subject import glare as ga
 from subject.i18n import _, _LW, _LI
 
 sa_logger = None
 LOG = logging.getLogger(__name__)
-
 
 STATUSES = ['active', 'saving', 'queued', 'killed', 'pending_delete',
             'deleted', 'deactivated']
@@ -147,14 +137,14 @@ def subject_create(context, values):
 
 
 def subject_update(context, subject_id, values, purge_props=False,
-                 from_state=None):
+                   from_state=None):
     """
     Set the given properties on an subject and update it.
 
     :raises: SubjectNotFound if subject does not exist.
     """
     return _subject_update(context, values, subject_id, purge_props,
-                         from_state=from_state)
+                           from_state=from_state)
 
 
 @retry(retry_on_exception=_retry_on_deadlock, wait_fixed=500,
@@ -200,10 +190,10 @@ def _normalize_locations(context, subject, force_show_deleted=False):
     else:
         locations = [x for x in subject['locations'] if not x.deleted]
     subject['locations'] = [{'id': loc['id'],
-                           'url': loc['value'],
-                           'metadata': loc['meta_data'],
-                           'status': loc['status']}
-                          for loc in locations]
+                             'url': loc['value'],
+                             'metadata': loc['meta_data'],
+                             'status': loc['status']}
+                            for loc in locations]
     return subject
 
 
@@ -215,9 +205,9 @@ def _normalize_tags(subject):
 
 def subject_get(context, subject_id, session=None, force_show_deleted=False):
     subject = _subject_get(context, subject_id, session=session,
-                       force_show_deleted=force_show_deleted)
+                           force_show_deleted=force_show_deleted)
     subject = _normalize_locations(context, subject.to_dict(),
-                                 force_show_deleted=force_show_deleted)
+                                   force_show_deleted=force_show_deleted)
     return subject
 
 
@@ -231,7 +221,8 @@ def _check_subject_id(subject_id):
     :returns: Raise NoFound exception if given subject id is invalid
     """
     if (subject_id and
-       len(subject_id) > models.Subject.id.property.columns[0].type.length):
+                len(subject_id) > models.Subject.id.property.columns[
+                0].type.length):
         raise exception.SubjectNotFound()
 
 
@@ -243,8 +234,8 @@ def _subject_get(context, subject_id, session=None, force_show_deleted=False):
     try:
         query = session.query(models.Subject).options(
             sa_orm.joinedload(models.Subject.properties)).options(
-                sa_orm.joinedload(
-                    models.Subject.locations)).filter_by(id=subject_id)
+            sa_orm.joinedload(
+                models.Subject.locations)).filter_by(id=subject_id)
 
         # filter out deleted subjects if context disallows it
         if not force_show_deleted and not context.can_see_deleted:
@@ -301,9 +292,9 @@ def is_subject_visible(context, subject, status=None):
 
         # Figure out if this subject is shared with that tenant
         members = subject_member_find(context,
-                                    subject_id=subject['id'],
-                                    member=context.owner,
-                                    status=status)
+                                      subject_id=subject['id'],
+                                      member=context.owner,
+                                      status=status)
         if members:
             return True
 
@@ -367,7 +358,7 @@ def _paginate_query(query, model, limit, sort_keys, marker=None,
         # the actual primary key, rather than assuming its id
         LOG.warn(_LW('Id not in sort_keys; is sort_keys unique?'))
 
-    assert(not (sort_dir and sort_dirs))  # nosec
+    assert (not (sort_dir and sort_dirs))  # nosec
     # nosec: This function runs safely if the assertion fails.
 
     # Default the sort direction to ascending
@@ -378,7 +369,7 @@ def _paginate_query(query, model, limit, sort_keys, marker=None,
     if sort_dirs is None:
         sort_dirs = [sort_dir] * len(sort_keys)
 
-    assert(len(sort_dirs) == len(sort_keys))  # nosec
+    assert (len(sort_dirs) == len(sort_keys))  # nosec
     # nosec: This function runs safely if the assertion fails.
     if len(sort_dirs) < len(sort_keys):
         sort_dirs += [sort_dir] * (len(sort_keys) - len(sort_dirs))
@@ -416,7 +407,7 @@ def _paginate_query(query, model, limit, sort_keys, marker=None,
                 default = _get_default_column_value(
                     model_attr.property.columns[0].type)
                 attr = sa_sql.expression.case([(model_attr != None,
-                                              model_attr), ],
+                                                model_attr), ],
                                               else_=default)
                 crit_attrs.append((attr == marker_values[j]))
 
@@ -424,7 +415,7 @@ def _paginate_query(query, model, limit, sort_keys, marker=None,
             default = _get_default_column_value(
                 model_attr.property.columns[0].type)
             attr = sa_sql.expression.case([(model_attr != None,
-                                          model_attr), ],
+                                            model_attr), ],
                                           else_=default)
             if sort_dirs[i] == 'desc':
                 crit_attrs.append((attr < marker_values[i]))
@@ -484,7 +475,8 @@ def _make_conditions_from_filters(filters, is_public=None):
         # TODO(bcwaldon): handle this logic in registry server
         if not deleted_filter:
             subject_statuses = [s for s in STATUSES if s != 'killed']
-            subject_conditions.append(models.Subject.status.in_(subject_statuses))
+            subject_conditions.append(
+                models.Subject.status.in_(subject_statuses))
 
     if 'tags' in filters:
         tags = filters.pop('tags')
@@ -560,7 +552,7 @@ def _make_subject_property_condition(key, value):
 
 
 def _select_subjects_query(context, subject_conditions, admin_as_user,
-                         member_status, visibility):
+                           member_status, visibility):
     session = get_session()
 
     img_conditional_clause = sa_sql.and_(*subject_conditions)
@@ -572,7 +564,8 @@ def _select_subjects_query(context, subject_conditions, admin_as_user,
     if regular_user:
         member_filters = [models.SubjectMember.deleted == False]
         if context.owner is not None:
-            member_filters.extend([models.SubjectMember.member == context.owner])
+            member_filters.extend(
+                [models.SubjectMember.member == context.owner])
             if member_status != 'all':
                 member_filters.extend([
                     models.SubjectMember.status == member_status])
@@ -590,7 +583,7 @@ def _select_subjects_query(context, subject_conditions, admin_as_user,
         if context.owner is not None:
             query_subject_owner = session.query(models.Subject).filter(
                 models.Subject.owner == context.owner).filter(
-                    img_conditional_clause)
+                img_conditional_clause)
         if query_subject_owner is not None:
             query = query_subject.union(query_subject_owner, query_member)
         else:
@@ -602,9 +595,9 @@ def _select_subjects_query(context, subject_conditions, admin_as_user,
 
 
 def subject_get_all(context, filters=None, marker=None, limit=None,
-                  sort_key=None, sort_dir=None,
-                  member_status='accepted', is_public=None,
-                  admin_as_user=False, return_tag=False):
+                    sort_key=None, sort_dir=None,
+                    member_status='accepted', is_public=None,
+                    admin_as_user=False, return_tag=False):
     """
     Get all subjects that match zero or more filters.
 
@@ -646,10 +639,10 @@ def subject_get_all(context, filters=None, marker=None, limit=None,
         filters, is_public)
 
     query = _select_subjects_query(context,
-                                 img_cond,
-                                 admin_as_user,
-                                 member_status,
-                                 visibility)
+                                   img_cond,
+                                   admin_as_user,
+                                   member_status,
+                                   visibility)
 
     if visibility is not None:
         if visibility == 'public':
@@ -670,8 +663,8 @@ def subject_get_all(context, filters=None, marker=None, limit=None,
     marker_subject = None
     if marker is not None:
         marker_subject = _subject_get(context,
-                                  marker,
-                                  force_show_deleted=showing_deleted)
+                                      marker,
+                                      force_show_deleted=showing_deleted)
 
     for key in ['created_at', 'id']:
         if key not in sort_key:
@@ -686,7 +679,7 @@ def subject_get_all(context, filters=None, marker=None, limit=None,
 
     query = query.options(sa_orm.joinedload(
         models.Subject.properties)).options(
-            sa_orm.joinedload(models.Subject.locations))
+        sa_orm.joinedload(models.Subject.locations))
     if return_tag:
         query = query.options(sa_orm.joinedload(models.Subject.tags))
 
@@ -694,7 +687,7 @@ def subject_get_all(context, filters=None, marker=None, limit=None,
     for subject in query.all():
         subject_dict = subject.to_dict()
         subject_dict = _normalize_locations(context, subject_dict,
-                                          force_show_deleted=showing_deleted)
+                                            force_show_deleted=showing_deleted)
         if return_tag:
             subject_dict = _normalize_tags(subject_dict)
         subjects.append(subject_dict)
@@ -763,7 +756,7 @@ def _update_values(subject_ref, values):
        stop_max_attempt_number=50)
 @utils.no_4byte_params
 def _subject_update(context, values, subject_id, purge_props=False,
-                  from_state=None):
+                    from_state=None):
     """
     Used internally by subject_create and subject_update
 
@@ -858,12 +851,13 @@ def _subject_update(context, values, subject_id, purge_props=False,
                 raise exception.Duplicate("Subject ID %s already exists!"
                                           % values['id'])
 
-        _set_properties_for_subject(context, subject_ref, properties, purge_props,
-                                  session)
+        _set_properties_for_subject(context, subject_ref, properties,
+                                    purge_props,
+                                    session)
 
         if location_data:
             _subject_locations_set(context, subject_ref.id, location_data,
-                                 session=session)
+                                   session=session)
 
     return subject_get(context, subject_ref.id)
 
@@ -913,7 +907,7 @@ def subject_location_update(context, subject_id, location, session=None):
 
 
 def subject_location_delete(context, subject_id, location_id, status,
-                          delete_time=None, session=None):
+                            delete_time=None, session=None):
     if status not in ('deleted', 'pending_delete'):
         msg = _("The status of deleted subject location can only be set to "
                 "'pending_delete' or 'deleted'")
@@ -950,7 +944,7 @@ def _subject_locations_set(context, subject_id, locations, session=None):
 
     for loc_id in [loc_ref.id for loc_ref in query.all()]:
         subject_location_delete(context, subject_id, loc_id, 'deleted',
-                              session=session)
+                                session=session)
 
     # NOTE(zhiyan): 2. Adding or update locations
     for loc in locations:
@@ -961,7 +955,7 @@ def _subject_locations_set(context, subject_id, locations, session=None):
 
 
 def _subject_locations_delete_all(context, subject_id,
-                                delete_time=None, session=None):
+                                  delete_time=None, session=None):
     """Delete all subject locations for given subject"""
     session = session or get_session()
     location_refs = session.query(models.SubjectLocation).filter_by(
@@ -969,12 +963,12 @@ def _subject_locations_delete_all(context, subject_id,
 
     for loc_id in [loc_ref.id for loc_ref in location_refs]:
         subject_location_delete(context, subject_id, loc_id, 'deleted',
-                              delete_time=delete_time, session=session)
+                                delete_time=delete_time, session=session)
 
 
 @utils.no_4byte_params
 def _set_properties_for_subject(context, subject_ref, properties,
-                              purge_props=False, session=None):
+                                purge_props=False, session=None):
     """
     Create or update a set of subject_properties for a given subject
 
@@ -994,7 +988,7 @@ def _set_properties_for_subject(context, subject_ref, properties,
         if name in orig_properties:
             prop_ref = orig_properties[name]
             _subject_property_update(context, prop_ref, prop_values,
-                                   session=session)
+                                     session=session)
         else:
             subject_property_create(context, prop_values, session=session)
 
@@ -1003,11 +997,12 @@ def _set_properties_for_subject(context, subject_ref, properties,
             if key not in properties:
                 prop_ref = orig_properties[key]
                 subject_property_delete(context, prop_ref.name,
-                                      subject_ref.id, session=session)
+                                        subject_ref.id, session=session)
 
 
-def _subject_child_entry_delete_all(child_model_cls, subject_id, delete_time=None,
-                                  session=None):
+def _subject_child_entry_delete_all(child_model_cls, subject_id,
+                                    delete_time=None,
+                                    session=None):
     """Deletes all the child entries for the given subject id.
 
     Deletes all the child entries of the given child entry ORM model class
@@ -1060,19 +1055,21 @@ def subject_property_delete(context, prop_ref, subject_ref, session=None):
     Used internally by subject_property_create and subject_property_update.
     """
     session = session or get_session()
-    prop = session.query(models.SubjectProperty).filter_by(subject_id=subject_ref,
-                                                         name=prop_ref).one()
+    prop = session.query(models.SubjectProperty).filter_by(
+        subject_id=subject_ref,
+        name=prop_ref).one()
     prop.delete(session=session)
     return prop
 
 
 def _subject_property_delete_all(context, subject_id, delete_time=None,
-                               session=None):
+                                 session=None):
     """Delete all subject properties for given subject"""
-    props_updated_count = _subject_child_entry_delete_all(models.SubjectProperty,
-                                                        subject_id,
-                                                        delete_time,
-                                                        session)
+    props_updated_count = _subject_child_entry_delete_all(
+        models.SubjectProperty,
+        subject_id,
+        delete_time,
+        session)
     return props_updated_count
 
 
@@ -1127,12 +1124,13 @@ def _subject_member_delete(context, memb_ref, session):
 
 
 def _subject_member_delete_all(context, subject_id, delete_time=None,
-                             session=None):
+                               session=None):
     """Delete all subject members for given subject"""
-    members_updated_count = _subject_child_entry_delete_all(models.SubjectMember,
-                                                          subject_id,
-                                                          delete_time,
-                                                          session)
+    members_updated_count = _subject_child_entry_delete_all(
+        models.SubjectMember,
+        subject_id,
+        delete_time,
+        session)
     return members_updated_count
 
 
@@ -1144,7 +1142,7 @@ def _subject_member_get(context, memb_id, session):
 
 
 def subject_member_find(context, subject_id=None, member=None,
-                      status=None, include_deleted=False):
+                        status=None, include_deleted=False):
     """Find all members that meet the given criteria.
 
     Note, currently include_deleted should be true only when create a new
@@ -1159,12 +1157,12 @@ def subject_member_find(context, subject_id=None, member=None,
     """
     session = get_session()
     members = _subject_member_find(context, session, subject_id,
-                                 member, status, include_deleted)
+                                   member, status, include_deleted)
     return [_subject_member_format(m) for m in members]
 
 
 def _subject_member_find(context, session, subject_id=None,
-                       member=None, status=None, include_deleted=False):
+                         member=None, status=None, include_deleted=False):
     query = session.query(models.SubjectMember)
     if not include_deleted:
         query = query.filter_by(deleted=False)
@@ -1238,7 +1236,7 @@ def subject_tag_delete(context, subject_id, value, session=None):
     session = session or get_session()
     query = session.query(models.SubjectTag).filter_by(
         subject_id=subject_id).filter_by(
-            value=value).filter_by(deleted=False)
+        value=value).filter_by(deleted=False)
     try:
         tag_ref = query.one()
     except sa_orm.exc.NoResultFound:
@@ -1247,7 +1245,8 @@ def subject_tag_delete(context, subject_id, value, session=None):
     tag_ref.delete(session=session)
 
 
-def _subject_tag_delete_all(context, subject_id, delete_time=None, session=None):
+def _subject_tag_delete_all(context, subject_id, delete_time=None,
+                            session=None):
     """Delete all subject tags for given subject"""
     tags_updated_count = _subject_child_entry_delete_all(models.SubjectTag,
                                                          subject_id,
@@ -1466,8 +1465,8 @@ def _task_soft_delete(context, session=None):
     query = session.query(models.Task)
 
     query = (query.filter(models.Task.owner == context.owner)
-                  .filter_by(deleted=0)
-                  .filter(expires_at <= timeutils.utcnow()))
+             .filter_by(deleted=0)
+             .filter(expires_at <= timeutils.utcnow()))
     values = {'deleted': 1, 'deleted_at': timeutils.utcnow()}
 
     with session.begin():
@@ -1609,325 +1608,3 @@ def _task_format(task_ref, task_info_ref=None):
         task_dict.update(task_info_dict)
 
     return task_dict
-
-
-def metadef_namespace_get_all(context, marker=None, limit=None, sort_key=None,
-                              sort_dir=None, filters=None, session=None):
-    """List all available namespaces."""
-    session = session or get_session()
-    namespaces = metadef_namespace_api.get_all(
-        context, session, marker, limit, sort_key, sort_dir, filters)
-    return namespaces
-
-
-def metadef_namespace_get(context, namespace_name, session=None):
-    """Get a namespace or raise if it does not exist or is not visible."""
-    session = session or get_session()
-    return metadef_namespace_api.get(
-        context, namespace_name, session)
-
-
-@utils.no_4byte_params
-def metadef_namespace_create(context, values, session=None):
-    """Create a namespace or raise if it already exists."""
-    session = session or get_session()
-    return metadef_namespace_api.create(context, values, session)
-
-
-@utils.no_4byte_params
-def metadef_namespace_update(context, namespace_id, namespace_dict,
-                             session=None):
-    """Update a namespace or raise if it does not exist or not visible"""
-    session = session or get_session()
-    return metadef_namespace_api.update(
-        context, namespace_id, namespace_dict, session)
-
-
-def metadef_namespace_delete(context, namespace_name, session=None):
-    """Delete the namespace and all foreign references"""
-    session = session or get_session()
-    return metadef_namespace_api.delete_cascade(
-        context, namespace_name, session)
-
-
-def metadef_object_get_all(context, namespace_name, session=None):
-    """Get a metadata-schema object or raise if it does not exist."""
-    session = session or get_session()
-    return metadef_object_api.get_all(
-        context, namespace_name, session)
-
-
-def metadef_object_get(context, namespace_name, object_name, session=None):
-    """Get a metadata-schema object or raise if it does not exist."""
-    session = session or get_session()
-    return metadef_object_api.get(
-        context, namespace_name, object_name, session)
-
-
-@utils.no_4byte_params
-def metadef_object_create(context, namespace_name, object_dict,
-                          session=None):
-    """Create a metadata-schema object or raise if it already exists."""
-    session = session or get_session()
-    return metadef_object_api.create(
-        context, namespace_name, object_dict, session)
-
-
-@utils.no_4byte_params
-def metadef_object_update(context, namespace_name, object_id, object_dict,
-                          session=None):
-    """Update an object or raise if it does not exist or not visible."""
-    session = session or get_session()
-    return metadef_object_api.update(
-        context, namespace_name, object_id, object_dict, session)
-
-
-def metadef_object_delete(context, namespace_name, object_name,
-                          session=None):
-    """Delete an object or raise if namespace or object doesn't exist."""
-    session = session or get_session()
-    return metadef_object_api.delete(
-        context, namespace_name, object_name, session)
-
-
-def metadef_object_delete_namespace_content(
-        context, namespace_name, session=None):
-    """Delete an object or raise if namespace or object doesn't exist."""
-    session = session or get_session()
-    return metadef_object_api.delete_by_namespace_name(
-        context, namespace_name, session)
-
-
-def metadef_object_count(context, namespace_name, session=None):
-    """Get count of properties for a namespace, raise if ns doesn't exist."""
-    session = session or get_session()
-    return metadef_object_api.count(context, namespace_name, session)
-
-
-def metadef_property_get_all(context, namespace_name, session=None):
-    """Get a metadef property or raise if it does not exist."""
-    session = session or get_session()
-    return metadef_property_api.get_all(context, namespace_name, session)
-
-
-def metadef_property_get(context, namespace_name,
-                         property_name, session=None):
-    """Get a metadef property or raise if it does not exist."""
-    session = session or get_session()
-    return metadef_property_api.get(
-        context, namespace_name, property_name, session)
-
-
-@utils.no_4byte_params
-def metadef_property_create(context, namespace_name, property_dict,
-                            session=None):
-    """Create a metadef property or raise if it already exists."""
-    session = session or get_session()
-    return metadef_property_api.create(
-        context, namespace_name, property_dict, session)
-
-
-@utils.no_4byte_params
-def metadef_property_update(context, namespace_name, property_id,
-                            property_dict, session=None):
-    """Update an object or raise if it does not exist or not visible."""
-    session = session or get_session()
-    return metadef_property_api.update(
-        context, namespace_name, property_id, property_dict, session)
-
-
-def metadef_property_delete(context, namespace_name, property_name,
-                            session=None):
-    """Delete a property or raise if it or namespace doesn't exist."""
-    session = session or get_session()
-    return metadef_property_api.delete(
-        context, namespace_name, property_name, session)
-
-
-def metadef_property_delete_namespace_content(
-        context, namespace_name, session=None):
-    """Delete a property or raise if it or namespace doesn't exist."""
-    session = session or get_session()
-    return metadef_property_api.delete_by_namespace_name(
-        context, namespace_name, session)
-
-
-def metadef_property_count(context, namespace_name, session=None):
-    """Get count of properties for a namespace, raise if ns doesn't exist."""
-    session = session or get_session()
-    return metadef_property_api.count(context, namespace_name, session)
-
-
-def metadef_resource_type_create(context, values, session=None):
-    """Create a resource_type"""
-    session = session or get_session()
-    return metadef_resource_type_api.create(
-        context, values, session)
-
-
-def metadef_resource_type_get(context, resource_type_name, session=None):
-    """Get a resource_type"""
-    session = session or get_session()
-    return metadef_resource_type_api.get(
-        context, resource_type_name, session)
-
-
-def metadef_resource_type_get_all(context, session=None):
-    """list all resource_types"""
-    session = session or get_session()
-    return metadef_resource_type_api.get_all(context, session)
-
-
-def metadef_resource_type_delete(context, resource_type_name, session=None):
-    """Get a resource_type"""
-    session = session or get_session()
-    return metadef_resource_type_api.delete(
-        context, resource_type_name, session)
-
-
-def metadef_resource_type_association_get(
-        context, namespace_name, resource_type_name, session=None):
-    session = session or get_session()
-    return metadef_association_api.get(
-        context, namespace_name, resource_type_name, session)
-
-
-def metadef_resource_type_association_create(
-        context, namespace_name, values, session=None):
-    session = session or get_session()
-    return metadef_association_api.create(
-        context, namespace_name, values, session)
-
-
-def metadef_resource_type_association_delete(
-        context, namespace_name, resource_type_name, session=None):
-    session = session or get_session()
-    return metadef_association_api.delete(
-        context, namespace_name, resource_type_name, session)
-
-
-def metadef_resource_type_association_get_all_by_namespace(
-        context, namespace_name, session=None):
-    session = session or get_session()
-    return metadef_association_api.get_all_by_namespace(
-        context, namespace_name, session)
-
-
-def metadef_tag_get_all(
-        context, namespace_name, filters=None, marker=None, limit=None,
-        sort_key=None, sort_dir=None, session=None):
-    """Get metadata-schema tags or raise if none exist."""
-    session = session or get_session()
-    return metadef_tag_api.get_all(
-        context, namespace_name, session,
-        filters, marker, limit, sort_key, sort_dir)
-
-
-def metadef_tag_get(context, namespace_name, name, session=None):
-    """Get a metadata-schema tag or raise if it does not exist."""
-    session = session or get_session()
-    return metadef_tag_api.get(
-        context, namespace_name, name, session)
-
-
-@utils.no_4byte_params
-def metadef_tag_create(context, namespace_name, tag_dict,
-                       session=None):
-    """Create a metadata-schema tag or raise if it already exists."""
-    session = session or get_session()
-    return metadef_tag_api.create(
-        context, namespace_name, tag_dict, session)
-
-
-def metadef_tag_create_tags(context, namespace_name, tag_list,
-                            session=None):
-    """Create a metadata-schema tag or raise if it already exists."""
-    session = get_session()
-    return metadef_tag_api.create_tags(
-        context, namespace_name, tag_list, session)
-
-
-@utils.no_4byte_params
-def metadef_tag_update(context, namespace_name, id, tag_dict,
-                       session=None):
-    """Update an tag or raise if it does not exist or not visible."""
-    session = session or get_session()
-    return metadef_tag_api.update(
-        context, namespace_name, id, tag_dict, session)
-
-
-def metadef_tag_delete(context, namespace_name, name,
-                       session=None):
-    """Delete an tag or raise if namespace or tag doesn't exist."""
-    session = session or get_session()
-    return metadef_tag_api.delete(
-        context, namespace_name, name, session)
-
-
-def metadef_tag_delete_namespace_content(
-        context, namespace_name, session=None):
-    """Delete an tag or raise if namespace or tag doesn't exist."""
-    session = session or get_session()
-    return metadef_tag_api.delete_by_namespace_name(
-        context, namespace_name, session)
-
-
-def metadef_tag_count(context, namespace_name, session=None):
-    """Get count of tags for a namespace, raise if ns doesn't exist."""
-    session = session or get_session()
-    return metadef_tag_api.count(context, namespace_name, session)
-
-
-def artifact_create(context, values, type_name,
-                    type_version=None, session=None):
-    session = session or get_session()
-    artifact = glare.create(context, values, session, type_name,
-                            type_version)
-    return artifact
-
-
-def artifact_delete(context, artifact_id, type_name,
-                    type_version=None, session=None):
-    session = session or get_session()
-    artifact = glare.delete(context, artifact_id, session, type_name,
-                            type_version)
-    return artifact
-
-
-def artifact_update(context, values, artifact_id, type_name,
-                    type_version=None, session=None):
-    session = session or get_session()
-    artifact = glare.update(context, values, artifact_id, session,
-                            type_name, type_version)
-    return artifact
-
-
-def artifact_get(context, artifact_id,
-                 type_name=None,
-                 type_version=None,
-                 show_level=ga.Showlevel.BASIC,
-                 session=None):
-    session = session or get_session()
-    return glare.get(context, artifact_id, session, type_name,
-                     type_version, show_level)
-
-
-def artifact_publish(context,
-                     artifact_id,
-                     type_name,
-                     type_version=None,
-                     session=None):
-    session = session or get_session()
-    return glare.publish(context,
-                         artifact_id,
-                         session,
-                         type_name,
-                         type_version)
-
-
-def artifact_get_all(context, marker=None, limit=None, sort_keys=None,
-                     sort_dirs=None, filters=None,
-                     show_level=ga.Showlevel.NONE, session=None):
-    session = session or get_session()
-    return glare.get_all(context, session, marker, limit, sort_keys,
-                         sort_dirs, filters, show_level)

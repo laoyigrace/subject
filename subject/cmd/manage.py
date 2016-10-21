@@ -34,8 +34,8 @@ import time
 # If ../subject/__init__.py exists, add ../ to Python search path, so that
 # it will override what happens to be installed in /usr/(local/)lib/python...
 possible_topdir = os.path.normpath(os.path.join(os.path.abspath(sys.argv[0]),
-                                   os.pardir,
-                                   os.pardir))
+                                                os.pardir,
+                                                os.pardir))
 if os.path.exists(os.path.join(possible_topdir, 'subject', '__init__.py')):
     sys.path.insert(0, possible_topdir)
 
@@ -53,7 +53,6 @@ from subject.db.sqlalchemy import api as db_api
 from subject.db.sqlalchemy import metadata
 from subject.i18n import _
 
-
 CONF = cfg.CONF
 
 
@@ -62,6 +61,7 @@ def args(*args, **kwargs):
     def _decorator(func):
         func.__dict__.setdefault('args', []).insert(0, (args, kwargs))
         return func
+
     return _decorator
 
 
@@ -204,7 +204,6 @@ class DbLegacyCommands(object):
 
 
 def add_legacy_command_parsers(command_object, subparsers):
-
     legacy_command_object = DbLegacyCommands(command_object)
 
     parser = subparsers.add_parser('db_version')
@@ -283,7 +282,6 @@ command_opt = cfg.SubCommandOpt('command',
                                 help='Available commands',
                                 handler=add_command_parsers)
 
-
 CATEGORIES = {
     'db': DbCommands,
 }
@@ -324,7 +322,6 @@ def main():
         logging.setup(CONF, 'subject')
     except RuntimeError as e:
         sys.exit("ERROR: %s" % e)
-
     try:
         if CONF.command.action.startswith('db'):
             return CONF.command.action_fn()

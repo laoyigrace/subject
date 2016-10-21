@@ -14,27 +14,29 @@
 #    under the License.
 
 from migrate.changeset import UniqueConstraint
-from sqlalchemy.schema import (Column, MetaData, Table)
-from sqlalchemy import ForeignKey, Index
-from subject.db.sqlalchemy.migrate_repo.schema import (
-    Boolean, DateTime, Integer, String, Text, create_tables)  # noqa
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Index
+from sqlalchemy import Integer, MetaData, String, Table, Text, UniqueConstraint
+
 from subject.db.sqlalchemy import models
+
+def create_tables(tables):
+    for table in tables:
+        table.create()
 
 
 def define_tables(meta):
     subjects = Table('subjects',
                      meta,
-                     Column('created_at', DateTime(), nullable=False),
-                     Column('updated_at', DateTime()),
-                     Column('deleted_at', DateTime()),
+                     Column('created_at', DateTime, nullable=False),
+                     Column('updated_at', DateTime),
+                     Column('deleted_at', DateTime),
                      Column('deleted',
-                            Boolean(),
+                            Boolean,
                             nullable=False,
-                            default=False,
-                            index=True),
+                            default=False),
                      Column('id', String(36), primary_key=True, nullable=False),
                      Column('name', String(255)),
-                     Column('size', Integer()),
+                     Column('size', Integer),
                      Column('type', String(30)),
                      Column('status', String(30), nullable=False),
                      Column('subject_format', String(20)),
@@ -44,15 +46,14 @@ def define_tables(meta):
                      Column('contributor', String(32)),
                      Column('phase', String(32)),
                      Column('language', String(32)),
-                     Column('score', Integer()),
+                     Column('score', Integer),
                      Column('knowledge', String(255)),
                      Column('is_public',
-                            Boolean(),
+                            Boolean,
                             nullable=False,
-                            default=False,
-                            index=True),
+                            default=False),
                      Column('protected',
-                            Boolean(),
+                            Boolean,
                             nullable=False,
                             default=False,
                             index=True),
@@ -65,33 +66,32 @@ def define_tables(meta):
                      Index('updated_at_subject_idx', 'updated_at'),
                      mysql_engine='InnoDB',
                      mysql_charset='utf8',
-                     extend_existing=True)
+                     extend_existing=True
+                     )
 
     subject_properties = Table('subject_properties', meta,
-                               Column('created_at', DateTime(), nullable=False),
-                               Column('updated_at', DateTime()),
-                               Column('deleted_at', DateTime()),
+                               Column('created_at', DateTime, nullable=False),
+                               Column('updated_at', DateTime),
+                               Column('deleted_at', DateTime),
                                Column('deleted',
-                                      Boolean(),
+                                      Boolean,
                                       nullable=False,
-                                      default=False,
-                                      index=True),
+                                      default=False),
                                Column('id',
-                                      Integer(),
+                                      Integer,
                                       primary_key=True,
                                       nullable=False),
                                Column('subject_id',
                                       String(36),
                                       ForeignKey('subjects.id'),
-                                      nullable=False,
-                                      index=True),
+                                      nullable=False),
                                Column('name', String(255), nullable=False),
                                Column('value', Text()),
                                Index('ix_subject_properties_subject_id',
                                      'subject_id'),
                                Index('ix_subject_properties_deleted',
                                      'deleted'),
-                               UniqueConstraint('subject_id', 'key',
+                               UniqueConstraint('subject_id', 'name',
                                                 'deleted'),
                                mysql_engine='InnoDB',
                                mysql_charset='utf8',
@@ -99,26 +99,24 @@ def define_tables(meta):
 
     subject_locations_table = Table('subject_locations', meta,
                                     Column('created_at',
-                                           DateTime(),
+                                           DateTime,
                                            nullable=False),
                                     Column('updated_at',
-                                           DateTime()),
+                                           DateTime),
                                     Column('deleted_at',
-                                           DateTime()),
+                                           DateTime),
                                     Column('deleted',
-                                           Boolean(),
+                                           Boolean,
                                            nullable=False,
-                                           default=False,
-                                           index=True),
+                                           default=False),
                                     Column('id',
-                                           Integer(),
+                                           Integer,
                                            primary_key=True,
                                            nullable=False),
                                     Column('subject_id',
                                            String(36),
                                            ForeignKey('subjects.id'),
-                                           nullable=False,
-                                           index=True),
+                                           nullable=False),
                                     Column('value',
                                            Text(),
                                            nullable=False),
@@ -138,10 +136,10 @@ def define_tables(meta):
     subject_tags = Table('subject_tags',
                          meta,
                          Column('id',
-                                Integer(),
+                                Integer,
                                 primary_key=True,
                                 nullable=False),
-                         Column('image_id',
+                         Column('subject_id',
                                 String(36),
                                 ForeignKey('subjects.id'),
                                 nullable=False),
@@ -149,14 +147,14 @@ def define_tables(meta):
                                 String(255),
                                 nullable=False),
                          Column('created_at',
-                                DateTime(),
+                                DateTime,
                                 nullable=False),
                          Column('updated_at',
-                                DateTime()),
+                                DateTime),
                          Column('deleted_at',
-                                DateTime()),
+                                DateTime),
                          Column('deleted',
-                                Boolean(),
+                                Boolean,
                                 nullable=False,
                                 default=False),
                          Index('ix_subject_tags_subject_id', 'subject_id'),
@@ -172,9 +170,8 @@ def define_tables(meta):
 def upgrade(migrate_engine):
     meta = MetaData()
     meta.bind = migrate_engine
-    tables = [define_tables(meta)]
+    tables = define_tables(meta)
     create_tables(tables)
-
     if migrate_engine.name == "mysql":
         tables = ['subjects', 'subject_properties', 'subject_locations',
                   'subject_tags']

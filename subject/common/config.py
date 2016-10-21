@@ -683,6 +683,9 @@ def parse_cache_args(args=None):
     config_files = cfg.find_config_files(project='subject', prog='subject-cache')
     parse_args(args=args, default_config_files=config_files)
 
+def parse_api_args(args=None):
+    config_files = cfg.find_config_files(project='subject', prog='subject-api')
+    parse_args(args=args, default_config_files=config_files)
 
 def _get_deployment_flavor(flavor=None):
     """

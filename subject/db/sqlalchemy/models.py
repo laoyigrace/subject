@@ -147,7 +147,7 @@ class SubjectProperty(BASE, GlanceBase):
     __tablename__ = 'subject_properties'
     __table_args__ = (Index('ix_subject_properties_subject_id', 'subject_id'),
                       Index('ix_subject_properties_deleted', 'deleted'),
-                      UniqueConstraint('subject_id', 'key',
+                      UniqueConstraint('subject_id', 'name',
                                        'deleted'),
                       )
 
