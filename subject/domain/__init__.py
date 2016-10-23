@@ -137,7 +137,7 @@ class Subject(object):
         self.score = kwargs.pop('score', None)
         self.knowledge = kwargs.pop('knowledge', None)
         self.description = kwargs.pop('description', None)
-        self.subject = kwargs.pop('subject', None)
+        self.subject_desc = kwargs.pop('subject_desc', None)
         extra_properties = kwargs.pop('extra_properties', {})
         self.extra_properties = ExtraProperties(extra_properties)
         self.tags = kwargs.pop('tags', [])

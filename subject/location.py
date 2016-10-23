@@ -384,9 +384,7 @@ class SubjectProxy(subject.domain.proxy.Subject):
     locations = _locations_proxy('subject', 'locations')
 
     def __init__(self, subject, context, store_api, store_utils):
-        import pdb
-        pdb.set_trace()
-        self.subject_obj = subject
+        self.subject = subject
         self.context = context
         self.store_api = store_api
         self.store_utils = store_utils

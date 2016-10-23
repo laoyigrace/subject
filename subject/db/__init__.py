@@ -124,7 +124,7 @@ class SubjectRepo(object):
             score=db_subject['score'],
             knowledge=db_subject['knowledge'],
             description=db_subject['description'],
-            subject=db_subject['subject'],
+            subject_desc=db_subject['subject_desc'],
             extra_properties=properties,
             tags=db_tags
         )
@@ -160,7 +160,7 @@ class SubjectRepo(object):
             'score': subject.score,
             'knowledge': subject.knowledge,
             'description': subject.description,
-            'subject': subject.subject,
+            'subject_desc': subject.subject_desc,
             'is_public': subject.visibility == 'public',
             'properties': dict(subject.extra_properties),
         }
