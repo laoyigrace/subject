@@ -320,7 +320,7 @@ class ImmutableSubjectProxy(object):
     checksum = _immutable_attr('base', 'checksum')
     owner = _immutable_attr('base', 'owner')
     disk_format = _immutable_attr('base', 'disk_format')
-    container_format = _immutable_attr('base', 'container_format')
+    subject_format = _immutable_attr('base', 'subject_format')
     size = _immutable_attr('base', 'size')
     virtual_size = _immutable_attr('base', 'virtual_size')
     extra_properties = _immutable_attr('base', 'extra_properties',

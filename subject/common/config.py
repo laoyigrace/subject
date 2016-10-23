@@ -86,18 +86,17 @@ Related Options:
 """)),
 ]
 subject_format_opts = [
-    cfg.ListOpt('container_formats',
-                default=['ami', 'ari', 'aki', 'bare', 'ovf', 'ova', 'docker'],
-                help=_("Supported values for the 'container_format' "
+    cfg.ListOpt('subject_formats',
+                default=['src', 'template', 'subject', 'answer'],
+                help=_("Supported values for the 'subject_format' "
                        "subject attribute"),
-                deprecated_opts=[cfg.DeprecatedOpt('container_formats',
+                deprecated_opts=[cfg.DeprecatedOpt('subject_formats',
                                                    group='DEFAULT')]),
-    cfg.ListOpt('disk_formats',
-                default=['ami', 'ari', 'aki', 'vhd', 'vhdx', 'vmdk', 'raw',
-                         'qcow2', 'vdi', 'iso'],
-                help=_("Supported values for the 'disk_format' "
+    cfg.ListOpt('tar_formats',
+                default=['rar', 'tar', 'gzip', 'zip'],
+                help=_("Supported values for the 'tar_format' "
                        "subject attribute"),
-                deprecated_opts=[cfg.DeprecatedOpt('disk_formats',
+                deprecated_opts=[cfg.DeprecatedOpt('tar_formats',
                                                    group='DEFAULT')]),
 ]
 task_opts = [

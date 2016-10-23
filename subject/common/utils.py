@@ -54,7 +54,7 @@ LOG = logging.getLogger(__name__)
 # Whitelist of v1 API headers of form x-subject-meta-xxx
 IMAGE_META_HEADERS = ['x-subject-meta-location', 'x-subject-meta-size',
                       'x-subject-meta-is_public', 'x-subject-meta-disk_format',
-                      'x-subject-meta-container_format', 'x-subject-meta-name',
+                      'x-subject-meta-subject_format', 'x-subject-meta-name',
                       'x-subject-meta-status', 'x-subject-meta-copy_from',
                       'x-subject-meta-uri', 'x-subject-meta-checksum',
                       'x-subject-meta-created_at', 'x-subject-meta-updated_at',

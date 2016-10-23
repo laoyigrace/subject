@@ -57,7 +57,7 @@ def define_tables(meta):
                             nullable=False,
                             default=False,
                             index=True),
-                     Column('subject', String(1024)),
+                     Column('subject_desc', String(1024)),
                      Index('checksum_subject_idx', 'checksum'),
                      Index('ix_subjects_is_public', 'is_public'),
                      Index('ix_subjects_deleted', 'deleted'),

@@ -153,7 +153,7 @@ def format_subject_notification(subject):
         'checksum': subject.checksum,
         'owner': subject.owner,
         'disk_format': subject.disk_format,
-        'container_format': subject.container_format,
+        'subject_format': subject.subject_format,
         'size': subject.size,
         'virtual_size': subject.virtual_size,
         'is_public': subject.visibility == 'public',

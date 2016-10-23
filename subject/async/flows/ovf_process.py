@@ -84,7 +84,7 @@ class _OVF_Process(task.Task):
 
         subject = self.subject_repo.get(subject_id)
         # Expect 'ova' as subject container format for OVF_Process task
-        if subject.container_format == 'ova':
+        if subject.subject_format == 'ova':
             # FIXME(dramakri): This is an admin-only feature for security
             # reasons. Ideally this should be achieved by making the import
             # task API admin only. This is one of the items that the upcoming
@@ -95,7 +95,7 @@ class _OVF_Process(task.Task):
                 data_iter = self._get_ova_iter_objects(file_path)
                 disk, properties = extractor.extract(data_iter)
                 subject.extra_properties.update(properties)
-                subject.container_format = 'bare'
+                subject.subject_format = 'bare'
                 self.subject_repo.save(subject)
                 dest_path = self._get_extracted_file_path(subject_id)
                 with open(dest_path, 'wb') as f:

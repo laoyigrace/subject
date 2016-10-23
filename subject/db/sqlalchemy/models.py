@@ -123,7 +123,7 @@ class Subject(BASE, GlanceBase):
     id = Column(String(36), primary_key=True,
                 default=lambda: str(uuid.uuid4()))
     name = Column(String(255))
-    size = Column(BigInteger().with_variant(Integer, "sqlite"))
+    size = Column(Integer().with_variant(Integer, "sqlite"))
     status = Column(String(30), nullable=False)
     type = Column(String(20))
     subject_format = Column(String(20))
@@ -139,7 +139,7 @@ class Subject(BASE, GlanceBase):
     protected = Column(Boolean, nullable=False, default=False,
                        server_default=sql.expression.false())
     description = Column(String(255))
-    subject = Column(String(1024))
+    subject_desc = Column(String(1024))
 
 
 class SubjectProperty(BASE, GlanceBase):

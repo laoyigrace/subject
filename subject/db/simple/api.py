@@ -213,7 +213,7 @@ def _subject_format(subject_id, **values):
         'status': 'queued',
         'protected': False,
         'is_public': False,
-        'container_format': None,
+        'subject_format': None,
         'disk_format': None,
         'min_ram': 0,
         'min_disk': 0,
@@ -305,7 +305,7 @@ def _filter_subjects(subjects, filters, context,
                 to_add = utils.evaluate_filter_op(attr_value, operator,
                                                   threshold)
             elif k in ['name', 'id', 'status',
-                       'container_format', 'disk_format']:
+                       'subject_format', 'disk_format']:
                 attr_value = subject.get(key)
                 operator, list_value = utils.split_filter_op(value)
                 if operator == 'in':
@@ -689,7 +689,7 @@ def subject_create(context, subject_values):
 
     allowed_keys = set(['id', 'name', 'status', 'min_ram', 'min_disk', 'size',
                         'virtual_size', 'checksum', 'locations', 'owner',
-                        'protected', 'is_public', 'container_format',
+                        'protected', 'is_public', 'subject_format',
                         'disk_format', 'created_at', 'updated_at', 'deleted',
                         'deleted_at', 'properties', 'tags'])
 

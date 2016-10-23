@@ -37,14 +37,14 @@ LOG = logging.getLogger(__name__)
 CONF = cfg.CONF
 
 DISPLAY_FIELDS_IN_INDEX = ['id', 'name', 'size',
-                           'disk_format', 'container_format',
+                           'disk_format', 'subject_format',
                            'checksum']
 
-SUPPORTED_FILTERS = ['name', 'status', 'container_format', 'disk_format',
+SUPPORTED_FILTERS = ['name', 'status', 'subject_format', 'disk_format',
                      'min_ram', 'min_disk', 'size_min', 'size_max',
                      'changes-since', 'protected']
 
-SUPPORTED_SORT_KEYS = ('name', 'status', 'container_format', 'disk_format',
+SUPPORTED_SORT_KEYS = ('name', 'status', 'subject_format', 'disk_format',
                        'size', 'id', 'created_at', 'updated_at')
 
 SUPPORTED_SORT_DIRS = ('asc', 'desc')
@@ -153,7 +153,7 @@ class Controller(object):
                 'name': <NAME>,
                 'size': <SIZE>,
                 'disk_format': <DISK_FORMAT>,
-                'container_format': <CONTAINER_FORMAT>,
+                'subject_format': <CONTAINER_FORMAT>,
                 'checksum': <CHECKSUM>
             }
 
@@ -185,7 +185,7 @@ class Controller(object):
                     'name': <NAME>,
                     'size': <SIZE>,
                     'disk_format': <DISK_FORMAT>,
-                    'container_format': <CONTAINER_FORMAT>,
+                    'subject_format': <CONTAINER_FORMAT>,
                     'checksum': <CHECKSUM>,
                     'min_disk': <MIN_DISK>,
                     'min_ram': <MIN_RAM>,

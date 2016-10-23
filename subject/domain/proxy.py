@@ -183,7 +183,7 @@ class Subject(object):
     score = _proxy('base', 'score')
     knowledge = _proxy('base', 'knowledge')
     description = _proxy('base', 'description')
-    subject = _proxy('base', 'subject')
+    subject_desc = _proxy('base', 'subject_desc')
     extra_properties = _proxy('base', 'extra_properties')
     tags = _proxy('base', 'tags')
 

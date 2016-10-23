@@ -39,8 +39,8 @@ import subject.schema
 LOG = logging.getLogger(__name__)
 
 CONF = cfg.CONF
-CONF.import_opt('disk_formats', 'subject.common.config', group='subject_format')
-CONF.import_opt('container_formats', 'subject.common.config',
+CONF.import_opt('tar_formats', 'subject.common.config', group='subject_format')
+CONF.import_opt('subject_formats', 'subject.common.config',
                 group='subject_format')
 CONF.import_opt('show_multiple_locations', 'subject.common.config')
 
@@ -60,6 +60,7 @@ class SubjectsController(object):
         subject_factory = self.gateway.get_subject_factory(req.context)
         subject_repo = self.gateway.get_repo(req.context)
         try:
+            LOG.debug("+++oj, subject = %s, extra_properties = %s", subject, extra_properties)
             subject = subject_factory.new_subject(extra_properties=extra_properties,
                                             tags=tags, **subject)
             subject_repo.add(subject)
@@ -81,7 +82,7 @@ class SubjectsController(object):
         except exception.NotAuthenticated as e:
             raise webob.exc.HTTPUnauthorized(explanation=e.msg)
         except TypeError as e:
-            LOG.debug(encodeutils.exception_to_unicode(e))
+            LOG.exception(encodeutils.exception_to_unicode(e))
             raise webob.exc.HTTPBadRequest(explanation=e)
 
         return subject
@@ -346,11 +347,11 @@ class RequestDeserializer(wsgi.JSONRequestDeserializer):
                             'size', 'virtual_size', 'direct_url', 'self',
                             'file', 'schema', 'id')
     _reserved_properties = ('location', 'deleted', 'deleted_at')
-    _base_properties = ('checksum', 'created_at', 'container_format',
+    _base_properties = ('checksum', 'created_at', 'subject_format',
                         'disk_format', 'id', 'min_disk', 'min_ram', 'name',
                         'size', 'virtual_size', 'status', 'tags', 'owner',
                         'updated_at', 'visibility', 'protected')
-    _available_sort_keys = ('name', 'status', 'container_format',
+    _available_sort_keys = ('name', 'status', 'subject_format',
                             'disk_format', 'size', 'id', 'created_at',
                             'updated_at')
 
@@ -383,10 +384,12 @@ class RequestDeserializer(wsgi.JSONRequestDeserializer):
 
     def create(self, request):
         body = self._get_request_body(request)
+        body = body['subject']
         self._check_allowed(body)
         try:
             self.schema.validate(body)
         except exception.InvalidObject as e:
+            LOG.exception("schema failed! ex = %s", e)
             raise webob.exc.HTTPBadRequest(explanation=e.msg)
         subject = {}
         properties = body
@@ -748,7 +751,7 @@ class ResponseSerializer(wsgi.JSONResponseSerializer):
 
         try:
             subject_view = dict(subject.extra_properties)
-            attributes = ['name', 'disk_format', 'container_format',
+            attributes = ['name', 'disk_format', 'subject_format',
                           'visibility', 'size', 'virtual_size', 'status',
                           'checksum', 'protected', 'min_ram', 'min_disk',
                           'owner']
@@ -847,12 +850,67 @@ def get_base_properties():
             'description': _('Descriptive name for the subject'),
             'maxLength': 255,
         },
+        'size': {
+            'type': ['null', 'integer'],
+            'readOnly': True,
+            'description': _('Size of subject file in bytes'),
+        },
         'status': {
             'type': 'string',
             'readOnly': True,
             'description': _('Status of the subject'),
             'enum': ['queued', 'saving', 'active', 'killed',
                      'deleted', 'pending_delete', 'deactivated'],
+        },
+        'type': {
+            'type': ['null', 'string'],
+            'description': _('type of subject'),
+            'enum': ['program', 'choice', 'judge'],
+        },
+        'subject_format': {
+            'type': ['null', 'string'],
+            'description': _('format of subject'),
+            'enum': [None] + CONF.subject_format.subject_formats,
+        },
+        'tar_format': {
+            'type': ['null', 'string'],
+            'description': _('Format of the disk'),
+            'enum': [None] + CONF.subject_format.tar_formats,
+        },
+        'owner': {
+            'type': ['null', 'string'],
+            'description': _('Owner of the subject'),
+            'maxLength': 255,
+        },
+        'checksum': {
+            'type': ['null', 'string'],
+            'readOnly': True,
+            'description': _('md5 hash of subject contents.'),
+            'maxLength': 32,
+        },
+        'contributor': {
+            'type': ['null', 'string'],
+            'description': _('contributor of the subject'),
+            'maxLength': 255,
+        },
+        'phase': {
+            'type': ['null', 'string'],
+            'description': _('phase of the subject'),
+            'maxLength': 255,
+        },
+        'language': {
+            'type': ['null', 'string'],
+            'description': _('phase of the subject'),
+            'maxLength': 255,
+        },
+        'score': {
+            'type': ['null', 'integer'],
+            'description': _('score of subject'),
+        },
+        'knowledge': {
+            'type': ['null', 'string'],
+            'description': _('knowledge of the subject'),
+            'maxLength': 255,
         },
         'visibility': {
             'type': 'string',
@@ -863,36 +921,10 @@ def get_base_properties():
             'type': 'boolean',
             'description': _('If true, subject will not be deletable.'),
         },
-        'checksum': {
+        'subject_desc': {
             'type': ['null', 'string'],
-            'readOnly': True,
-            'description': _('md5 hash of subject contents.'),
-            'maxLength': 32,
-        },
-        'owner': {
-            'type': ['null', 'string'],
-            'description': _('Owner of the subject'),
-            'maxLength': 255,
-        },
-        'size': {
-            'type': ['null', 'integer'],
-            'readOnly': True,
-            'description': _('Size of subject file in bytes'),
-        },
-        'virtual_size': {
-            'type': ['null', 'integer'],
-            'readOnly': True,
-            'description': _('Virtual size of subject in bytes'),
-        },
-        'container_format': {
-            'type': ['null', 'string'],
-            'description': _('Format of the container'),
-            'enum': [None] + CONF.subject_format.container_formats,
-        },
-        'disk_format': {
-            'type': ['null', 'string'],
-            'description': _('Format of the disk'),
-            'enum': [None] + CONF.subject_format.disk_formats,
+            'description': _('info of the subject'),
+            'maxLength': 1024,
         },
         'created_at': {
             'type': 'string',
@@ -924,15 +956,6 @@ def get_base_properties():
             'description': _('URL to access the subject file kept in external '
                              'store'),
         },
-        'min_ram': {
-            'type': 'integer',
-            'description': _('Amount of ram (in MB) required to boot subject.'),
-        },
-        'min_disk': {
-            'type': 'integer',
-            'description': _('Amount of disk space (in GB) required to boot '
-                             'subject.'),
-        },
         'self': {
             'type': 'string',
             'readOnly': True,
@@ -942,11 +965,6 @@ def get_base_properties():
             'type': 'string',
             'readOnly': True,
             'description': _('An subject file url'),
-        },
-        'schema': {
-            'type': 'string',
-            'readOnly': True,
-            'description': _('An subject schema url'),
         },
         'locations': {
             'type': 'array',

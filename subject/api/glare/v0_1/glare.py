@@ -496,7 +496,7 @@ class ArtifactsController(object):
 
 class RequestDeserializer(wsgi.JSONRequestDeserializer,
                           jsonpatchvalidator.JsonPatchValidatorMixin):
-    _available_sort_keys = ('name', 'status', 'container_format',
+    _available_sort_keys = ('name', 'status', 'subject_format',
                             'disk_format', 'size', 'id', 'created_at',
                             'updated_at', 'version')
     _default_sort_dir = 'desc'

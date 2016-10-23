@@ -898,6 +898,7 @@ class Router(object):
         """
         mapper.redirect("", "/")
         self.map = mapper
+        LOG.debug("+++oj, mapper = %s", self.map)
         self._router = routes.middleware.RoutesMiddleware(self._dispatch,
                                                           self.map)
 
@@ -1098,6 +1099,7 @@ class Resource(object):
     def __call__(self, request):
         """WSGI method that controls (de)serialization and method dispatch."""
         action_args = self.get_action_args(request.environ)
+        LOG.debug("environ = %s, wsgi = %s", request.environ, request.environ['wsgiorg.routing_args'])
         action = action_args.pop('action', None)
         body_reject = strutils.bool_from_string(
             action_args.pop('body_reject', None))
@@ -1112,6 +1114,8 @@ class Resource(object):
             action_result = self.dispatch(self.controller, action,
                                           request, **action_args)
         except webob.exc.WSGIHTTPException as e:
+            LOG.exception(_LE("Caught error: %s"),
+                          encodeutils.exception_to_unicode(e))
             exc_info = sys.exc_info()
             e = translate_exception(request, e)
             six.reraise(type(e), e, exc_info[2])
@@ -1144,6 +1148,7 @@ class Resource(object):
 
     def dispatch(self, obj, action, *args, **kwargs):
         """Find action-specific method on self and call it."""
+        LOG.debug("+++oj, obj = %s, type = %s", obj, type(obj))
         try:
             method = getattr(obj, action)
         except AttributeError:

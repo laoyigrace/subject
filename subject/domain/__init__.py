@@ -48,7 +48,7 @@ def _import_delayed_delete():
 
 class SubjectFactory(object):
     _readonly_properties = ['created_at', 'updated_at', 'status', 'checksum',
-                            'size', 'virtual_size']
+                            'size']
     _reserved_properties = ['owner', 'locations', 'deleted', 'deleted_at',
                             'direct_url', 'self', 'file', 'schema']
 
@@ -69,8 +69,11 @@ class SubjectFactory(object):
                     raise exception.ReservedProperty(property=key)
 
     def new_subject(self, subject_id=None, name=None, visibility='private',
-                    min_disk=0, min_ram=0, protected=False, owner=None,
-                    disk_format=None, container_format=None,
+                    type=None, contributor=None, phase=None,
+                    language=None,score=0,knowledge=None,
+                    subject_desc=None,description=None,protected=False,
+                    owner=None,
+                    tar_format=None, subject_format=None,
                     extra_properties=None, tags=None, **other_args):
         extra_properties = extra_properties or {}
         self._check_readonly(other_args)
@@ -85,10 +88,13 @@ class SubjectFactory(object):
 
         return Subject(subject_id=subject_id, name=name, status=status,
                        created_at=created_at, updated_at=updated_at,
-                       visibility=visibility, min_disk=min_disk,
-                       min_ram=min_ram, protected=protected,
-                       owner=owner, disk_format=disk_format,
-                       container_format=container_format,
+                       visibility=visibility, type=type,
+                       contributor=contributor,phase=phase,
+                       language=language,score=score,
+                       knowledge=knowledge,subject_desc=subject_desc,
+                       description=description,protected=protected,
+                       owner=owner, tar_format=tar_format,
+                       subject_format=subject_format,
                        extra_properties=extra_properties, tags=tags or [])
 
 
@@ -154,7 +160,7 @@ class Subject(object):
                 raise e
 
             if self._status == 'queued' and status in ('saving', 'active'):
-                missing = [k for k in ['disk_format', 'container_format']
+                missing = [k for k in ['disk_format', 'subject_format']
                            if not getattr(self, k)]
                 if len(missing) > 0:
                     if len(missing) == 1:
@@ -168,7 +174,6 @@ class Subject(object):
         # status is updated to 'queued'
         if status == 'queued':
             self.size = None
-            self.virtual_size = None
         self._status = status
 
     @property

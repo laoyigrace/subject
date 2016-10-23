@@ -26,7 +26,7 @@ class SubjectAsAnArtifact(definitions.ArtifactType):
                                                      'iso'],
                                      required=True,
                                      mutable=False)
-    container_format = definitions.String(allowed_values=['ami', 'ari',
+    subject_format = definitions.String(allowed_values=['ami', 'ari',
                                                           'aki', 'bare',
                                                           'ovf', 'ova',
                                                           'docker'],

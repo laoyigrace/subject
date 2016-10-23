@@ -78,35 +78,14 @@ class Controller(object):
                 ],
             }
 
-        version_objs = []
-        if CONF.enable_v2_api:
-            version_objs.extend([
-                build_version_object(2.4, 'v1', 'CURRENT'),
-                build_version_object(2.3, 'v1', 'SUPPORTED'),
-                build_version_object(2.2, 'v1', 'SUPPORTED'),
-                build_version_object(2.1, 'v1', 'SUPPORTED'),
-                build_version_object(2.0, 'v1', 'SUPPORTED'),
-            ])
-        if CONF.enable_v1_api:
-            LOG.warn(_LW('The Subjects (Glance) v1 API is deprecated and will '
-                         'be removed on or after the Pike release, following '
-                         'the standard OpenStack deprecation policy. '
-                         'Currently, the solution is to set '
-                         'enable_v1_api=False and enable_v2_api=True in your '
-                         'subject-api.conf file. Once those options are '
-                         'removed from the code, Subjects (Glance) v1 API will '
-                         'be switched on by default and will be the only '
-                         'option to deploy and use.'))
-            version_objs.extend([
-                build_version_object(1.1, 'v1', 'DEPRECATED'),
-                build_version_object(1.0, 'v1', 'DEPRECATED'),
-            ])
+        version_objs = {"v1.0":  build_version_object(1.0, 'v1', 'CURRENT')}
 
         status = explicit and http_client.OK or http_client.MULTIPLE_CHOICES
         response = webob.Response(request=req,
                                   status=status,
                                   content_type='application/json')
         response.body = jsonutils.dump_as_bytes(dict(versions=version_objs))
+        LOG.debug("+++oj, version = %s", version_objs)
         return response
 
     @webob.dec.wsgify(RequestClass=wsgi.Request)

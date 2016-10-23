@@ -520,7 +520,7 @@ def _make_conditions_from_filters(filters, is_public=None):
                                                   threshold)
             subject_conditions.append(comparison)
 
-        elif k in ['name', 'id', 'status', 'container_format', 'disk_format']:
+        elif k in ['name', 'id', 'status', 'subject_format', 'disk_format']:
             attr_value = getattr(models.Subject, key)
             operator, list_value = utils.split_filter_op(filters.pop(k))
             if operator == 'in':

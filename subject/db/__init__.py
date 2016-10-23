@@ -51,7 +51,7 @@ BASE_MODEL_ATTRS = set(['id', 'created_at', 'updated_at', 'deleted_at',
 
 
 IMAGE_ATTRS = BASE_MODEL_ATTRS | set(['name', 'status', 'size', 'virtual_size',
-                                      'disk_format', 'container_format',
+                                      'disk_format', 'subject_format',
                                       'min_disk', 'min_ram', 'is_public',
                                       'locations', 'checksum', 'owner',
                                       'protected'])

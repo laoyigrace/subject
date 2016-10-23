@@ -75,7 +75,7 @@ def set_base_subject_properties(properties=None):
         # are placeholders to show that the scripts work on 'devstack'
         # environment.
         properties['disk_format'] = 'qcow2'
-        properties['container_format'] = 'bare'
+        properties['subject_format'] = 'bare'
 
 
 def validate_location_uri(location):
