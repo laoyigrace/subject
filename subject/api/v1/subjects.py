@@ -751,9 +751,10 @@ class ResponseSerializer(wsgi.JSONResponseSerializer):
 
         try:
             subject_view = dict(subject.extra_properties)
-            attributes = ['name', 'disk_format', 'subject_format',
-                          'visibility', 'size', 'virtual_size', 'status',
-                          'checksum', 'protected', 'min_ram', 'min_disk',
+            attributes = ['name', 'type', 'tar_format', 'subject_format',
+                          'visibility', 'size', 'contributor', 'status',
+                          'checksum', 'protected', 'phase', 'language',
+                          'score', 'knowledge', 'description', 'subject_desc',
                           'owner']
             for key in attributes:
                 subject_view[key] = getattr(subject, key)
@@ -793,7 +794,7 @@ class ResponseSerializer(wsgi.JSONResponseSerializer):
             subject_view['file'] = self._get_subject_href(subject, 'file')
             subject_view['schema'] = '/v1/schemas/subject'
             subject_view = self.schema.filter(subject_view)  # domain
-            return subject_view
+            return {'subject': subject_view}
         except exception.Forbidden as e:
             raise webob.exc.HTTPForbidden(explanation=e.msg)
 
